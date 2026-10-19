@@ -227,17 +227,17 @@ spec:
                           properties:
                             effect:
                               description: |-
-                                Effect indicates the taint effect to match. Empty means match all taint effects.
+                                effect indicates the taint effect to match. Empty means match all taint effects.
                                 When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
                               type: string
                             key:
                               description: |-
-                                Key is the taint key that the toleration applies to. Empty means match all taint keys.
+                                key is the taint key that the toleration applies to. Empty means match all taint keys.
                                 If the key is empty, operator must be Exists; this combination means to match all values and all keys.
                               type: string
                             operator:
                               description: |-
-                                Operator represents a key's relationship to the value.
+                                operator represents a key's relationship to the value.
                                 Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
                                 Exists is equivalent to wildcard for value, so that a pod can
                                 tolerate all taints of a particular category.
@@ -245,7 +245,7 @@ spec:
                               type: string
                             tolerationSeconds:
                               description: |-
-                                TolerationSeconds represents the period of time the toleration (which must be
+                                tolerationSeconds represents the period of time the toleration (which must be
                                 of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
                                 it is not set, which means tolerate the taint forever (do not evict). Zero and
                                 negative values will be treated as 0 (evict immediately) by the system.
@@ -253,7 +253,7 @@ spec:
                               type: integer
                             value:
                               description: |-
-                                Value is the taint value the toleration matches to.
+                                value is the taint value the toleration matches to.
                                 If the operator is Exists, the value should be empty, otherwise just a regular string.
                               type: string
                           type: object
@@ -281,7 +281,7 @@ spec:
                           properties:
                             labelSelector:
                               description: |-
-                                LabelSelector is used to find matching pods.
+                                labelSelector is used to find matching pods.
                                 Pods that match this label selector are counted to determine the number of pods
                                 in their corresponding topology domain.
                               properties:
@@ -330,7 +330,7 @@ spec:
                               x-kubernetes-map-type: atomic
                             matchLabelKeys:
                               description: |-
-                                MatchLabelKeys is a set of pod label keys to select the pods over which
+                                matchLabelKeys is a set of pod label keys to select the pods over which
                                 spreading will be calculated. The keys are used to lookup values from the
                                 incoming pod labels, those key-value labels are ANDed with labelSelector
                                 to select the group of existing pods over which spreading will be calculated
@@ -346,7 +346,7 @@ spec:
                               x-kubernetes-list-type: atomic
                             maxSkew:
                               description: |-
-                                MaxSkew describes the degree to which pods may be unevenly distributed.
+                                maxSkew describes the degree to which pods may be unevenly distributed.
                                 When `whenUnsatisfiable=DoNotSchedule`, it is the maximum permitted difference
                                 between the number of matching pods in the target topology and the global minimum.
                                 The global minimum is the minimum number of matching pods in an eligible domain
@@ -367,7 +367,7 @@ spec:
                               type: integer
                             minDomains:
                               description: |-
-                                MinDomains indicates a minimum number of eligible domains.
+                                minDomains indicates a minimum number of eligible domains.
                                 When the number of eligible domains with matching topology keys is less than minDomains,
                                 Pod Topology Spread treats "global minimum" as 0, and then the calculation of Skew is performed.
                                 And when the number of eligible domains with matching topology keys equals or greater than minDomains,
@@ -390,7 +390,7 @@ spec:
                               type: integer
                             nodeAffinityPolicy:
                               description: |-
-                                NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
+                                nodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
                                 when calculating pod topology spread skew. Options are:
                                 - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations.
                                 - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.
@@ -399,7 +399,7 @@ spec:
                               type: string
                             nodeTaintsPolicy:
                               description: |-
-                                NodeTaintsPolicy indicates how we will treat node taints when calculating
+                                nodeTaintsPolicy indicates how we will treat node taints when calculating
                                 pod topology spread skew. Options are:
                                 - Honor: nodes without taints, along with tainted nodes for which the incoming pod
                                 has a toleration, are included.
@@ -409,7 +409,7 @@ spec:
                               type: string
                             topologyKey:
                               description: |-
-                                TopologyKey is the key of node labels. Nodes that have a label with this key
+                                topologyKey is the key of node labels. Nodes that have a label with this key
                                 and identical values are considered to be in the same topology.
                                 We consider each <key, value> as a "bucket", and try to put balanced number
                                 of pods into each bucket.
@@ -422,7 +422,7 @@ spec:
                               type: string
                             whenUnsatisfiable:
                               description: |-
-                                WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
+                                whenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
                                 the spread constraint.
                                 - DoNotSchedule (default) tells the scheduler not to schedule it.
                                 - ScheduleAnyway tells the scheduler to schedule the pod in any location,
@@ -496,7 +496,7 @@ spec:
                             type: string
                           metadata:
                             description: |-
-                              Standard object's metadata.
+                              metadata is the standard object metadata.
                               More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
                             type: object
                           spec:
@@ -525,16 +525,16 @@ spec:
                                 properties:
                                   apiGroup:
                                     description: |-
-                                      APIGroup is the group for the resource being referenced.
+                                      apiGroup is the group for the resource being referenced.
                                       If APIGroup is not specified, the specified Kind must be in the core API group.
                                       For any other third-party types, APIGroup is required.
                                     type: string
                                   kind:
-                                    description: Kind is the type of resource being
+                                    description: kind is the type of resource being
                                       referenced
                                     type: string
                                   name:
-                                    description: Name is the name of resource being
+                                    description: name is the name of resource being
                                       referenced
                                     type: string
                                 required:
@@ -569,21 +569,21 @@ spec:
                                 properties:
                                   apiGroup:
                                     description: |-
-                                      APIGroup is the group for the resource being referenced.
+                                      apiGroup is the group for the resource being referenced.
                                       If APIGroup is not specified, the specified Kind must be in the core API group.
                                       For any other third-party types, APIGroup is required.
                                     type: string
                                   kind:
-                                    description: Kind is the type of resource being
+                                    description: kind is the type of resource being
                                       referenced
                                     type: string
                                   name:
-                                    description: Name is the name of resource being
+                                    description: name is the name of resource being
                                       referenced
                                     type: string
                                   namespace:
                                     description: |-
-                                      Namespace is the namespace of resource being referenced
+                                      namespace is the namespace of resource being referenced
                                       Note that when a namespace is specified, a gateway.networking.k8s.io/ReferenceGrant object is required in the referent namespace to allow that namespace's owner to accept the reference. See the ReferenceGrant documentation for details.
                                       (Alpha) This field requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
                                     type: string
@@ -607,7 +607,7 @@ spec:
                                       pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                       x-kubernetes-int-or-string: true
                                     description: |-
-                                      Limits describes the maximum amount of compute resources allowed.
+                                      limits describes the maximum amount of compute resources allowed.
                                       More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
                                     type: object
                                   requests:
@@ -618,7 +618,7 @@ spec:
                                       pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                       x-kubernetes-int-or-string: true
                                     description: |-
-                                      Requests describes the minimum amount of compute resources required.
+                                      requests describes the minimum amount of compute resources required.
                                       If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
                                       otherwise to an implementation-defined value. Requests cannot exceed Limits.
                                       More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
@@ -836,13 +836,13 @@ spec:
                                       type: string
                                     status:
                                       description: |-
-                                        Status is the status of the condition.
+                                        status is the status of the condition.
                                         Can be True, False, Unknown.
                                         More info: https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#:~:text=state%20of%20pvc-,conditions.status,-(string)%2C%20required
                                       type: string
                                     type:
                                       description: |-
-                                        Type is the type of the condition.
+                                        type is the type of the condition.
                                         More info: https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#:~:text=set%20to%20%27ResizeStarted%27.-,PersistentVolumeClaimCondition,-contains%20details%20about
                                       type: string
                                   required:
@@ -865,7 +865,7 @@ spec:
                                 properties:
                                   healthConditions:
                                     description: |-
-                                      conditions is the set of adverse conditions reported by
+                                      healthConditions is the set of adverse conditions reported by
                                       the CSI controller plugin. An empty list means no adverse condition.
                                       At most 16 conditions may be reported.
                                     items:
@@ -936,8 +936,6 @@ spec:
                                       the name of the VolumeAttributesClass the PVC
                                       currently being reconciled
                                     type: string
-                                required:
-                                - status
                                 type: object
                               phase:
                                 description: phase represents the current phase of
@@ -1164,17 +1162,17 @@ spec:
                       properties:
                         effect:
                           description: |-
-                            Effect indicates the taint effect to match. Empty means match all taint effects.
+                            effect indicates the taint effect to match. Empty means match all taint effects.
                             When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
                           type: string
                         key:
                           description: |-
-                            Key is the taint key that the toleration applies to. Empty means match all taint keys.
+                            key is the taint key that the toleration applies to. Empty means match all taint keys.
                             If the key is empty, operator must be Exists; this combination means to match all values and all keys.
                           type: string
                         operator:
                           description: |-
-                            Operator represents a key's relationship to the value.
+                            operator represents a key's relationship to the value.
                             Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
                             Exists is equivalent to wildcard for value, so that a pod can
                             tolerate all taints of a particular category.
@@ -1182,7 +1180,7 @@ spec:
                           type: string
                         tolerationSeconds:
                           description: |-
-                            TolerationSeconds represents the period of time the toleration (which must be
+                            tolerationSeconds represents the period of time the toleration (which must be
                             of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
                             it is not set, which means tolerate the taint forever (do not evict). Zero and
                             negative values will be treated as 0 (evict immediately) by the system.
@@ -1190,7 +1188,7 @@ spec:
                           type: integer
                         value:
                           description: |-
-                            Value is the taint value the toleration matches to.
+                            value is the taint value the toleration matches to.
                             If the operator is Exists, the value should be empty, otherwise just a regular string.
                           type: string
                       type: object
@@ -1228,7 +1226,7 @@ spec:
                       properties:
                         labelSelector:
                           description: |-
-                            LabelSelector is used to find matching pods.
+                            labelSelector is used to find matching pods.
                             Pods that match this label selector are counted to determine the number of pods
                             in their corresponding topology domain.
                           properties:
@@ -1277,7 +1275,7 @@ spec:
                           x-kubernetes-map-type: atomic
                         matchLabelKeys:
                           description: |-
-                            MatchLabelKeys is a set of pod label keys to select the pods over which
+                            matchLabelKeys is a set of pod label keys to select the pods over which
                             spreading will be calculated. The keys are used to lookup values from the
                             incoming pod labels, those key-value labels are ANDed with labelSelector
                             to select the group of existing pods over which spreading will be calculated
@@ -1293,7 +1291,7 @@ spec:
                           x-kubernetes-list-type: atomic
                         maxSkew:
                           description: |-
-                            MaxSkew describes the degree to which pods may be unevenly distributed.
+                            maxSkew describes the degree to which pods may be unevenly distributed.
                             When `whenUnsatisfiable=DoNotSchedule`, it is the maximum permitted difference
                             between the number of matching pods in the target topology and the global minimum.
                             The global minimum is the minimum number of matching pods in an eligible domain
@@ -1314,7 +1312,7 @@ spec:
                           type: integer
                         minDomains:
                           description: |-
-                            MinDomains indicates a minimum number of eligible domains.
+                            minDomains indicates a minimum number of eligible domains.
                             When the number of eligible domains with matching topology keys is less than minDomains,
                             Pod Topology Spread treats "global minimum" as 0, and then the calculation of Skew is performed.
                             And when the number of eligible domains with matching topology keys equals or greater than minDomains,
@@ -1337,7 +1335,7 @@ spec:
                           type: integer
                         nodeAffinityPolicy:
                           description: |-
-                            NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
+                            nodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
                             when calculating pod topology spread skew. Options are:
                             - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations.
                             - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.
@@ -1346,7 +1344,7 @@ spec:
                           type: string
                         nodeTaintsPolicy:
                           description: |-
-                            NodeTaintsPolicy indicates how we will treat node taints when calculating
+                            nodeTaintsPolicy indicates how we will treat node taints when calculating
                             pod topology spread skew. Options are:
                             - Honor: nodes without taints, along with tainted nodes for which the incoming pod
                             has a toleration, are included.
@@ -1356,7 +1354,7 @@ spec:
                           type: string
                         topologyKey:
                           description: |-
-                            TopologyKey is the key of node labels. Nodes that have a label with this key
+                            topologyKey is the key of node labels. Nodes that have a label with this key
                             and identical values are considered to be in the same topology.
                             We consider each <key, value> as a "bucket", and try to put balanced number
                             of pods into each bucket.
@@ -1369,7 +1367,7 @@ spec:
                           type: string
                         whenUnsatisfiable:
                           description: |-
-                            WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
+                            whenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
                             the spread constraint.
                             - DoNotSchedule (default) tells the scheduler not to schedule it.
                             - ScheduleAnyway tells the scheduler to schedule the pod in any location,
@@ -1560,17 +1558,17 @@ spec:
                       properties:
                         effect:
                           description: |-
-                            Effect indicates the taint effect to match. Empty means match all taint effects.
+                            effect indicates the taint effect to match. Empty means match all taint effects.
                             When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
                           type: string
                         key:
                           description: |-
-                            Key is the taint key that the toleration applies to. Empty means match all taint keys.
+                            key is the taint key that the toleration applies to. Empty means match all taint keys.
                             If the key is empty, operator must be Exists; this combination means to match all values and all keys.
                           type: string
                         operator:
                           description: |-
-                            Operator represents a key's relationship to the value.
+                            operator represents a key's relationship to the value.
                             Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
                             Exists is equivalent to wildcard for value, so that a pod can
                             tolerate all taints of a particular category.
@@ -1578,7 +1576,7 @@ spec:
                           type: string
                         tolerationSeconds:
                           description: |-
-                            TolerationSeconds represents the period of time the toleration (which must be
+                            tolerationSeconds represents the period of time the toleration (which must be
                             of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
                             it is not set, which means tolerate the taint forever (do not evict). Zero and
                             negative values will be treated as 0 (evict immediately) by the system.
@@ -1586,7 +1584,7 @@ spec:
                           type: integer
                         value:
                           description: |-
-                            Value is the taint value the toleration matches to.
+                            value is the taint value the toleration matches to.
                             If the operator is Exists, the value should be empty, otherwise just a regular string.
                           type: string
                       type: object
@@ -1614,7 +1612,7 @@ spec:
                       properties:
                         labelSelector:
                           description: |-
-                            LabelSelector is used to find matching pods.
+                            labelSelector is used to find matching pods.
                             Pods that match this label selector are counted to determine the number of pods
                             in their corresponding topology domain.
                           properties:
@@ -1663,7 +1661,7 @@ spec:
                           x-kubernetes-map-type: atomic
                         matchLabelKeys:
                           description: |-
-                            MatchLabelKeys is a set of pod label keys to select the pods over which
+                            matchLabelKeys is a set of pod label keys to select the pods over which
                             spreading will be calculated. The keys are used to lookup values from the
                             incoming pod labels, those key-value labels are ANDed with labelSelector
                             to select the group of existing pods over which spreading will be calculated
@@ -1679,7 +1677,7 @@ spec:
                           x-kubernetes-list-type: atomic
                         maxSkew:
                           description: |-
-                            MaxSkew describes the degree to which pods may be unevenly distributed.
+                            maxSkew describes the degree to which pods may be unevenly distributed.
                             When `whenUnsatisfiable=DoNotSchedule`, it is the maximum permitted difference
                             between the number of matching pods in the target topology and the global minimum.
                             The global minimum is the minimum number of matching pods in an eligible domain
@@ -1700,7 +1698,7 @@ spec:
                           type: integer
                         minDomains:
                           description: |-
-                            MinDomains indicates a minimum number of eligible domains.
+                            minDomains indicates a minimum number of eligible domains.
                             When the number of eligible domains with matching topology keys is less than minDomains,
                             Pod Topology Spread treats "global minimum" as 0, and then the calculation of Skew is performed.
                             And when the number of eligible domains with matching topology keys equals or greater than minDomains,
@@ -1723,7 +1721,7 @@ spec:
                           type: integer
                         nodeAffinityPolicy:
                           description: |-
-                            NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
+                            nodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
                             when calculating pod topology spread skew. Options are:
                             - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations.
                             - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.
@@ -1732,7 +1730,7 @@ spec:
                           type: string
                         nodeTaintsPolicy:
                           description: |-
-                            NodeTaintsPolicy indicates how we will treat node taints when calculating
+                            nodeTaintsPolicy indicates how we will treat node taints when calculating
                             pod topology spread skew. Options are:
                             - Honor: nodes without taints, along with tainted nodes for which the incoming pod
                             has a toleration, are included.
@@ -1742,7 +1740,7 @@ spec:
                           type: string
                         topologyKey:
                           description: |-
-                            TopologyKey is the key of node labels. Nodes that have a label with this key
+                            topologyKey is the key of node labels. Nodes that have a label with this key
                             and identical values are considered to be in the same topology.
                             We consider each <key, value> as a "bucket", and try to put balanced number
                             of pods into each bucket.
@@ -1755,7 +1753,7 @@ spec:
                           type: string
                         whenUnsatisfiable:
                           description: |-
-                            WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
+                            whenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
                             the spread constraint.
                             - DoNotSchedule (default) tells the scheduler not to schedule it.
                             - ScheduleAnyway tells the scheduler to schedule the pod in any location,
@@ -1924,17 +1922,17 @@ spec:
                       properties:
                         effect:
                           description: |-
-                            Effect indicates the taint effect to match. Empty means match all taint effects.
+                            effect indicates the taint effect to match. Empty means match all taint effects.
                             When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
                           type: string
                         key:
                           description: |-
-                            Key is the taint key that the toleration applies to. Empty means match all taint keys.
+                            key is the taint key that the toleration applies to. Empty means match all taint keys.
                             If the key is empty, operator must be Exists; this combination means to match all values and all keys.
                           type: string
                         operator:
                           description: |-
-                            Operator represents a key's relationship to the value.
+                            operator represents a key's relationship to the value.
                             Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
                             Exists is equivalent to wildcard for value, so that a pod can
                             tolerate all taints of a particular category.
@@ -1942,7 +1940,7 @@ spec:
                           type: string
                         tolerationSeconds:
                           description: |-
-                            TolerationSeconds represents the period of time the toleration (which must be
+                            tolerationSeconds represents the period of time the toleration (which must be
                             of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
                             it is not set, which means tolerate the taint forever (do not evict). Zero and
                             negative values will be treated as 0 (evict immediately) by the system.
@@ -1950,7 +1948,7 @@ spec:
                           type: integer
                         value:
                           description: |-
-                            Value is the taint value the toleration matches to.
+                            value is the taint value the toleration matches to.
                             If the operator is Exists, the value should be empty, otherwise just a regular string.
                           type: string
                       type: object
@@ -1976,7 +1974,7 @@ spec:
                       properties:
                         labelSelector:
                           description: |-
-                            LabelSelector is used to find matching pods.
+                            labelSelector is used to find matching pods.
                             Pods that match this label selector are counted to determine the number of pods
                             in their corresponding topology domain.
                           properties:
@@ -2025,7 +2023,7 @@ spec:
                           x-kubernetes-map-type: atomic
                         matchLabelKeys:
                           description: |-
-                            MatchLabelKeys is a set of pod label keys to select the pods over which
+                            matchLabelKeys is a set of pod label keys to select the pods over which
                             spreading will be calculated. The keys are used to lookup values from the
                             incoming pod labels, those key-value labels are ANDed with labelSelector
                             to select the group of existing pods over which spreading will be calculated
@@ -2041,7 +2039,7 @@ spec:
                           x-kubernetes-list-type: atomic
                         maxSkew:
                           description: |-
-                            MaxSkew describes the degree to which pods may be unevenly distributed.
+                            maxSkew describes the degree to which pods may be unevenly distributed.
                             When `whenUnsatisfiable=DoNotSchedule`, it is the maximum permitted difference
                             between the number of matching pods in the target topology and the global minimum.
                             The global minimum is the minimum number of matching pods in an eligible domain
@@ -2062,7 +2060,7 @@ spec:
                           type: integer
                         minDomains:
                           description: |-
-                            MinDomains indicates a minimum number of eligible domains.
+                            minDomains indicates a minimum number of eligible domains.
                             When the number of eligible domains with matching topology keys is less than minDomains,
                             Pod Topology Spread treats "global minimum" as 0, and then the calculation of Skew is performed.
                             And when the number of eligible domains with matching topology keys equals or greater than minDomains,
@@ -2085,7 +2083,7 @@ spec:
                           type: integer
                         nodeAffinityPolicy:
                           description: |-
-                            NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
+                            nodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
                             when calculating pod topology spread skew. Options are:
                             - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations.
                             - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.
@@ -2094,7 +2092,7 @@ spec:
                           type: string
                         nodeTaintsPolicy:
                           description: |-
-                            NodeTaintsPolicy indicates how we will treat node taints when calculating
+                            nodeTaintsPolicy indicates how we will treat node taints when calculating
                             pod topology spread skew. Options are:
                             - Honor: nodes without taints, along with tainted nodes for which the incoming pod
                             has a toleration, are included.
@@ -2104,7 +2102,7 @@ spec:
                           type: string
                         topologyKey:
                           description: |-
-                            TopologyKey is the key of node labels. Nodes that have a label with this key
+                            topologyKey is the key of node labels. Nodes that have a label with this key
                             and identical values are considered to be in the same topology.
                             We consider each <key, value> as a "bucket", and try to put balanced number
                             of pods into each bucket.
@@ -2117,7 +2115,7 @@ spec:
                           type: string
                         whenUnsatisfiable:
                           description: |-
-                            WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
+                            whenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
                             the spread constraint.
                             - DoNotSchedule (default) tells the scheduler not to schedule it.
                             - ScheduleAnyway tells the scheduler to schedule the pod in any location,
@@ -2879,17 +2877,17 @@ spec:
                       properties:
                         effect:
                           description: |-
-                            Effect indicates the taint effect to match. Empty means match all taint effects.
+                            effect indicates the taint effect to match. Empty means match all taint effects.
                             When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
                           type: string
                         key:
                           description: |-
-                            Key is the taint key that the toleration applies to. Empty means match all taint keys.
+                            key is the taint key that the toleration applies to. Empty means match all taint keys.
                             If the key is empty, operator must be Exists; this combination means to match all values and all keys.
                           type: string
                         operator:
                           description: |-
-                            Operator represents a key's relationship to the value.
+                            operator represents a key's relationship to the value.
                             Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
                             Exists is equivalent to wildcard for value, so that a pod can
                             tolerate all taints of a particular category.
@@ -2897,7 +2895,7 @@ spec:
                           type: string
                         tolerationSeconds:
                           description: |-
-                            TolerationSeconds represents the period of time the toleration (which must be
+                            tolerationSeconds represents the period of time the toleration (which must be
                             of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
                             it is not set, which means tolerate the taint forever (do not evict). Zero and
                             negative values will be treated as 0 (evict immediately) by the system.
@@ -2905,7 +2903,7 @@ spec:
                           type: integer
                         value:
                           description: |-
-                            Value is the taint value the toleration matches to.
+                            value is the taint value the toleration matches to.
                             If the operator is Exists, the value should be empty, otherwise just a regular string.
                           type: string
                       type: object
@@ -2933,7 +2931,7 @@ spec:
                       properties:
                         labelSelector:
                           description: |-
-                            LabelSelector is used to find matching pods.
+                            labelSelector is used to find matching pods.
                             Pods that match this label selector are counted to determine the number of pods
                             in their corresponding topology domain.
                           properties:
@@ -2982,7 +2980,7 @@ spec:
                           x-kubernetes-map-type: atomic
                         matchLabelKeys:
                           description: |-
-                            MatchLabelKeys is a set of pod label keys to select the pods over which
+                            matchLabelKeys is a set of pod label keys to select the pods over which
                             spreading will be calculated. The keys are used to lookup values from the
                             incoming pod labels, those key-value labels are ANDed with labelSelector
                             to select the group of existing pods over which spreading will be calculated
@@ -2998,7 +2996,7 @@ spec:
                           x-kubernetes-list-type: atomic
                         maxSkew:
                           description: |-
-                            MaxSkew describes the degree to which pods may be unevenly distributed.
+                            maxSkew describes the degree to which pods may be unevenly distributed.
                             When `whenUnsatisfiable=DoNotSchedule`, it is the maximum permitted difference
                             between the number of matching pods in the target topology and the global minimum.
                             The global minimum is the minimum number of matching pods in an eligible domain
@@ -3019,7 +3017,7 @@ spec:
                           type: integer
                         minDomains:
                           description: |-
-                            MinDomains indicates a minimum number of eligible domains.
+                            minDomains indicates a minimum number of eligible domains.
                             When the number of eligible domains with matching topology keys is less than minDomains,
                             Pod Topology Spread treats "global minimum" as 0, and then the calculation of Skew is performed.
                             And when the number of eligible domains with matching topology keys equals or greater than minDomains,
@@ -3042,7 +3040,7 @@ spec:
                           type: integer
                         nodeAffinityPolicy:
                           description: |-
-                            NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
+                            nodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
                             when calculating pod topology spread skew. Options are:
                             - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations.
                             - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.
@@ -3051,7 +3049,7 @@ spec:
                           type: string
                         nodeTaintsPolicy:
                           description: |-
-                            NodeTaintsPolicy indicates how we will treat node taints when calculating
+                            nodeTaintsPolicy indicates how we will treat node taints when calculating
                             pod topology spread skew. Options are:
                             - Honor: nodes without taints, along with tainted nodes for which the incoming pod
                             has a toleration, are included.
@@ -3061,7 +3059,7 @@ spec:
                           type: string
                         topologyKey:
                           description: |-
-                            TopologyKey is the key of node labels. Nodes that have a label with this key
+                            topologyKey is the key of node labels. Nodes that have a label with this key
                             and identical values are considered to be in the same topology.
                             We consider each <key, value> as a "bucket", and try to put balanced number
                             of pods into each bucket.
@@ -3074,7 +3072,7 @@ spec:
                           type: string
                         whenUnsatisfiable:
                           description: |-
-                            WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
+                            whenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
                             the spread constraint.
                             - DoNotSchedule (default) tells the scheduler not to schedule it.
                             - ScheduleAnyway tells the scheduler to schedule the pod in any location,
@@ -4826,17 +4824,17 @@ spec:
                       properties:
                         effect:
                           description: |-
-                            Effect indicates the taint effect to match. Empty means match all taint effects.
+                            effect indicates the taint effect to match. Empty means match all taint effects.
                             When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
                           type: string
                         key:
                           description: |-
-                            Key is the taint key that the toleration applies to. Empty means match all taint keys.
+                            key is the taint key that the toleration applies to. Empty means match all taint keys.
                             If the key is empty, operator must be Exists; this combination means to match all values and all keys.
                           type: string
                         operator:
                           description: |-
-                            Operator represents a key's relationship to the value.
+                            operator represents a key's relationship to the value.
                             Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
                             Exists is equivalent to wildcard for value, so that a pod can
                             tolerate all taints of a particular category.
@@ -4844,7 +4842,7 @@ spec:
                           type: string
                         tolerationSeconds:
                           description: |-
-                            TolerationSeconds represents the period of time the toleration (which must be
+                            tolerationSeconds represents the period of time the toleration (which must be
                             of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
                             it is not set, which means tolerate the taint forever (do not evict). Zero and
                             negative values will be treated as 0 (evict immediately) by the system.
@@ -4852,7 +4850,7 @@ spec:
                           type: integer
                         value:
                           description: |-
-                            Value is the taint value the toleration matches to.
+                            value is the taint value the toleration matches to.
                             If the operator is Exists, the value should be empty, otherwise just a regular string.
                           type: string
                       type: object
@@ -4880,7 +4878,7 @@ spec:
                       properties:
                         labelSelector:
                           description: |-
-                            LabelSelector is used to find matching pods.
+                            labelSelector is used to find matching pods.
                             Pods that match this label selector are counted to determine the number of pods
                             in their corresponding topology domain.
                           properties:
@@ -4929,7 +4927,7 @@ spec:
                           x-kubernetes-map-type: atomic
                         matchLabelKeys:
                           description: |-
-                            MatchLabelKeys is a set of pod label keys to select the pods over which
+                            matchLabelKeys is a set of pod label keys to select the pods over which
                             spreading will be calculated. The keys are used to lookup values from the
                             incoming pod labels, those key-value labels are ANDed with labelSelector
                             to select the group of existing pods over which spreading will be calculated
@@ -4945,7 +4943,7 @@ spec:
                           x-kubernetes-list-type: atomic
                         maxSkew:
                           description: |-
-                            MaxSkew describes the degree to which pods may be unevenly distributed.
+                            maxSkew describes the degree to which pods may be unevenly distributed.
                             When `whenUnsatisfiable=DoNotSchedule`, it is the maximum permitted difference
                             between the number of matching pods in the target topology and the global minimum.
                             The global minimum is the minimum number of matching pods in an eligible domain
@@ -4966,7 +4964,7 @@ spec:
                           type: integer
                         minDomains:
                           description: |-
-                            MinDomains indicates a minimum number of eligible domains.
+                            minDomains indicates a minimum number of eligible domains.
                             When the number of eligible domains with matching topology keys is less than minDomains,
                             Pod Topology Spread treats "global minimum" as 0, and then the calculation of Skew is performed.
                             And when the number of eligible domains with matching topology keys equals or greater than minDomains,
@@ -4989,7 +4987,7 @@ spec:
                           type: integer
                         nodeAffinityPolicy:
                           description: |-
-                            NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
+                            nodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
                             when calculating pod topology spread skew. Options are:
                             - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations.
                             - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.
@@ -4998,7 +4996,7 @@ spec:
                           type: string
                         nodeTaintsPolicy:
                           description: |-
-                            NodeTaintsPolicy indicates how we will treat node taints when calculating
+                            nodeTaintsPolicy indicates how we will treat node taints when calculating
                             pod topology spread skew. Options are:
                             - Honor: nodes without taints, along with tainted nodes for which the incoming pod
                             has a toleration, are included.
@@ -5008,7 +5006,7 @@ spec:
                           type: string
                         topologyKey:
                           description: |-
-                            TopologyKey is the key of node labels. Nodes that have a label with this key
+                            topologyKey is the key of node labels. Nodes that have a label with this key
                             and identical values are considered to be in the same topology.
                             We consider each <key, value> as a "bucket", and try to put balanced number
                             of pods into each bucket.
@@ -5021,7 +5019,7 @@ spec:
                           type: string
                         whenUnsatisfiable:
                           description: |-
-                            WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
+                            whenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
                             the spread constraint.
                             - DoNotSchedule (default) tells the scheduler not to schedule it.
                             - ScheduleAnyway tells the scheduler to schedule the pod in any location,
@@ -5076,7 +5074,7 @@ spec:
                         type: string
                       metadata:
                         description: |-
-                          Standard object's metadata.
+                          metadata is the standard object metadata.
                           More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
                         type: object
                       spec:
@@ -5105,15 +5103,15 @@ spec:
                             properties:
                               apiGroup:
                                 description: |-
-                                  APIGroup is the group for the resource being referenced.
+                                  apiGroup is the group for the resource being referenced.
                                   If APIGroup is not specified, the specified Kind must be in the core API group.
                                   For any other third-party types, APIGroup is required.
                                 type: string
                               kind:
-                                description: Kind is the type of resource being referenced
+                                description: kind is the type of resource being referenced
                                 type: string
                               name:
-                                description: Name is the name of resource being referenced
+                                description: name is the name of resource being referenced
                                 type: string
                             required:
                             - kind
@@ -5147,19 +5145,19 @@ spec:
                             properties:
                               apiGroup:
                                 description: |-
-                                  APIGroup is the group for the resource being referenced.
+                                  apiGroup is the group for the resource being referenced.
                                   If APIGroup is not specified, the specified Kind must be in the core API group.
                                   For any other third-party types, APIGroup is required.
                                 type: string
                               kind:
-                                description: Kind is the type of resource being referenced
+                                description: kind is the type of resource being referenced
                                 type: string
                               name:
-                                description: Name is the name of resource being referenced
+                                description: name is the name of resource being referenced
                                 type: string
                               namespace:
                                 description: |-
-                                  Namespace is the namespace of resource being referenced
+                                  namespace is the namespace of resource being referenced
                                   Note that when a namespace is specified, a gateway.networking.k8s.io/ReferenceGrant object is required in the referent namespace to allow that namespace's owner to accept the reference. See the ReferenceGrant documentation for details.
                                   (Alpha) This field requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
                                 type: string
@@ -5183,7 +5181,7 @@ spec:
                                   pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                   x-kubernetes-int-or-string: true
                                 description: |-
-                                  Limits describes the maximum amount of compute resources allowed.
+                                  limits describes the maximum amount of compute resources allowed.
                                   More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
                                 type: object
                               requests:
@@ -5194,7 +5192,7 @@ spec:
                                   pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                   x-kubernetes-int-or-string: true
                                 description: |-
-                                  Requests describes the minimum amount of compute resources required.
+                                  requests describes the minimum amount of compute resources required.
                                   If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
                                   otherwise to an implementation-defined value. Requests cannot exceed Limits.
                                   More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
@@ -5403,13 +5401,13 @@ spec:
                                   type: string
                                 status:
                                   description: |-
-                                    Status is the status of the condition.
+                                    status is the status of the condition.
                                     Can be True, False, Unknown.
                                     More info: https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#:~:text=state%20of%20pvc-,conditions.status,-(string)%2C%20required
                                   type: string
                                 type:
                                   description: |-
-                                    Type is the type of the condition.
+                                    type is the type of the condition.
                                     More info: https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#:~:text=set%20to%20%27ResizeStarted%27.-,PersistentVolumeClaimCondition,-contains%20details%20about
                                   type: string
                               required:
@@ -5432,7 +5430,7 @@ spec:
                             properties:
                               healthConditions:
                                 description: |-
-                                  conditions is the set of adverse conditions reported by
+                                  healthConditions is the set of adverse conditions reported by
                                   the CSI controller plugin. An empty list means no adverse condition.
                                   At most 16 conditions may be reported.
                                 items:
@@ -5501,8 +5499,6 @@ spec:
                                   name of the VolumeAttributesClass the PVC currently
                                   being reconciled
                                 type: string
-                            required:
-                            - status
                             type: object
                           phase:
                             description: phase represents the current phase of PersistentVolumeClaim.
@@ -5624,7 +5620,7 @@ spec:
                       properties:
                         labelSelector:
                           description: |-
-                            LabelSelector is used to find matching pods.
+                            labelSelector is used to find matching pods.
                             Pods that match this label selector are counted to determine the number of pods
                             in their corresponding topology domain.
                           properties:
@@ -5673,7 +5669,7 @@ spec:
                           x-kubernetes-map-type: atomic
                         matchLabelKeys:
                           description: |-
-                            MatchLabelKeys is a set of pod label keys to select the pods over which
+                            matchLabelKeys is a set of pod label keys to select the pods over which
                             spreading will be calculated. The keys are used to lookup values from the
                             incoming pod labels, those key-value labels are ANDed with labelSelector
                             to select the group of existing pods over which spreading will be calculated
@@ -5689,7 +5685,7 @@ spec:
                           x-kubernetes-list-type: atomic
                         maxSkew:
                           description: |-
-                            MaxSkew describes the degree to which pods may be unevenly distributed.
+                            maxSkew describes the degree to which pods may be unevenly distributed.
                             When `whenUnsatisfiable=DoNotSchedule`, it is the maximum permitted difference
                             between the number of matching pods in the target topology and the global minimum.
                             The global minimum is the minimum number of matching pods in an eligible domain
@@ -5710,7 +5706,7 @@ spec:
                           type: integer
                         minDomains:
                           description: |-
-                            MinDomains indicates a minimum number of eligible domains.
+                            minDomains indicates a minimum number of eligible domains.
                             When the number of eligible domains with matching topology keys is less than minDomains,
                             Pod Topology Spread treats "global minimum" as 0, and then the calculation of Skew is performed.
                             And when the number of eligible domains with matching topology keys equals or greater than minDomains,
@@ -5733,7 +5729,7 @@ spec:
                           type: integer
                         nodeAffinityPolicy:
                           description: |-
-                            NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
+                            nodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
                             when calculating pod topology spread skew. Options are:
                             - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations.
                             - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.
@@ -5742,7 +5738,7 @@ spec:
                           type: string
                         nodeTaintsPolicy:
                           description: |-
-                            NodeTaintsPolicy indicates how we will treat node taints when calculating
+                            nodeTaintsPolicy indicates how we will treat node taints when calculating
                             pod topology spread skew. Options are:
                             - Honor: nodes without taints, along with tainted nodes for which the incoming pod
                             has a toleration, are included.
@@ -5752,7 +5748,7 @@ spec:
                           type: string
                         topologyKey:
                           description: |-
-                            TopologyKey is the key of node labels. Nodes that have a label with this key
+                            topologyKey is the key of node labels. Nodes that have a label with this key
                             and identical values are considered to be in the same topology.
                             We consider each <key, value> as a "bucket", and try to put balanced number
                             of pods into each bucket.
@@ -5765,7 +5761,7 @@ spec:
                           type: string
                         whenUnsatisfiable:
                           description: |-
-                            WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
+                            whenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
                             the spread constraint.
                             - DoNotSchedule (default) tells the scheduler not to schedule it.
                             - ScheduleAnyway tells the scheduler to schedule the pod in any location,
@@ -5936,17 +5932,17 @@ spec:
                       properties:
                         effect:
                           description: |-
-                            Effect indicates the taint effect to match. Empty means match all taint effects.
+                            effect indicates the taint effect to match. Empty means match all taint effects.
                             When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
                           type: string
                         key:
                           description: |-
-                            Key is the taint key that the toleration applies to. Empty means match all taint keys.
+                            key is the taint key that the toleration applies to. Empty means match all taint keys.
                             If the key is empty, operator must be Exists; this combination means to match all values and all keys.
                           type: string
                         operator:
                           description: |-
-                            Operator represents a key's relationship to the value.
+                            operator represents a key's relationship to the value.
                             Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
                             Exists is equivalent to wildcard for value, so that a pod can
                             tolerate all taints of a particular category.
@@ -5954,7 +5950,7 @@ spec:
                           type: string
                         tolerationSeconds:
                           description: |-
-                            TolerationSeconds represents the period of time the toleration (which must be
+                            tolerationSeconds represents the period of time the toleration (which must be
                             of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
                             it is not set, which means tolerate the taint forever (do not evict). Zero and
                             negative values will be treated as 0 (evict immediately) by the system.
@@ -5962,7 +5958,7 @@ spec:
                           type: integer
                         value:
                           description: |-
-                            Value is the taint value the toleration matches to.
+                            value is the taint value the toleration matches to.
                             If the operator is Exists, the value should be empty, otherwise just a regular string.
                           type: string
                       type: object
@@ -5990,7 +5986,7 @@ spec:
                       properties:
                         labelSelector:
                           description: |-
-                            LabelSelector is used to find matching pods.
+                            labelSelector is used to find matching pods.
                             Pods that match this label selector are counted to determine the number of pods
                             in their corresponding topology domain.
                           properties:
@@ -6039,7 +6035,7 @@ spec:
                           x-kubernetes-map-type: atomic
                         matchLabelKeys:
                           description: |-
-                            MatchLabelKeys is a set of pod label keys to select the pods over which
+                            matchLabelKeys is a set of pod label keys to select the pods over which
                             spreading will be calculated. The keys are used to lookup values from the
                             incoming pod labels, those key-value labels are ANDed with labelSelector
                             to select the group of existing pods over which spreading will be calculated
@@ -6055,7 +6051,7 @@ spec:
                           x-kubernetes-list-type: atomic
                         maxSkew:
                           description: |-
-                            MaxSkew describes the degree to which pods may be unevenly distributed.
+                            maxSkew describes the degree to which pods may be unevenly distributed.
                             When `whenUnsatisfiable=DoNotSchedule`, it is the maximum permitted difference
                             between the number of matching pods in the target topology and the global minimum.
                             The global minimum is the minimum number of matching pods in an eligible domain
@@ -6076,7 +6072,7 @@ spec:
                           type: integer
                         minDomains:
                           description: |-
-                            MinDomains indicates a minimum number of eligible domains.
+                            minDomains indicates a minimum number of eligible domains.
                             When the number of eligible domains with matching topology keys is less than minDomains,
                             Pod Topology Spread treats "global minimum" as 0, and then the calculation of Skew is performed.
                             And when the number of eligible domains with matching topology keys equals or greater than minDomains,
@@ -6099,7 +6095,7 @@ spec:
                           type: integer
                         nodeAffinityPolicy:
                           description: |-
-                            NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
+                            nodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
                             when calculating pod topology spread skew. Options are:
                             - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations.
                             - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.
@@ -6108,7 +6104,7 @@ spec:
                           type: string
                         nodeTaintsPolicy:
                           description: |-
-                            NodeTaintsPolicy indicates how we will treat node taints when calculating
+                            nodeTaintsPolicy indicates how we will treat node taints when calculating
                             pod topology spread skew. Options are:
                             - Honor: nodes without taints, along with tainted nodes for which the incoming pod
                             has a toleration, are included.
@@ -6118,7 +6114,7 @@ spec:
                           type: string
                         topologyKey:
                           description: |-
-                            TopologyKey is the key of node labels. Nodes that have a label with this key
+                            topologyKey is the key of node labels. Nodes that have a label with this key
                             and identical values are considered to be in the same topology.
                             We consider each <key, value> as a "bucket", and try to put balanced number
                             of pods into each bucket.
@@ -6131,7 +6127,7 @@ spec:
                           type: string
                         whenUnsatisfiable:
                           description: |-
-                            WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
+                            whenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
                             the spread constraint.
                             - DoNotSchedule (default) tells the scheduler not to schedule it.
                             - ScheduleAnyway tells the scheduler to schedule the pod in any location,
@@ -6286,17 +6282,17 @@ spec:
                       properties:
                         effect:
                           description: |-
-                            Effect indicates the taint effect to match. Empty means match all taint effects.
+                            effect indicates the taint effect to match. Empty means match all taint effects.
                             When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
                           type: string
                         key:
                           description: |-
-                            Key is the taint key that the toleration applies to. Empty means match all taint keys.
+                            key is the taint key that the toleration applies to. Empty means match all taint keys.
                             If the key is empty, operator must be Exists; this combination means to match all values and all keys.
                           type: string
                         operator:
                           description: |-
-                            Operator represents a key's relationship to the value.
+                            operator represents a key's relationship to the value.
                             Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
                             Exists is equivalent to wildcard for value, so that a pod can
                             tolerate all taints of a particular category.
@@ -6304,7 +6300,7 @@ spec:
                           type: string
                         tolerationSeconds:
                           description: |-
-                            TolerationSeconds represents the period of time the toleration (which must be
+                            tolerationSeconds represents the period of time the toleration (which must be
                             of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
                             it is not set, which means tolerate the taint forever (do not evict). Zero and
                             negative values will be treated as 0 (evict immediately) by the system.
@@ -6312,7 +6308,7 @@ spec:
                           type: integer
                         value:
                           description: |-
-                            Value is the taint value the toleration matches to.
+                            value is the taint value the toleration matches to.
                             If the operator is Exists, the value should be empty, otherwise just a regular string.
                           type: string
                       type: object
@@ -6340,7 +6336,7 @@ spec:
                       properties:
                         labelSelector:
                           description: |-
-                            LabelSelector is used to find matching pods.
+                            labelSelector is used to find matching pods.
                             Pods that match this label selector are counted to determine the number of pods
                             in their corresponding topology domain.
                           properties:
@@ -6389,7 +6385,7 @@ spec:
                           x-kubernetes-map-type: atomic
                         matchLabelKeys:
                           description: |-
-                            MatchLabelKeys is a set of pod label keys to select the pods over which
+                            matchLabelKeys is a set of pod label keys to select the pods over which
                             spreading will be calculated. The keys are used to lookup values from the
                             incoming pod labels, those key-value labels are ANDed with labelSelector
                             to select the group of existing pods over which spreading will be calculated
@@ -6405,7 +6401,7 @@ spec:
                           x-kubernetes-list-type: atomic
                         maxSkew:
                           description: |-
-                            MaxSkew describes the degree to which pods may be unevenly distributed.
+                            maxSkew describes the degree to which pods may be unevenly distributed.
                             When `whenUnsatisfiable=DoNotSchedule`, it is the maximum permitted difference
                             between the number of matching pods in the target topology and the global minimum.
                             The global minimum is the minimum number of matching pods in an eligible domain
@@ -6426,7 +6422,7 @@ spec:
                           type: integer
                         minDomains:
                           description: |-
-                            MinDomains indicates a minimum number of eligible domains.
+                            minDomains indicates a minimum number of eligible domains.
                             When the number of eligible domains with matching topology keys is less than minDomains,
                             Pod Topology Spread treats "global minimum" as 0, and then the calculation of Skew is performed.
                             And when the number of eligible domains with matching topology keys equals or greater than minDomains,
@@ -6449,7 +6445,7 @@ spec:
                           type: integer
                         nodeAffinityPolicy:
                           description: |-
-                            NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
+                            nodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
                             when calculating pod topology spread skew. Options are:
                             - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations.
                             - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.
@@ -6458,7 +6454,7 @@ spec:
                           type: string
                         nodeTaintsPolicy:
                           description: |-
-                            NodeTaintsPolicy indicates how we will treat node taints when calculating
+                            nodeTaintsPolicy indicates how we will treat node taints when calculating
                             pod topology spread skew. Options are:
                             - Honor: nodes without taints, along with tainted nodes for which the incoming pod
                             has a toleration, are included.
@@ -6468,7 +6464,7 @@ spec:
                           type: string
                         topologyKey:
                           description: |-
-                            TopologyKey is the key of node labels. Nodes that have a label with this key
+                            topologyKey is the key of node labels. Nodes that have a label with this key
                             and identical values are considered to be in the same topology.
                             We consider each <key, value> as a "bucket", and try to put balanced number
                             of pods into each bucket.
@@ -6481,7 +6477,7 @@ spec:
                           type: string
                         whenUnsatisfiable:
                           description: |-
-                            WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
+                            whenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
                             the spread constraint.
                             - DoNotSchedule (default) tells the scheduler not to schedule it.
                             - ScheduleAnyway tells the scheduler to schedule the pod in any location,
@@ -6691,17 +6687,17 @@ spec:
                       properties:
                         effect:
                           description: |-
-                            Effect indicates the taint effect to match. Empty means match all taint effects.
+                            effect indicates the taint effect to match. Empty means match all taint effects.
                             When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
                           type: string
                         key:
                           description: |-
-                            Key is the taint key that the toleration applies to. Empty means match all taint keys.
+                            key is the taint key that the toleration applies to. Empty means match all taint keys.
                             If the key is empty, operator must be Exists; this combination means to match all values and all keys.
                           type: string
                         operator:
                           description: |-
-                            Operator represents a key's relationship to the value.
+                            operator represents a key's relationship to the value.
                             Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
                             Exists is equivalent to wildcard for value, so that a pod can
                             tolerate all taints of a particular category.
@@ -6709,7 +6705,7 @@ spec:
                           type: string
                         tolerationSeconds:
                           description: |-
-                            TolerationSeconds represents the period of time the toleration (which must be
+                            tolerationSeconds represents the period of time the toleration (which must be
                             of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
                             it is not set, which means tolerate the taint forever (do not evict). Zero and
                             negative values will be treated as 0 (evict immediately) by the system.
@@ -6717,7 +6713,7 @@ spec:
                           type: integer
                         value:
                           description: |-
-                            Value is the taint value the toleration matches to.
+                            value is the taint value the toleration matches to.
                             If the operator is Exists, the value should be empty, otherwise just a regular string.
                           type: string
                       type: object
@@ -6745,7 +6741,7 @@ spec:
                       properties:
                         labelSelector:
                           description: |-
-                            LabelSelector is used to find matching pods.
+                            labelSelector is used to find matching pods.
                             Pods that match this label selector are counted to determine the number of pods
                             in their corresponding topology domain.
                           properties:
@@ -6794,7 +6790,7 @@ spec:
                           x-kubernetes-map-type: atomic
                         matchLabelKeys:
                           description: |-
-                            MatchLabelKeys is a set of pod label keys to select the pods over which
+                            matchLabelKeys is a set of pod label keys to select the pods over which
                             spreading will be calculated. The keys are used to lookup values from the
                             incoming pod labels, those key-value labels are ANDed with labelSelector
                             to select the group of existing pods over which spreading will be calculated
@@ -6810,7 +6806,7 @@ spec:
                           x-kubernetes-list-type: atomic
                         maxSkew:
                           description: |-
-                            MaxSkew describes the degree to which pods may be unevenly distributed.
+                            maxSkew describes the degree to which pods may be unevenly distributed.
                             When `whenUnsatisfiable=DoNotSchedule`, it is the maximum permitted difference
                             between the number of matching pods in the target topology and the global minimum.
                             The global minimum is the minimum number of matching pods in an eligible domain
@@ -6831,7 +6827,7 @@ spec:
                           type: integer
                         minDomains:
                           description: |-
-                            MinDomains indicates a minimum number of eligible domains.
+                            minDomains indicates a minimum number of eligible domains.
                             When the number of eligible domains with matching topology keys is less than minDomains,
                             Pod Topology Spread treats "global minimum" as 0, and then the calculation of Skew is performed.
                             And when the number of eligible domains with matching topology keys equals or greater than minDomains,
@@ -6854,7 +6850,7 @@ spec:
                           type: integer
                         nodeAffinityPolicy:
                           description: |-
-                            NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
+                            nodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector
                             when calculating pod topology spread skew. Options are:
                             - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations.
                             - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.
@@ -6863,7 +6859,7 @@ spec:
                           type: string
                         nodeTaintsPolicy:
                           description: |-
-                            NodeTaintsPolicy indicates how we will treat node taints when calculating
+                            nodeTaintsPolicy indicates how we will treat node taints when calculating
                             pod topology spread skew. Options are:
                             - Honor: nodes without taints, along with tainted nodes for which the incoming pod
                             has a toleration, are included.
@@ -6873,7 +6869,7 @@ spec:
                           type: string
                         topologyKey:
                           description: |-
-                            TopologyKey is the key of node labels. Nodes that have a label with this key
+                            topologyKey is the key of node labels. Nodes that have a label with this key
                             and identical values are considered to be in the same topology.
                             We consider each <key, value> as a "bucket", and try to put balanced number
                             of pods into each bucket.
@@ -6886,7 +6882,7 @@ spec:
                           type: string
                         whenUnsatisfiable:
                           description: |-
-                            WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
+                            whenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
                             the spread constraint.
                             - DoNotSchedule (default) tells the scheduler not to schedule it.
                             - ScheduleAnyway tells the scheduler to schedule the pod in any location,

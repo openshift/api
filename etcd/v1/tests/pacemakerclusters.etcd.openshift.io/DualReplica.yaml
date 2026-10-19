@@ -234,6 +234,7 @@ tests:
                       lastTransitionTime: "2024-01-01T00:00:00Z"
                       reason: Schedulable
                       message: "Schedulable"
+              fencingEventCount24h: 0
       expected: |
         apiVersion: etcd.openshift.io/v1
         kind: PacemakerCluster
@@ -437,6 +438,7 @@ tests:
                       lastTransitionTime: "2024-01-01T00:00:00Z"
                       reason: Schedulable
                       message: "Schedulable"
+              fencingEventCount24h: 0
     # Missing required conditions tests
     - name: Should reject cluster status missing Healthy condition
       initial: |
@@ -679,6 +681,7 @@ tests:
                       lastTransitionTime: "2024-01-01T00:00:00Z"
                       reason: Schedulable
                       message: "Schedulable"
+              fencingEventCount24h: 0
       expectedStatusError: "conditions must contain a condition of type FencingAvailable"
     # IP address validation tests
     - name: Should reject loopback IP address
@@ -890,6 +893,7 @@ tests:
                       lastTransitionTime: "2024-01-01T00:00:00Z"
                       reason: Schedulable
                       message: "Schedulable"
+              fencingEventCount24h: 0
       expectedStatusError: "must be a valid global unicast IPv4 or IPv6 address in canonical form"
     - name: Should reject invalid IP address format
       initial: |
@@ -1100,6 +1104,7 @@ tests:
                       lastTransitionTime: "2024-01-01T00:00:00Z"
                       reason: Schedulable
                       message: "Schedulable"
+              fencingEventCount24h: 0
       expectedStatusError: "must be a valid global unicast IPv4 or IPv6 address in canonical form"
     - name: Should accept valid IPv6 address
       initial: |
@@ -1310,6 +1315,7 @@ tests:
                       lastTransitionTime: "2024-01-01T00:00:00Z"
                       reason: Schedulable
                       message: "Schedulable"
+              fencingEventCount24h: 0
       expected: |
         apiVersion: etcd.openshift.io/v1
         kind: PacemakerCluster
@@ -1513,6 +1519,7 @@ tests:
                       lastTransitionTime: "2024-01-01T00:00:00Z"
                       reason: Schedulable
                       message: "Schedulable"
+              fencingEventCount24h: 0
     - name: Should reject IPv6 loopback address
       initial: |
         apiVersion: etcd.openshift.io/v1
@@ -1722,6 +1729,7 @@ tests:
                       lastTransitionTime: "2024-01-01T00:00:00Z"
                       reason: Schedulable
                       message: "Schedulable"
+              fencingEventCount24h: 0
       expectedStatusError: "must be a valid global unicast IPv4 or IPv6 address in canonical form"
     - name: Should reject IPv6 link-local address
       initial: |
@@ -1932,8 +1940,9 @@ tests:
                       lastTransitionTime: "2024-01-01T00:00:00Z"
                       reason: Schedulable
                       message: "Schedulable"
+              fencingEventCount24h: 0
       expectedStatusError: "must be a valid global unicast IPv4 or IPv6 address in canonical form"
-    - name: Should accept node with lastFenceEvent for a completed fence operation
+    - name: Should accept node with fencingEventCount24h reflecting recent fencing activity
       initial: |
         apiVersion: etcd.openshift.io/v1
         kind: PacemakerCluster
@@ -2018,12 +2027,7 @@ tests:
                   lastTransitionTime: "2024-01-01T00:00:00Z"
                   reason: FencingHealthy
                   message: "Fencing healthy"
-              lastFenceEvent:
-                action: reboot
-                status: success
-                client: crmd
-                lastUpdated: "2024-01-01T00:00:00Z"
-                completedTime: "2024-01-01T00:00:05Z"
+              fencingEventCount24h: 2
               resources:
                 - name: Kubelet
                   conditions:
@@ -2153,6 +2157,7 @@ tests:
                       lastTransitionTime: "2024-01-01T00:00:00Z"
                       reason: Schedulable
                       message: "Schedulable"
+              fencingEventCount24h: 0
       expected: |
         apiVersion: etcd.openshift.io/v1
         kind: PacemakerCluster
@@ -2232,12 +2237,7 @@ tests:
                   lastTransitionTime: "2024-01-01T00:00:00Z"
                   reason: FencingHealthy
                   message: "Fencing healthy"
-              lastFenceEvent:
-                action: reboot
-                status: success
-                client: crmd
-                lastUpdated: "2024-01-01T00:00:00Z"
-                completedTime: "2024-01-01T00:00:05Z"
+              fencingEventCount24h: 2
               resources:
                 - name: Kubelet
                   conditions:
@@ -2367,3 +2367,4 @@ tests:
                       lastTransitionTime: "2024-01-01T00:00:00Z"
                       reason: Schedulable
                       message: "Schedulable"
+              fencingEventCount24h: 0

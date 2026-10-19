@@ -671,7 +671,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		etcdv1.PacemakerClusterNodeStatus{}.OpenAPIModelName():                                 schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref),
 		etcdv1.PacemakerClusterResourceStatus{}.OpenAPIModelName():                             schema_openshift_api_etcd_v1_PacemakerClusterResourceStatus(ref),
 		etcdv1.PacemakerClusterStatus{}.OpenAPIModelName():                                     schema_openshift_api_etcd_v1_PacemakerClusterStatus(ref),
-		etcdv1.PacemakerFenceEvent{}.OpenAPIModelName():                                        schema_openshift_api_etcd_v1_PacemakerFenceEvent(ref),
 		etcdv1.PacemakerNodeAddress{}.OpenAPIModelName():                                       schema_openshift_api_etcd_v1_PacemakerNodeAddress(ref),
 		etcdv1alpha1.PacemakerCluster{}.OpenAPIModelName():                                     schema_openshift_api_etcd_v1alpha1_PacemakerCluster(ref),
 		etcdv1alpha1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName():                   schema_openshift_api_etcd_v1alpha1_PacemakerClusterFencingAgentStatus(ref),
@@ -679,7 +678,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		etcdv1alpha1.PacemakerClusterNodeStatus{}.OpenAPIModelName():                           schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref),
 		etcdv1alpha1.PacemakerClusterResourceStatus{}.OpenAPIModelName():                       schema_openshift_api_etcd_v1alpha1_PacemakerClusterResourceStatus(ref),
 		etcdv1alpha1.PacemakerClusterStatus{}.OpenAPIModelName():                               schema_openshift_api_etcd_v1alpha1_PacemakerClusterStatus(ref),
-		etcdv1alpha1.PacemakerFenceEvent{}.OpenAPIModelName():                                  schema_openshift_api_etcd_v1alpha1_PacemakerFenceEvent(ref),
 		etcdv1alpha1.PacemakerNodeAddress{}.OpenAPIModelName():                                 schema_openshift_api_etcd_v1alpha1_PacemakerNodeAddress(ref),
 		examplev1.CELUnion{}.OpenAPIModelName():                                                schema_openshift_api_example_v1_CELUnion(ref),
 		examplev1.EvolvingUnion{}.OpenAPIModelName():                                           schema_openshift_api_example_v1_EvolvingUnion(ref),
@@ -30339,19 +30337,19 @@ func schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref common.Referenc
 							},
 						},
 					},
-					"lastFenceEvent": {
+					"fencingEventCount24h": {
 						SchemaProps: spec.SchemaProps{
-							Description: "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken and its outcome. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(etcdv1.PacemakerFenceEvent{}.OpenAPIModelName()),
+							Description: "fencingEventCount24h is the number of fencing events recorded against this node in Pacemaker's fence history in the CIB within the trailing 24 hours, as of the last status collection. This is a count, not event detail: it exists to let an administrator detect repeated fencing (for example, a node being fenced multiple times in a short period due to a flapping fence device or an underlying hardware issue) without requiring per-event fields in this API. Individual fencing events are also recorded as Kubernetes Events in the operator's namespace, which can be consulted for event-level detail (action, outcome, requester, timestamps) while they remain within the cluster's event retention period. This field is required and is populated with 0 when no fencing events have been observed for this node in the trailing 24 hours; it is never omitted once the node's status is reported. The value must be between 0 and 1000, a sanity bound well above any realistic fencing rate: a healthy two-node cluster should see zero or one fencing events in a day, and sustained double-digit counts already indicate a cluster in a failure loop.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 				},
-				Required: []string{"conditions", "nodeName", "addresses", "resources", "fencingAgents"},
+				Required: []string{"conditions", "nodeName", "addresses", "resources", "fencingAgents", "fencingEventCount24h"},
 			},
 		},
 		Dependencies: []string{
-			etcdv1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1.PacemakerFenceEvent{}.OpenAPIModelName(), etcdv1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+			etcdv1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -30478,56 +30476,6 @@ func schema_openshift_api_etcd_v1_PacemakerClusterStatus(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			etcdv1.PacemakerClusterNodeStatus{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
-	}
-}
-
-func schema_openshift_api_etcd_v1_PacemakerFenceEvent(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during split-brain recovery or manually via stonith_admin. This struct captures the last fence event targeting a given node, providing visibility into what happened, its outcome, and whether it was triggered automatically by the cluster or manually by an operator.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"action": {
-						SchemaProps: spec.SchemaProps{
-							Description: "action is the type of fencing action that was performed or is in progress, as reported by Pacemaker. Common values are \"reboot\" (power-cycle the node), \"off\" (power off the node), and \"on\" (power on the node), but this is not an exhaustive list: Pacemaker's fence-event schema allows any string here, and other fence agents may report different values. The value must be between 1 and 64 characters.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "status is the outcome of the fencing operation. Valid values are \"success\" (the operation completed successfully), \"failed\" (the operation failed), and \"pending\" (the operation is currently in progress).\n\nPossible enum values:\n - `\"failed\"` means the fencing operation failed.\n - `\"pending\"` means the fencing operation is currently in progress.\n - `\"success\"` means the fencing operation completed successfully.",
-							Type:        []string{"string"},
-							Format:      "",
-							Enum:        []interface{}{"failed", "pending", "success"},
-						},
-					},
-					"client": {
-						SchemaProps: spec.SchemaProps{
-							Description: "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker. When provided, the value must be between 1 and 256 characters.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"lastUpdated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastUpdated is the timestamp when Pacemaker last updated this fence event record in the CIB. This timestamp is always present in the CIB fence history, including for pending operations where completedTime is not yet set. It must be a valid timestamp in RFC3339 format.",
-							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
-						},
-					},
-					"completedTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "completedTime is the timestamp when the fencing operation completed. This field is optional and is omitted when the fencing operation is still in progress (status \"pending\") or when Pacemaker has not recorded a completion time.",
-							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
-						},
-					},
-				},
-				Required: []string{"action", "status", "lastUpdated"},
-			},
-		},
-		Dependencies: []string{
-			metav1.Time{}.OpenAPIModelName()},
 	}
 }
 
@@ -30807,19 +30755,19 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref common.Re
 							},
 						},
 					},
-					"lastFenceEvent": {
+					"fencingEventCount24h": {
 						SchemaProps: spec.SchemaProps{
-							Description: "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken and its outcome. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(etcdv1alpha1.PacemakerFenceEvent{}.OpenAPIModelName()),
+							Description: "fencingEventCount24h is the number of fencing events recorded against this node in Pacemaker's fence history in the CIB within the trailing 24 hours, as of the last status collection. This is a count, not event detail: it exists to let an administrator detect repeated fencing (for example, a node being fenced multiple times in a short period due to a flapping fence device or an underlying hardware issue) without requiring per-event fields in this API. Individual fencing events are also recorded as Kubernetes Events in the operator's namespace, which can be consulted for event-level detail (action, outcome, requester, timestamps) while they remain within the cluster's event retention period. This field is required and is populated with 0 when no fencing events have been observed for this node in the trailing 24 hours; it is never omitted once the node's status is reported. The value must be between 0 and 1000, a sanity bound well above any realistic fencing rate: a healthy two-node cluster should see zero or one fencing events in a day, and sustained double-digit counts already indicate a cluster in a failure loop.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 				},
-				Required: []string{"conditions", "nodeName", "addresses", "resources", "fencingAgents"},
+				Required: []string{"conditions", "nodeName", "addresses", "resources", "fencingAgents", "fencingEventCount24h"},
 			},
 		},
 		Dependencies: []string{
-			etcdv1alpha1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerFenceEvent{}.OpenAPIModelName(), etcdv1alpha1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+			etcdv1alpha1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -30946,56 +30894,6 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterStatus(ref common.Refere
 		},
 		Dependencies: []string{
 			etcdv1alpha1.PacemakerClusterNodeStatus{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
-	}
-}
-
-func schema_openshift_api_etcd_v1alpha1_PacemakerFenceEvent(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during split-brain recovery or manually via stonith_admin. This struct captures the last fence event targeting a given node, providing visibility into what happened, its outcome, and whether it was triggered automatically by the cluster or manually by an operator.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"action": {
-						SchemaProps: spec.SchemaProps{
-							Description: "action is the type of fencing action that was performed or is in progress, as reported by Pacemaker. Common values are \"reboot\" (power-cycle the node), \"off\" (power off the node), and \"on\" (power on the node), but this is not an exhaustive list: Pacemaker's fence-event schema allows any string here, and other fence agents may report different values. The value must be between 1 and 64 characters.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "status is the outcome of the fencing operation. Valid values are \"success\" (the operation completed successfully), \"failed\" (the operation failed), and \"pending\" (the operation is currently in progress).\n\nPossible enum values:\n - `\"failed\"` means the fencing operation failed.\n - `\"pending\"` means the fencing operation is currently in progress.\n - `\"success\"` means the fencing operation completed successfully.",
-							Type:        []string{"string"},
-							Format:      "",
-							Enum:        []interface{}{"failed", "pending", "success"},
-						},
-					},
-					"client": {
-						SchemaProps: spec.SchemaProps{
-							Description: "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker. When provided, the value must be between 1 and 256 characters.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"lastUpdated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastUpdated is the timestamp when Pacemaker last updated this fence event record in the CIB. This timestamp is always present in the CIB fence history, including for pending operations where completedTime is not yet set. It must be a valid timestamp in RFC3339 format.",
-							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
-						},
-					},
-					"completedTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "completedTime is the timestamp when the fencing operation completed. This field is optional and is omitted when the fencing operation is still in progress (status \"pending\") or when Pacemaker has not recorded a completion time.",
-							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
-						},
-					},
-				},
-				Required: []string{"action", "status", "lastUpdated"},
-			},
-		},
-		Dependencies: []string{
-			metav1.Time{}.OpenAPIModelName()},
 	}
 }
 

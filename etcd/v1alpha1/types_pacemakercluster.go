@@ -494,88 +494,6 @@ const (
 	FencingMethodIPMI FencingMethod = "IPMI"
 )
 
-// PacemakerFenceEventAction represents the type of fencing action performed.
-// This is not a closed set: Pacemaker's fence-event XML schema (fence-event-2.15.rng)
-// defines the action attribute as an arbitrary string, so values outside the common
-// ones below are valid and must not be rejected.
-type PacemakerFenceEventAction string
-
-const (
-	// PacemakerFenceEventActionReboot is a fence action that power-cycles the target node.
-	PacemakerFenceEventActionReboot PacemakerFenceEventAction = "reboot"
-
-	// PacemakerFenceEventActionOff is a fence action that powers off the target node.
-	PacemakerFenceEventActionOff PacemakerFenceEventAction = "off"
-
-	// PacemakerFenceEventActionOn is a fence action that powers on the target node.
-	PacemakerFenceEventActionOn PacemakerFenceEventAction = "on"
-)
-
-// PacemakerFenceEventStatus represents the outcome of a fencing operation.
-// Values are lowercase per Pacemaker's fence-event XML schema (fence-event-2.15.rng).
-// +kubebuilder:validation:Enum=success;failed;pending
-// +enum
-type PacemakerFenceEventStatus string
-
-const (
-	// PacemakerFenceEventStatusSuccess means the fencing operation completed successfully.
-	PacemakerFenceEventStatusSuccess PacemakerFenceEventStatus = "success"
-
-	// PacemakerFenceEventStatusFailed means the fencing operation failed.
-	PacemakerFenceEventStatusFailed PacemakerFenceEventStatus = "failed"
-
-	// PacemakerFenceEventStatusPending means the fencing operation is currently in progress.
-	PacemakerFenceEventStatusPending PacemakerFenceEventStatus = "pending"
-)
-
-// PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events
-// are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during
-// split-brain recovery or manually via stonith_admin. This struct captures the last fence event
-// targeting a given node, providing visibility into what happened, its outcome, and whether it was
-// triggered automatically by the cluster or manually by an operator.
-type PacemakerFenceEvent struct {
-	// action is the type of fencing action that was performed or is in progress, as
-	// reported by Pacemaker. Common values are "reboot" (power-cycle the node), "off"
-	// (power off the node), and "on" (power on the node), but this is not an exhaustive
-	// list: Pacemaker's fence-event schema allows any string here, and other fence agents
-	// may report different values. The value must be between 1 and 64 characters.
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=64
-	// +required
-	Action PacemakerFenceEventAction `json:"action,omitempty"`
-
-	// status is the outcome of the fencing operation.
-	// Valid values are "success" (the operation completed successfully), "failed" (the operation
-	// failed), and "pending" (the operation is currently in progress).
-	// +required
-	Status PacemakerFenceEventStatus `json:"status,omitempty"`
-
-	// client identifies the daemon or tool that requested the fencing operation. Typical values
-	// are "crmd" for automatic recovery initiated by the cluster resource manager, or
-	// "stonith_admin" for manual fencing initiated by an operator. This is useful for
-	// distinguishing "the cluster fenced itself for cause" from "someone fenced a node manually"
-	// during incident review. This field is optional and is omitted when the client is not
-	// reported by Pacemaker. When provided, the value must be between 1 and 256 characters.
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=256
-	// +optional
-	Client string `json:"client,omitempty"`
-
-	// lastUpdated is the timestamp when Pacemaker last updated this fence event record in the CIB.
-	// This timestamp is always present in the CIB fence history, including for pending operations
-	// where completedTime is not yet set. It must be a valid timestamp in RFC3339 format.
-	// +kubebuilder:validation:Format=date-time
-	// +required
-	LastUpdated *metav1.Time `json:"lastUpdated,omitempty"`
-
-	// completedTime is the timestamp when the fencing operation completed. This field is optional
-	// and is omitted when the fencing operation is still in progress (status "pending") or when
-	// Pacemaker has not recorded a completion time.
-	// +kubebuilder:validation:Format=date-time
-	// +optional
-	CompletedTime *metav1.Time `json:"completedTime,omitempty"`
-}
-
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -738,14 +656,23 @@ type PacemakerClusterNodeStatus struct {
 	// +required
 	FencingAgents []PacemakerClusterFencingAgentStatus `json:"fencingAgents,omitempty"`
 
-	// lastFenceEvent is the most recent fencing event targeting this node, as recorded in
-	// Pacemaker's fence history in the CIB. This captures the last time this node was fenced
-	// (or a fence attempt was made), including the action taken and its outcome. When the
-	// Clean condition is False, this field provides the concrete fencing context behind the
-	// unclean state. This field is optional and is omitted when no fencing event has been
-	// observed for this node.
-	// +optional
-	LastFenceEvent PacemakerFenceEvent `json:"lastFenceEvent,omitempty,omitzero"`
+	// fencingEventCount24h is the number of fencing events recorded against this node in
+	// Pacemaker's fence history in the CIB within the trailing 24 hours, as of the last status
+	// collection. This is a count, not event detail: it exists to let an administrator detect
+	// repeated fencing (for example, a node being fenced multiple times in a short period due to
+	// a flapping fence device or an underlying hardware issue) without requiring per-event fields
+	// in this API. Individual fencing events are also recorded as Kubernetes Events in the
+	// operator's namespace, which can be consulted for event-level detail (action, outcome,
+	// requester, timestamps) while they remain within the cluster's event retention period. This
+	// field is required and is populated with 0 when no fencing events have been observed for
+	// this node in the trailing 24 hours; it is never omitted once the node's status is reported.
+	// The value must be between 0 and 1000, a sanity bound well above any realistic fencing rate:
+	// a healthy two-node cluster should see zero or one fencing events in a day, and sustained
+	// double-digit counts already indicate a cluster in a failure loop.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1000
+	// +required
+	FencingEventCount24h *int32 `json:"fencingEventCount24h,omitempty"`
 }
 
 // PacemakerClusterFencingAgentStatus represents the status of a fencing agent that can fence a node.

@@ -16851,7 +16851,8 @@
         "nodeName",
         "addresses",
         "resources",
-        "fencingAgents"
+        "fencingAgents",
+        "fencingEventCount24h"
       ],
       "properties": {
         "addresses": {
@@ -16887,10 +16888,10 @@
           ],
           "x-kubernetes-list-type": "map"
         },
-        "lastFenceEvent": {
-          "description": "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken and its outcome. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.etcd.v1.PacemakerFenceEvent"
+        "fencingEventCount24h": {
+          "description": "fencingEventCount24h is the number of fencing events recorded against this node in Pacemaker's fence history in the CIB within the trailing 24 hours, as of the last status collection. This is a count, not event detail: it exists to let an administrator detect repeated fencing (for example, a node being fenced multiple times in a short period due to a flapping fence device or an underlying hardware issue) without requiring per-event fields in this API. Individual fencing events are also recorded as Kubernetes Events in the operator's namespace, which can be consulted for event-level detail (action, outcome, requester, timestamps) while they remain within the cluster's event retention period. This field is required and is populated with 0 when no fencing events have been observed for this node in the trailing 24 hours; it is never omitted once the node's status is reported. The value must be between 0 and 1000, a sanity bound well above any realistic fencing rate: a healthy two-node cluster should see zero or one fencing events in a day, and sustained double-digit counts already indicate a cluster in a failure loop.",
+          "type": "integer",
+          "format": "int32"
         },
         "nodeName": {
           "description": "nodeName is the name of the node. This is expected to match the Kubernetes node's name, which must be a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character, and be at most 253 characters in length.",
@@ -16986,42 +16987,6 @@
             "nodeName"
           ],
           "x-kubernetes-list-type": "map"
-        }
-      }
-    },
-    "com.github.openshift.api.etcd.v1.PacemakerFenceEvent": {
-      "description": "PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during split-brain recovery or manually via stonith_admin. This struct captures the last fence event targeting a given node, providing visibility into what happened, its outcome, and whether it was triggered automatically by the cluster or manually by an operator.",
-      "type": "object",
-      "required": [
-        "action",
-        "status",
-        "lastUpdated"
-      ],
-      "properties": {
-        "action": {
-          "description": "action is the type of fencing action that was performed or is in progress, as reported by Pacemaker. Common values are \"reboot\" (power-cycle the node), \"off\" (power off the node), and \"on\" (power on the node), but this is not an exhaustive list: Pacemaker's fence-event schema allows any string here, and other fence agents may report different values. The value must be between 1 and 64 characters.",
-          "type": "string"
-        },
-        "client": {
-          "description": "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker. When provided, the value must be between 1 and 256 characters.",
-          "type": "string"
-        },
-        "completedTime": {
-          "description": "completedTime is the timestamp when the fencing operation completed. This field is optional and is omitted when the fencing operation is still in progress (status \"pending\") or when Pacemaker has not recorded a completion time.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "lastUpdated": {
-          "description": "lastUpdated is the timestamp when Pacemaker last updated this fence event record in the CIB. This timestamp is always present in the CIB fence history, including for pending operations where completedTime is not yet set. It must be a valid timestamp in RFC3339 format.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "status": {
-          "description": "status is the outcome of the fencing operation. Valid values are \"success\" (the operation completed successfully), \"failed\" (the operation failed), and \"pending\" (the operation is currently in progress).\n\nPossible enum values:\n - `\"failed\"` means the fencing operation failed.\n - `\"pending\"` means the fencing operation is currently in progress.\n - `\"success\"` means the fencing operation completed successfully.",
-          "type": "string",
-          "enum": [
-            "failed",
-            "pending",
-            "success"
-          ]
         }
       }
     },
@@ -17146,7 +17111,8 @@
         "nodeName",
         "addresses",
         "resources",
-        "fencingAgents"
+        "fencingAgents",
+        "fencingEventCount24h"
       ],
       "properties": {
         "addresses": {
@@ -17182,10 +17148,10 @@
           ],
           "x-kubernetes-list-type": "map"
         },
-        "lastFenceEvent": {
-          "description": "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken and its outcome. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerFenceEvent"
+        "fencingEventCount24h": {
+          "description": "fencingEventCount24h is the number of fencing events recorded against this node in Pacemaker's fence history in the CIB within the trailing 24 hours, as of the last status collection. This is a count, not event detail: it exists to let an administrator detect repeated fencing (for example, a node being fenced multiple times in a short period due to a flapping fence device or an underlying hardware issue) without requiring per-event fields in this API. Individual fencing events are also recorded as Kubernetes Events in the operator's namespace, which can be consulted for event-level detail (action, outcome, requester, timestamps) while they remain within the cluster's event retention period. This field is required and is populated with 0 when no fencing events have been observed for this node in the trailing 24 hours; it is never omitted once the node's status is reported. The value must be between 0 and 1000, a sanity bound well above any realistic fencing rate: a healthy two-node cluster should see zero or one fencing events in a day, and sustained double-digit counts already indicate a cluster in a failure loop.",
+          "type": "integer",
+          "format": "int32"
         },
         "nodeName": {
           "description": "nodeName is the name of the node. This is expected to match the Kubernetes node's name, which must be a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character, and be at most 253 characters in length.",
@@ -17281,42 +17247,6 @@
             "nodeName"
           ],
           "x-kubernetes-list-type": "map"
-        }
-      }
-    },
-    "com.github.openshift.api.etcd.v1alpha1.PacemakerFenceEvent": {
-      "description": "PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during split-brain recovery or manually via stonith_admin. This struct captures the last fence event targeting a given node, providing visibility into what happened, its outcome, and whether it was triggered automatically by the cluster or manually by an operator.",
-      "type": "object",
-      "required": [
-        "action",
-        "status",
-        "lastUpdated"
-      ],
-      "properties": {
-        "action": {
-          "description": "action is the type of fencing action that was performed or is in progress, as reported by Pacemaker. Common values are \"reboot\" (power-cycle the node), \"off\" (power off the node), and \"on\" (power on the node), but this is not an exhaustive list: Pacemaker's fence-event schema allows any string here, and other fence agents may report different values. The value must be between 1 and 64 characters.",
-          "type": "string"
-        },
-        "client": {
-          "description": "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker. When provided, the value must be between 1 and 256 characters.",
-          "type": "string"
-        },
-        "completedTime": {
-          "description": "completedTime is the timestamp when the fencing operation completed. This field is optional and is omitted when the fencing operation is still in progress (status \"pending\") or when Pacemaker has not recorded a completion time.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "lastUpdated": {
-          "description": "lastUpdated is the timestamp when Pacemaker last updated this fence event record in the CIB. This timestamp is always present in the CIB fence history, including for pending operations where completedTime is not yet set. It must be a valid timestamp in RFC3339 format.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "status": {
-          "description": "status is the outcome of the fencing operation. Valid values are \"success\" (the operation completed successfully), \"failed\" (the operation failed), and \"pending\" (the operation is currently in progress).\n\nPossible enum values:\n - `\"failed\"` means the fencing operation failed.\n - `\"pending\"` means the fencing operation is currently in progress.\n - `\"success\"` means the fencing operation completed successfully.",
-          "type": "string",
-          "enum": [
-            "failed",
-            "pending",
-            "success"
-          ]
         }
       }
     },

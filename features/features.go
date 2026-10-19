@@ -1134,4 +1134,12 @@ var (
 						productScope(kubernetes).
 						enhancementPR("https://github.com/kubernetes/enhancements/issues/5729").
 						mustRegister()
+
+	FeatureGateImagePolicyDenyByDefault = newFeatureGate("ImagePolicyDenyByDefault").
+						reportProblemsToJiraComponent("node").
+						contactPerson("QiWang19").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/2139").
+						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						mustRegister()
 )

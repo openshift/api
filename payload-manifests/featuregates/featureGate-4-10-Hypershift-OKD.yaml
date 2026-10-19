@@ -179,6 +179,9 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
+                        "name": "ImagePolicyDenyByDefault"
+                    },
+                    {
                         "name": "IngressComponentRouteLabels"
                     },
                     {

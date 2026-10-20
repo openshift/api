@@ -3264,6 +3264,58 @@ tests:
             retention:
               size: "0B"
       expectedError: 'must be "0" to disable size-based retention, or a positive byte-size string'
+    - name: Should preserve Alertmanager legacy timeoutSeconds
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutSeconds: 30
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutSeconds: 30
+    - name: Should preserve Alertmanager both timeout fields
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutSeconds: 30
+                timeoutMilliseconds: 500
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutSeconds: 30
+                timeoutMilliseconds: 500
     - name: Should accept Alertmanager timeoutMilliseconds 1
       initial: |
         apiVersion: config.openshift.io/v1alpha1

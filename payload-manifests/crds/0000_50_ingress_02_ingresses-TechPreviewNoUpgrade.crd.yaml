@@ -85,59 +85,84 @@ spec:
 
                           Each toleration has the following constraints:
 
-                          * operator, if specified, must be "Exists", "Equal", or the empty string;
-                            an omitted or empty operator means "Equal". The "Lt" and "Gt" operators
-                            are not supported.
-                          * effect, if specified, must be "NoSchedule", "PreferNoSchedule",
-                            "NoExecute", or the empty string; an omitted or empty effect means the
-                            toleration matches all taint effects.
+                          * operator is required and must be "Exists" or "Equal"; omitted and empty
+                            operators, as well as "Lt" and "Gt", are rejected.
+                          * effect is required and must be "NoSchedule", "PreferNoSchedule", or
+                            "NoExecute"; omitted and empty effects are rejected.
                           * value must be empty when operator is "Exists".
                           * key must be non-empty. A toleration with an empty key is rejected; in
                             particular, a toleration with an empty key and operator "Exists", which
                             tolerates all taints, is rejected.
+                          * key must be a qualified label key: a 1-63 character name consisting of
+                            alphanumeric characters, '-', '_', or '.', beginning and ending with an
+                            alphanumeric character, optionally preceded by a lowercase DNS subdomain
+                            prefix of at most 253 characters and a '/'. The total limit is 317 characters.
+                          * value for "Equal" must be empty or a label value of at most 63 characters,
+                            using the same characters and beginning/end constraints as the key name.
                           * tolerationSeconds may be specified only when effect is "NoExecute".
 
                           At least 1 and no more than 32 tolerations may be specified.
 
-                          Duplicate tolerations are allowed.
+                          List order, duplicate tolerations, and overlapping tolerations are preserved.
+                          For NoExecute, omitted tolerationSeconds means tolerating indefinitely;
+                          finite values are preserved, including zero and negative values.
 
                           See https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
                         items:
-                          description: |-
-                            The pod this Toleration is attached to tolerates any taint that matches
-                            the triple <key,value,effect> using the matching operator <operator>.
+                          description: CanaryToleration describes a toleration added
+                            to the ingress canary daemonset.
                           properties:
                             effect:
                               description: |-
-                                Effect indicates the taint effect to match. Empty means match all taint effects.
-                                When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
+                                effect is required and specifies the taint effect to match. Only NoSchedule,
+                                PreferNoSchedule, and NoExecute are allowed; omitted or empty effects are
+                                rejected. NoSchedule prevents scheduling, PreferNoSchedule expresses a
+                                scheduling preference, and NoExecute also evicts pods that do not tolerate it.
+                              enum:
+                              - NoSchedule
+                              - PreferNoSchedule
+                              - NoExecute
                               type: string
                             key:
                               description: |-
-                                Key is the taint key that the toleration applies to. Empty means match all taint keys.
-                                If the key is empty, operator must be Exists; this combination means to match all values and all keys.
+                                key is required and identifies the taint to tolerate. It must be a qualified
+                                label key of 1-317 characters: an alphanumeric-bounded name of 1-63
+                                characters using alphanumerics, '-', '_', or '.', optionally preceded by
+                                a lowercase DNS subdomain prefix of at most 253 characters and a '/'.
+                              maxLength: 317
+                              minLength: 1
                               type: string
                             operator:
                               description: |-
-                                Operator represents a key's relationship to the value.
-                                Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
-                                Exists is equivalent to wildcard for value, so that a pod can
-                                tolerate all taints of a particular category.
-                                Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
+                                operator is required and specifies how the taint value is matched.
+                                Equal matches the specified value; Exists matches any value and requires
+                                value to be empty or omitted. Only Equal and Exists are allowed;
+                                omitted or empty operators are rejected.
+                              enum:
+                              - Exists
+                              - Equal
                               type: string
                             tolerationSeconds:
                               description: |-
-                                TolerationSeconds represents the period of time the toleration (which must be
-                                of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
-                                it is not set, which means tolerate the taint forever (do not evict). Zero and
-                                negative values will be treated as 0 (evict immediately) by the system.
+                                tolerationSeconds is optional and may be set only for effect NoExecute.
+                                When omitted, the taint is tolerated indefinitely. When specified, this is
+                                the duration in seconds for which the taint is tolerated. Zero and negative
+                                values are preserved by the API and treated as zero by Kubernetes.
                               format: int64
                               type: integer
                             value:
                               description: |-
-                                Value is the taint value the toleration matches to.
-                                If the operator is Exists, the value should be empty, otherwise just a regular string.
+                                value is optional and defaults to the empty string when omitted. For Equal,
+                                it must be empty or a label value of at most 63 characters, consisting of
+                                alphanumerics, '-', '_', or '.', beginning and ending with an alphanumeric
+                                character. For Exists, it must be empty or omitted.
+                              maxLength: 63
+                              minLength: 0
                               type: string
+                          required:
+                          - effect
+                          - key
+                          - operator
                           type: object
                         maxItems: 32
                         minItems: 1
@@ -145,11 +170,11 @@ spec:
                         x-kubernetes-list-type: atomic
                         x-kubernetes-validations:
                         - message: tolerations operator must be 'Exists' or 'Equal'
-                          rule: self.all(t, !has(t.operator) || t.operator in ['',
-                            'Exists', 'Equal'])
+                          rule: self.all(t, has(t.operator) && t.operator in ['Exists',
+                            'Equal'])
                         - message: tolerations effect must be 'NoSchedule', 'PreferNoSchedule',
                             or 'NoExecute'
-                          rule: self.all(t, !has(t.effect) || t.effect in ['', 'NoSchedule',
+                          rule: self.all(t, has(t.effect) && t.effect in ['NoSchedule',
                             'PreferNoSchedule', 'NoExecute'])
                         - message: tolerations value must be empty when operator is
                             'Exists'
@@ -157,6 +182,14 @@ spec:
                             || !has(t.value) || t.value == '')
                         - message: tolerations key must be non-empty
                           rule: self.all(t, has(t.key) && t.key != '')
+                        - message: tolerations key must be a qualified label key with
+                            a name of 1-63 characters and an optional DNS prefix of
+                            at most 253 characters
+                          rule: self.all(t, !has(t.key) || !format.qualifiedName().validate(t.key).hasValue())
+                        - message: tolerations Equal value must be a valid label value
+                            of at most 63 characters
+                          rule: self.all(t, !has(t.operator) || t.operator != 'Equal'
+                            || !has(t.value) || !format.labelValue().validate(t.value).hasValue())
                         - message: tolerations effect must be 'NoExecute' when tolerationSeconds
                             is set
                           rule: self.all(t, !has(t.tolerationSeconds) || (has(t.effect)

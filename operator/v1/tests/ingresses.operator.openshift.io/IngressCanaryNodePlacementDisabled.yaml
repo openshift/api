@@ -9,6 +9,7 @@ tests:
   onCreate:
   - name: Strict admission with canary absent from schema
     fieldValidation: Strict
+    expectedWarnings: []
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress
@@ -26,6 +27,8 @@ tests:
     expectedError: unknown field "spec.canary"
   - name: Warn admission with canary absent from schema
     fieldValidation: Warn
+    expectedWarnings:
+    - unknown field "spec.canary"
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress
@@ -50,6 +53,7 @@ tests:
           managementMode: Managed
   - name: Ignore admission with canary absent from schema
     fieldValidation: Ignore
+    expectedWarnings: []
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress
@@ -75,6 +79,7 @@ tests:
   onUpdate:
   - name: Strict update with canary absent from schema
     fieldValidation: Strict
+    expectedWarnings: []
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress
@@ -100,6 +105,8 @@ tests:
     expectedError: unknown field "spec.canary"
   - name: Warn update with canary absent from schema
     fieldValidation: Warn
+    expectedWarnings:
+    - unknown field "spec.canary"
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress
@@ -132,6 +139,7 @@ tests:
           managementMode: Managed
   - name: Ignore update with canary absent from schema
     fieldValidation: Ignore
+    expectedWarnings: []
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress

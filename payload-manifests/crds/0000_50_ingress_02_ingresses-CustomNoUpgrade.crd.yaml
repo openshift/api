@@ -81,7 +81,9 @@ spec:
 
                           If unset, the canary daemonset has only its default tolerations. When
                           specified, the list must contain at least 1 toleration; to remove all
-                          additional tolerations, omit the field rather than setting an empty list.
+                          additional tolerations, omit the entire spec.canary field rather than
+                          setting an empty list or leaving empty parent objects. Retain at least one
+                          other valid spec field, such as spec.gatewayAPI, because spec must not be empty.
 
                           Each toleration has the following constraints:
 

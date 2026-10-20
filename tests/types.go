@@ -36,6 +36,12 @@ type TestSpec struct {
 
 // OnCreateTestSpec defines an individual test case for the on create style tests.
 type OnCreateTestSpec struct {
+	// ExpectedWarnings lists substrings that must match warning messages in the
+	// tested create request's final response, including errors after any retries.
+	// Every message must match at least one substring. Omitted
+	// or null skips warning assertions; an empty list requires no warnings.
+	ExpectedWarnings []string `json:"expectedWarnings"`
+
 	// FieldValidation selects server-side unknown field handling; empty uses the server default.
 	FieldValidation string `json:"fieldValidation,omitempty"`
 
@@ -67,6 +73,12 @@ type PerTestRuntimeInfo struct {
 
 // OnUpdateTestSpec defines an individual test case for the on update style tests.
 type OnUpdateTestSpec struct {
+	// ExpectedWarnings lists substrings that must match warning messages in the
+	// tested update request's final response, including errors after any retries.
+	// Every message must match at least one substring. Omitted
+	// or null skips warning assertions; an empty list requires no warnings.
+	ExpectedWarnings []string `json:"expectedWarnings"`
+
 	// FieldValidation selects server-side unknown field handling; empty uses the server default.
 	FieldValidation string `json:"fieldValidation,omitempty"`
 

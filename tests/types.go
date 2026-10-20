@@ -36,6 +36,9 @@ type TestSpec struct {
 
 // OnCreateTestSpec defines an individual test case for the on create style tests.
 type OnCreateTestSpec struct {
+	// FieldValidation selects server-side unknown field handling; empty uses the server default.
+	FieldValidation string `json:"fieldValidation,omitempty"`
+
 	// Name is the name of this test case.
 	Name string `json:"name"`
 
@@ -64,6 +67,9 @@ type PerTestRuntimeInfo struct {
 
 // OnUpdateTestSpec defines an individual test case for the on update style tests.
 type OnUpdateTestSpec struct {
+	// FieldValidation selects server-side unknown field handling; empty uses the server default.
+	FieldValidation string `json:"fieldValidation,omitempty"`
+
 	// Name is the name of this test case.
 	Name string `json:"name"`
 

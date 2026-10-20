@@ -288,6 +288,9 @@
                         "name": "OnPremDNSRecords"
                     },
                     {
+                        "name": "OpenStackMaxAllowedAddressPairs"
+                    },
+                    {
                         "name": "PodGroupPreemptionPolicy"
                     },
                     {

@@ -146,6 +146,11 @@ func (in CanaryNodePlacement) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in CanaryToleration) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.CanaryToleration"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in Capability) OpenAPIModelName() string {
 	return "com.github.openshift.api.operator.v1.Capability"
 }

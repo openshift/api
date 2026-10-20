@@ -611,6 +611,14 @@ var (
 							enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 							mustRegister()
 
+	FeatureGateOpenStackMaxAllowedAddressPairs = newFeatureGate("OpenStackMaxAllowedAddressPairs").
+							reportProblemsToJiraComponent("Cloud Compute / OpenStack Provider").
+							contactPerson("stephenfin").
+							productScope(ocpSpecific).
+							enhancementPR("https://github.com/openshift/enhancements/pull/2140").
+							enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+							mustRegister()
+
 	FeatureGateClusterAPIMachineManagementVSphere = newFeatureGate("ClusterAPIMachineManagementVSphere").
 							reportProblemsToJiraComponent("SPLAT").
 							contactPerson("jcpowermac").

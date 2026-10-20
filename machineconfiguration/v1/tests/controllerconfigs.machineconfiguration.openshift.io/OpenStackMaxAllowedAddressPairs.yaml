@@ -1,0 +1,300 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "OpenStackMaxAllowedAddressPairs ControllerConfig"
+crdName: controllerconfigs.machineconfiguration.openshift.io
+featureGates:
+- OpenStackMaxAllowedAddressPairs
+tests:
+  onCreate:
+  - name: Should allow omitting maxAllowedAddressPairs
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1
+      kind: ControllerConfig
+      spec:
+        additionalTrustBundle: Y2VydGlmaWNhdGUK
+        baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+        cloudProviderCAData: null
+        cloudProviderConfig: ""
+        clusterDNSIP: fd02::a
+        dns:
+          apiVersion: config.openshift.io/v1
+          kind: DNS
+          spec:
+            baseDomain: fake.redhat.com
+        images:
+          machineConfigOperator: rexample.com/example/openshift-release-dev@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
+        infra:
+          apiVersion: config.openshift.io/v1
+          kind: Infrastructure
+          spec:
+            platformSpec:
+              type: OpenStack
+              openstack: {}
+        ipFamilies: IPv6
+        kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+        network: null
+        networkType: OVNKubernetes
+        osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
+        platform: OpenStack
+        proxy: null
+        pullSecret:
+          name: pull-secret
+          namespace: openshift-config
+        releaseImage: ""
+        rootCAData: Y2VydGlmaWNhdGUK
+    expected: |
+      apiVersion: machineconfiguration.openshift.io/v1
+      kind: ControllerConfig
+      spec:
+        additionalTrustBundle: Y2VydGlmaWNhdGUK
+        baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+        cloudProviderCAData: null
+        cloudProviderConfig: ""
+        clusterDNSIP: fd02::a
+        dns:
+          apiVersion: config.openshift.io/v1
+          kind: DNS
+          spec:
+            baseDomain: fake.redhat.com
+        images:
+          machineConfigOperator: rexample.com/example/openshift-release-dev@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
+        infra:
+          apiVersion: config.openshift.io/v1
+          kind: Infrastructure
+          spec:
+            platformSpec:
+              type: OpenStack
+              openstack: {}
+        ipFamilies: IPv6
+        kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+        network: null
+        networkType: OVNKubernetes
+        osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
+        platform: OpenStack
+        proxy: null
+        pullSecret:
+          name: pull-secret
+          namespace: openshift-config
+        releaseImage: ""
+        rootCAData: Y2VydGlmaWNhdGUK
+  - name: Should allow the minimum maxAllowedAddressPairs value
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1
+      kind: ControllerConfig
+      spec:
+        additionalTrustBundle: Y2VydGlmaWNhdGUK
+        baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+        cloudProviderCAData: null
+        cloudProviderConfig: ""
+        clusterDNSIP: fd02::a
+        dns:
+          apiVersion: config.openshift.io/v1
+          kind: DNS
+          spec:
+            baseDomain: fake.redhat.com
+        images:
+          machineConfigOperator: rexample.com/example/openshift-release-dev@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
+        infra:
+          apiVersion: config.openshift.io/v1
+          kind: Infrastructure
+          spec:
+            platformSpec:
+              type: OpenStack
+              openstack:
+                maxAllowedAddressPairs: 1
+        ipFamilies: IPv6
+        kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+        network: null
+        networkType: OVNKubernetes
+        osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
+        platform: OpenStack
+        proxy: null
+        pullSecret:
+          name: pull-secret
+          namespace: openshift-config
+        releaseImage: ""
+        rootCAData: Y2VydGlmaWNhdGUK
+    expected: |
+      apiVersion: machineconfiguration.openshift.io/v1
+      kind: ControllerConfig
+      spec:
+        additionalTrustBundle: Y2VydGlmaWNhdGUK
+        baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+        cloudProviderCAData: null
+        cloudProviderConfig: ""
+        clusterDNSIP: fd02::a
+        dns:
+          apiVersion: config.openshift.io/v1
+          kind: DNS
+          spec:
+            baseDomain: fake.redhat.com
+        images:
+          machineConfigOperator: rexample.com/example/openshift-release-dev@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
+        infra:
+          apiVersion: config.openshift.io/v1
+          kind: Infrastructure
+          spec:
+            platformSpec:
+              type: OpenStack
+              openstack:
+                maxAllowedAddressPairs: 1
+        ipFamilies: IPv6
+        kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+        network: null
+        networkType: OVNKubernetes
+        osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
+        platform: OpenStack
+        proxy: null
+        pullSecret:
+          name: pull-secret
+          namespace: openshift-config
+        releaseImage: ""
+        rootCAData: Y2VydGlmaWNhdGUK
+  - name: Should allow the maximum maxAllowedAddressPairs value
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1
+      kind: ControllerConfig
+      spec:
+        additionalTrustBundle: Y2VydGlmaWNhdGUK
+        baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+        cloudProviderCAData: null
+        cloudProviderConfig: ""
+        clusterDNSIP: fd02::a
+        dns:
+          apiVersion: config.openshift.io/v1
+          kind: DNS
+          spec:
+            baseDomain: fake.redhat.com
+        images:
+          machineConfigOperator: rexample.com/example/openshift-release-dev@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
+        infra:
+          apiVersion: config.openshift.io/v1
+          kind: Infrastructure
+          spec:
+            platformSpec:
+              type: OpenStack
+              openstack:
+                maxAllowedAddressPairs: 2147483647
+        ipFamilies: IPv6
+        kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+        network: null
+        networkType: OVNKubernetes
+        osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
+        platform: OpenStack
+        proxy: null
+        pullSecret:
+          name: pull-secret
+          namespace: openshift-config
+        releaseImage: ""
+        rootCAData: Y2VydGlmaWNhdGUK
+    expected: |
+      apiVersion: machineconfiguration.openshift.io/v1
+      kind: ControllerConfig
+      spec:
+        additionalTrustBundle: Y2VydGlmaWNhdGUK
+        baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+        cloudProviderCAData: null
+        cloudProviderConfig: ""
+        clusterDNSIP: fd02::a
+        dns:
+          apiVersion: config.openshift.io/v1
+          kind: DNS
+          spec:
+            baseDomain: fake.redhat.com
+        images:
+          machineConfigOperator: rexample.com/example/openshift-release-dev@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
+        infra:
+          apiVersion: config.openshift.io/v1
+          kind: Infrastructure
+          spec:
+            platformSpec:
+              type: OpenStack
+              openstack:
+                maxAllowedAddressPairs: 2147483647
+        ipFamilies: IPv6
+        kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+        network: null
+        networkType: OVNKubernetes
+        osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
+        platform: OpenStack
+        proxy: null
+        pullSecret:
+          name: pull-secret
+          namespace: openshift-config
+        releaseImage: ""
+        rootCAData: Y2VydGlmaWNhdGUK
+  - name: Should reject maxAllowedAddressPairs below the minimum
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1
+      kind: ControllerConfig
+      spec:
+        additionalTrustBundle: Y2VydGlmaWNhdGUK
+        baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+        cloudProviderCAData: null
+        cloudProviderConfig: ""
+        clusterDNSIP: fd02::a
+        dns:
+          apiVersion: config.openshift.io/v1
+          kind: DNS
+          spec:
+            baseDomain: fake.redhat.com
+        images:
+          machineConfigOperator: rexample.com/example/openshift-release-dev@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
+        infra:
+          apiVersion: config.openshift.io/v1
+          kind: Infrastructure
+          spec:
+            platformSpec:
+              type: OpenStack
+              openstack:
+                maxAllowedAddressPairs: 0
+        ipFamilies: IPv6
+        kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+        network: null
+        networkType: OVNKubernetes
+        osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
+        platform: OpenStack
+        proxy: null
+        pullSecret:
+          name: pull-secret
+          namespace: openshift-config
+        releaseImage: ""
+        rootCAData: Y2VydGlmaWNhdGUK
+    expectedError: "maxAllowedAddressPairs in body should be greater than or equal to 1"
+  - name: Should reject maxAllowedAddressPairs above the maximum
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1
+      kind: ControllerConfig
+      spec:
+        additionalTrustBundle: Y2VydGlmaWNhdGUK
+        baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+        cloudProviderCAData: null
+        cloudProviderConfig: ""
+        clusterDNSIP: fd02::a
+        dns:
+          apiVersion: config.openshift.io/v1
+          kind: DNS
+          spec:
+            baseDomain: fake.redhat.com
+        images:
+          machineConfigOperator: rexample.com/example/openshift-release-dev@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
+        infra:
+          apiVersion: config.openshift.io/v1
+          kind: Infrastructure
+          spec:
+            platformSpec:
+              type: OpenStack
+              openstack:
+                maxAllowedAddressPairs: 2147483648
+        ipFamilies: IPv6
+        kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+        network: null
+        networkType: OVNKubernetes
+        osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
+        platform: OpenStack
+        proxy: null
+        pullSecret:
+          name: pull-secret
+          namespace: openshift-config
+        releaseImage: ""
+        rootCAData: Y2VydGlmaWNhdGUK
+    expectedError: "maxAllowedAddressPairs in body should be less than or equal to 2147483647"

@@ -1,0 +1,3314 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Ingress"
+crdName: ingresses.operator.openshift.io
+version: v1
+featureGates:
+- IngressCanaryNodePlacement
+tests:
+  onCreate:
+  - name: Should be able to create an Ingress with canary nodePlacement tolerations
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: NoSchedule
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: NoSchedule
+  - name: Should not be able to create an Ingress with a wildcard toleration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - operator: Exists
+              effect: NoSchedule
+    expectedError: spec.canary.nodePlacement.tolerations[0].key
+  - name: Should be able to create an Ingress with tolerationSeconds on a NoExecute toleration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: node.kubernetes.io/unreachable
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 60
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: node.kubernetes.io/unreachable
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 60
+  - name: Should be able to create an Ingress with duplicate tolerations
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+  - name: Should be able to create an Ingress with both canary and gatewayAPI configuration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+  - name: Should not be able to create an Ingress with an unknown toleration operator
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Matches
+              effect: NoSchedule
+              value: value-1
+    expectedError: spec.canary.nodePlacement.tolerations[0].operator
+  - name: Should not be able to create an Ingress with an unknown toleration effect
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: NoOp
+    expectedError: spec.canary.nodePlacement.tolerations[0].effect
+  - name: Should not be able to create an Ingress with a value on an Exists toleration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations value must be empty when operator is 'Exists'
+  - name: Should not be able to create an Ingress with an empty toleration key
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: spec.canary.nodePlacement.tolerations[0].key
+  - name: Should not be able to create an Ingress with tolerationSeconds on a non-NoExecute toleration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: NoSchedule
+              tolerationSeconds: 60
+    expectedError: tolerations effect must be 'NoExecute' when tolerationSeconds is set
+  - name: Should not be able to create an Ingress with more than 32 tolerations
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+    expectedError: must have at most 32 items
+  - name: Should not be able to create an Ingress with an empty tolerations list
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations: []
+    expectedError: should have at least 1 items
+  - name: Should not be able to create an Ingress with an empty canary
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary: {}
+    expectedError: spec.canary in body should have at least 1 properties
+  - name: Should not be able to create an Ingress with an empty canary nodePlacement
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement: {}
+    expectedError: spec.canary.nodePlacement in body should have at least 1 properties
+  - name: Should not be able to create an Ingress with a toleration that omits operator
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              value: value-1
+    expectedError: spec.canary.nodePlacement.tolerations[0].operator
+  - name: Should not be able to create an Ingress with a toleration with an empty operator
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: ""
+              effect: NoSchedule
+              value: value-1
+    expectedError: spec.canary.nodePlacement.tolerations[0].operator
+  - name: Should not be able to create an Ingress with a toleration with an empty effect
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: ""
+    expectedError: spec.canary.nodePlacement.tolerations[0].effect
+  - name: Should be able to create an Ingress with an Exists toleration with an empty value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+              value: ""
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+              value: ""
+  - name: Should be able to create an Ingress with a PreferNoSchedule toleration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: PreferNoSchedule
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: PreferNoSchedule
+  - name: Should be able to create an Ingress with exactly 32 tolerations
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+  - name: Should not be able to create an Ingress with the unsupported Lt toleration operator
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Lt
+              effect: NoSchedule
+              value: "1"
+    expectedError: spec.canary.nodePlacement.tolerations[0].operator
+  - name: Should not be able to create an Ingress with tolerationSeconds and no effect
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              tolerationSeconds: 60
+    expectedError: spec.canary.nodePlacement.tolerations[0].effect
+  - name: Should not be able to create an Ingress with a toleration that omits both key and operator
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - effect: NoSchedule
+    expectedError: spec.canary.nodePlacement.tolerations[0].key
+  - name: valid key 63
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+  - name: valid key 264
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Name_1.2-3
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Name_1.2-3
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+  - name: valid key 317
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+  - name: valid key 10
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: Name_1.2-3
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: Name_1.2-3
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+  - name: invalid key bad$key
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: bad$key
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key -name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: -name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key name-
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: name-
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key .name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: .name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key name.
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: name.
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key _name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: _name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key name_
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: name_
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key Example.com/name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: Example.com/name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key bad_prefix/name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: bad_prefix/name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key -prefix/name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: -prefix/name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key prefix-/name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: prefix-/name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key .prefix/name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: .prefix/name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key prefix./name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: prefix./name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key prefix..name/name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: prefix..name/name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key prefix//name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: prefix//name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key prefix/name/extra
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: prefix/name/extra
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key /name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: /name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key prefix/
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: prefix/
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: valid Equal value 0
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: ''
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: ''
+  - name: valid Equal value 63
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  - name: valid Equal value 7
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: A_b.c-9
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: A_b.c-9
+  - name: invalid Equal value aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    expectedError: spec.canary.nodePlacement.tolerations[0].value
+  - name: invalid Equal value bad/value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: bad/value
+    expectedError: tolerations Equal value must be
+  - name: invalid Equal value bad$value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: bad$value
+    expectedError: tolerations Equal value must be
+  - name: invalid Equal value -value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: -value
+    expectedError: tolerations Equal value must be
+  - name: invalid Equal value value-
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-
+    expectedError: tolerations Equal value must be
+  - name: invalid Equal value .value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: .value
+    expectedError: tolerations Equal value must be
+  - name: invalid Equal value value.
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value.
+    expectedError: tolerations Equal value must be
+  - name: invalid Equal value _value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: _value
+    expectedError: tolerations Equal value must be
+  - name: invalid Equal value value_
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value_
+    expectedError: tolerations Equal value must be
+  - name: reject operator absent
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              effect: NoSchedule
+              value: value-1
+    expectedError: spec.canary.nodePlacement.tolerations[0].operator
+  - name: reject operator empty
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: ''
+              effect: NoSchedule
+              value: value-1
+    expectedError: spec.canary.nodePlacement.tolerations[0].operator
+  - name: reject effect absent
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+    expectedError: spec.canary.nodePlacement.tolerations[0].effect
+  - name: reject effect empty
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: ''
+              value: value-1
+    expectedError: spec.canary.nodePlacement.tolerations[0].effect
+  - name: reject empty Exists key
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: ''
+              operator: Exists
+              effect: NoSchedule
+    expectedError: spec.canary.nodePlacement.tolerations[0].key
+  - name: Preserves ordered duplicates overlaps and indefinite finite zero negative durations
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 30
+            - key: example.com/taint
+              operator: Equal
+              effect: NoExecute
+              value: value-1
+              tolerationSeconds: 90
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 0
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: -1
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 30
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 30
+            - key: example.com/taint
+              operator: Equal
+              effect: NoExecute
+              value: value-1
+              tolerationSeconds: 90
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 0
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: -1
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 30
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+  - name: Accepts 64 character single-label prefix
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+  - name: Accepts 253 character single-label prefix
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+  - name: Rejects combined key length 318
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: spec.canary.nodePlacement.tolerations[0].key
+  - name: Rejects non-ASCII label key
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: "example.com/t\xE4int"
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: Rejects non-ASCII label value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: "v\xE4lue"
+    expectedError: tolerations Equal value must be
+  - name: Accepts Equal with omitted value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+  - name: Accepts Exists with explicit empty value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+              value: ''
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+              value: ''
+  onUpdate:
+  - name: Should be able to update the canary tolerations of an Ingress
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/other-taint
+              operator: Exists
+              effect: NoExecute
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/other-taint
+              operator: Exists
+              effect: NoExecute
+  - name: Should be able to add canary configuration to an Ingress
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+  - name: Should be able to remove the canary configuration from an Ingress
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+  - name: Should not be able to update an Ingress with an unknown toleration operator
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Matches
+              effect: NoSchedule
+              value: value-1
+    expectedError: spec.canary.nodePlacement.tolerations[0].operator
+  - name: valid key 63
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+  - name: valid key 264
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Name_1.2-3
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Name_1.2-3
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+  - name: valid key 317
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+  - name: valid key 10
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: Name_1.2-3
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: Name_1.2-3
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+  - name: invalid key bad$key
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: bad$key
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key -name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: -name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key name-
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: name-
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key .name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: .name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key name.
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: name.
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key _name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: _name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key name_
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: name_
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key Example.com/name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: Example.com/name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key bad_prefix/name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: bad_prefix/name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key -prefix/name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: -prefix/name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key prefix-/name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: prefix-/name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key .prefix/name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: .prefix/name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key prefix./name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: prefix./name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key prefix..name/name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: prefix..name/name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key prefix//name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: prefix//name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key prefix/name/extra
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: prefix/name/extra
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key /name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: /name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key prefix/
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: prefix/
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: invalid key aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/name
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: valid Equal value 0
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: ''
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: ''
+  - name: valid Equal value 63
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  - name: valid Equal value 7
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: A_b.c-9
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: A_b.c-9
+  - name: invalid Equal value aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    expectedError: spec.canary.nodePlacement.tolerations[0].value
+  - name: invalid Equal value bad/value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: bad/value
+    expectedError: tolerations Equal value must be
+  - name: invalid Equal value bad$value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: bad$value
+    expectedError: tolerations Equal value must be
+  - name: invalid Equal value -value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: -value
+    expectedError: tolerations Equal value must be
+  - name: invalid Equal value value-
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-
+    expectedError: tolerations Equal value must be
+  - name: invalid Equal value .value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: .value
+    expectedError: tolerations Equal value must be
+  - name: invalid Equal value value.
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value.
+    expectedError: tolerations Equal value must be
+  - name: invalid Equal value _value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: _value
+    expectedError: tolerations Equal value must be
+  - name: invalid Equal value value_
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value_
+    expectedError: tolerations Equal value must be
+  - name: reject operator absent
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              effect: NoSchedule
+              value: value-1
+    expectedError: spec.canary.nodePlacement.tolerations[0].operator
+  - name: reject operator empty
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: ''
+              effect: NoSchedule
+              value: value-1
+    expectedError: spec.canary.nodePlacement.tolerations[0].operator
+  - name: reject effect absent
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+    expectedError: spec.canary.nodePlacement.tolerations[0].effect
+  - name: reject effect empty
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: ''
+              value: value-1
+    expectedError: spec.canary.nodePlacement.tolerations[0].effect
+  - name: reject empty Exists key
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: ''
+              operator: Exists
+              effect: NoSchedule
+    expectedError: spec.canary.nodePlacement.tolerations[0].key
+  - name: Preserves ordered duplicates overlaps and indefinite finite zero negative durations
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 30
+            - key: example.com/taint
+              operator: Equal
+              effect: NoExecute
+              value: value-1
+              tolerationSeconds: 90
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 0
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: -1
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 30
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 30
+            - key: example.com/taint
+              operator: Equal
+              effect: NoExecute
+              value: value-1
+              tolerationSeconds: 90
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 0
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: -1
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 30
+            - key: example.com/taint
+              operator: Exists
+              effect: NoExecute
+  - name: Accepts 64 character single-label prefix
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+  - name: Accepts 253 character single-label prefix
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+  - name: Rejects combined key length 318
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: spec.canary.nodePlacement.tolerations[0].key
+  - name: Rejects non-ASCII label key
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: "example.com/t\xE4int"
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    expectedError: tolerations key must be a qualified label key
+  - name: Rejects non-ASCII label value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: "v\xE4lue"
+    expectedError: tolerations Equal value must be
+  - name: Accepts Equal with omitted value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+  - name: Accepts Exists with explicit empty value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+              value: ''
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+              value: ''

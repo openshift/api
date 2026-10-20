@@ -1,0 +1,172 @@
+apiVersion: apiextensions.k8s.io/v1
+name: Ingress canary schema absent
+crdName: ingresses.operator.openshift.io
+version: v1
+featureGates:
+- GatewayAPIManagementMode
+- -IngressCanaryNodePlacement
+tests:
+  onCreate:
+  - name: Strict admission with canary absent from schema
+    fieldValidation: Strict
+    expectedWarnings: []
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+    expectedError: unknown field "spec.canary"
+  - name: Warn admission with canary absent from schema
+    fieldValidation: Warn
+    expectedWarnings:
+    - unknown field "spec.canary"
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+  - name: Ignore admission with canary absent from schema
+    fieldValidation: Ignore
+    expectedWarnings: []
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+  onUpdate:
+  - name: Strict update with canary absent from schema
+    fieldValidation: Strict
+    expectedWarnings: []
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+    expectedError: unknown field "spec.canary"
+  - name: Warn update with canary absent from schema
+    fieldValidation: Warn
+    expectedWarnings:
+    - unknown field "spec.canary"
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+  - name: Ignore update with canary absent from schema
+    fieldValidation: Ignore
+    expectedWarnings: []
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              effect: NoSchedule
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed

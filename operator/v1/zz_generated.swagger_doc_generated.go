@@ -917,6 +917,28 @@ func (EtcdSpec) SwaggerDoc() map[string]string {
 	return map_EtcdSpec
 }
 
+var map_CanaryNodePlacement = map[string]string{
+	"":            "CanaryNodePlacement describes node placement configuration for the ingress canary daemonset pods.",
+	"tolerations": "tolerations is a list of tolerations that are applied to the ingress canary daemonset pods in addition to the tolerations the canary daemonset has by default. The default toleration for the node-role.kubernetes.io/infra taint is always preserved.\n\nIf unset, the canary daemonset has only its default tolerations. When specified, the list must contain at least 1 toleration; to remove all additional tolerations, omit the entire spec.canary field rather than setting an empty list or leaving empty parent objects. Retain at least one other valid spec field, such as spec.gatewayAPI, because spec must not be empty.\n\nEach toleration has the following constraints:\n\n* operator is required and must be \"Exists\" or \"Equal\"; omitted and empty\n  operators, as well as \"Lt\" and \"Gt\", are rejected.\n* effect is required and must be \"NoSchedule\", \"PreferNoSchedule\", or\n  \"NoExecute\"; omitted and empty effects are rejected.\n* value must be empty when operator is \"Exists\". * key must be non-empty. A toleration with an empty key is rejected; in\n  particular, a toleration with an empty key and operator \"Exists\", which\n  tolerates all taints, is rejected.\n* key must be a qualified label key: a 1-63 character name consisting of\n  alphanumeric characters, '-', '_', or '.', beginning and ending with an\n  alphanumeric character, optionally preceded by a lowercase DNS subdomain\n  prefix of at most 253 characters and a '/'. The total limit is 317 characters.\n* value for \"Equal\" must be empty or a label value of at most 63 characters,\n  using the same characters and beginning/end constraints as the key name.\n* tolerationSeconds may be specified only when effect is \"NoExecute\".\n\nAt least 1 and no more than 32 tolerations may be specified.\n\nList order, duplicate tolerations, and overlapping tolerations are preserved. For NoExecute, omitted tolerationSeconds means tolerating indefinitely; finite values are preserved, including zero and negative values.\n\nSee https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/",
+}
+
+func (CanaryNodePlacement) SwaggerDoc() map[string]string {
+	return map_CanaryNodePlacement
+}
+
+var map_CanaryToleration = map[string]string{
+	"":                  "CanaryToleration describes a toleration added to the ingress canary daemonset.",
+	"key":               "key is required and identifies the taint to tolerate. It must be a qualified label key of 1-317 characters: an alphanumeric-bounded name of 1-63 characters using alphanumerics, '-', '_', or '.', optionally preceded by a lowercase DNS subdomain prefix of at most 253 characters and a '/'.",
+	"operator":          "operator is required and specifies how the taint value is matched. Equal matches the specified value; Exists matches any value and requires value to be empty or omitted. Only Equal and Exists are allowed; omitted or empty operators are rejected.",
+	"value":             "value is optional and defaults to the empty string when omitted. For Equal, it must be empty or a label value of at most 63 characters, consisting of alphanumerics, '-', '_', or '.', beginning and ending with an alphanumeric character. For Exists, it must be empty or omitted.",
+	"effect":            "effect is required and specifies the taint effect to match. Only NoSchedule, PreferNoSchedule, and NoExecute are allowed; omitted or empty effects are rejected. NoSchedule prevents scheduling, PreferNoSchedule expresses a scheduling preference, and NoExecute also evicts pods that do not tolerate it.",
+	"tolerationSeconds": "tolerationSeconds is optional and may be set only for effect NoExecute. When omitted, the taint is tolerated indefinitely. When specified, this is the duration in seconds for which the taint is tolerated. Zero and negative values are preserved by the API and treated as zero by Kubernetes.",
+}
+
+func (CanaryToleration) SwaggerDoc() map[string]string {
+	return map_CanaryToleration
+}
+
 var map_GatewayAPIIngressConfig = map[string]string{
 	"":               "GatewayAPIIngressConfig holds configuration for Gateway API integration in the Cluster Ingress Operator.",
 	"managementMode": "managementMode specifies how the Cluster Ingress Operator manages Gateway API Custom Resource Definitions (CRDs), the OpenShift Gateway API implementation, and its Gateway API controllers.\n\nAllowed values are \"Managed\" and \"Unmanaged\".\n\nWhen omitted or set to \"Managed\", the ingress operator installs, owns, and upgrades the Gateway API CRDs, protects them with a Validating Admission Policy, and deploys the OpenShift Gateway API implementation and its Gateway API controllers.\n\nWhen set to \"Unmanaged\", the ingress operator does not install or manage Gateway API CRDs and does not deploy the OpenShift Gateway API implementation or its Gateway API controllers. The cluster administrator or a third-party product is responsible for providing their own CRDs and Gateway controller. The ingress operator reports observational status only.",
@@ -937,6 +959,15 @@ func (Ingress) SwaggerDoc() map[string]string {
 	return map_Ingress
 }
 
+var map_IngressCanary = map[string]string{
+	"":              "IngressCanary holds configuration for the ingress canary daemonset.",
+	"nodePlacement": "nodePlacement enables explicit control over the scheduling of the ingress canary daemonset pods.\n\nnodePlacement is optional. To leave the canary daemonset with its default scheduling configuration, which tolerates the node-role.kubernetes.io/infra taint, omit the parent canary field entirely: because canary requires at least one field, nodePlacement can only be absent when canary itself is absent. When specified, nodePlacement must set at least one of its fields; an empty object is rejected.",
+}
+
+func (IngressCanary) SwaggerDoc() map[string]string {
+	return map_IngressCanary
+}
+
 var map_IngressList = map[string]string{
 	"":         "IngressList is a collection of Ingresses.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
@@ -950,6 +981,7 @@ func (IngressList) SwaggerDoc() map[string]string {
 var map_IngressSpec = map[string]string{
 	"":           "IngressSpec is the specification of the desired behavior of the Ingress Operator.",
 	"gatewayAPI": "gatewayAPI holds configuration for Gateway API integration, including how the ingress operator manages Gateway API CRDs, the OpenShift Gateway API implementation, and its Gateway API controllers.",
+	"canary":     "canary holds configuration for the ingress canary daemonset (the ingress-canary DaemonSet in the openshift-ingress-canary namespace).\n\ncanary is optional. When omitted, the ingress canary daemonset keeps its default configuration. When specified, canary must set at least one of its fields; an empty object is rejected.",
 }
 
 func (IngressSpec) SwaggerDoc() map[string]string {

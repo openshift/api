@@ -1141,6 +1141,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1.CSISnapshotControllerList{}.OpenAPIModelName():                              schema_openshift_api_operator_v1_CSISnapshotControllerList(ref),
 		operatorv1.CSISnapshotControllerSpec{}.OpenAPIModelName():                              schema_openshift_api_operator_v1_CSISnapshotControllerSpec(ref),
 		operatorv1.CSISnapshotControllerStatus{}.OpenAPIModelName():                            schema_openshift_api_operator_v1_CSISnapshotControllerStatus(ref),
+		operatorv1.CanaryNodePlacement{}.OpenAPIModelName():                                    schema_openshift_api_operator_v1_CanaryNodePlacement(ref),
+		operatorv1.CanaryToleration{}.OpenAPIModelName():                                       schema_openshift_api_operator_v1_CanaryToleration(ref),
 		operatorv1.Capability{}.OpenAPIModelName():                                             schema_openshift_api_operator_v1_Capability(ref),
 		operatorv1.CapabilityVisibility{}.OpenAPIModelName():                                   schema_openshift_api_operator_v1_CapabilityVisibility(ref),
 		operatorv1.ClientTLS{}.OpenAPIModelName():                                              schema_openshift_api_operator_v1_ClientTLS(ref),
@@ -1218,6 +1220,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1.IPv6GatewayConfig{}.OpenAPIModelName():                                      schema_openshift_api_operator_v1_IPv6GatewayConfig(ref),
 		operatorv1.IPv6OVNKubernetesConfig{}.OpenAPIModelName():                                schema_openshift_api_operator_v1_IPv6OVNKubernetesConfig(ref),
 		operatorv1.Ingress{}.OpenAPIModelName():                                                schema_openshift_api_operator_v1_Ingress(ref),
+		operatorv1.IngressCanary{}.OpenAPIModelName():                                          schema_openshift_api_operator_v1_IngressCanary(ref),
 		operatorv1.IngressController{}.OpenAPIModelName():                                      schema_openshift_api_operator_v1_IngressController(ref),
 		operatorv1.IngressControllerCaptureHTTPCookie{}.OpenAPIModelName():                     schema_openshift_api_operator_v1_IngressControllerCaptureHTTPCookie(ref),
 		operatorv1.IngressControllerCaptureHTTPCookieUnion{}.OpenAPIModelName():                schema_openshift_api_operator_v1_IngressControllerCaptureHTTPCookieUnion(ref),
@@ -54843,6 +54846,90 @@ func schema_openshift_api_operator_v1_CSISnapshotControllerStatus(ref common.Ref
 	}
 }
 
+func schema_openshift_api_operator_v1_CanaryNodePlacement(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CanaryNodePlacement describes node placement configuration for the ingress canary daemonset pods.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"tolerations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "tolerations is a list of tolerations that are applied to the ingress canary daemonset pods in addition to the tolerations the canary daemonset has by default. The default toleration for the node-role.kubernetes.io/infra taint is always preserved.\n\nIf unset, the canary daemonset has only its default tolerations. When specified, the list must contain at least 1 toleration; to remove all additional tolerations, omit the entire spec.canary field rather than setting an empty list or leaving empty parent objects. Retain at least one other valid spec field, such as spec.gatewayAPI, because spec must not be empty.\n\nEach toleration has the following constraints:\n\n* operator is required and must be \"Exists\" or \"Equal\"; omitted and empty\n  operators, as well as \"Lt\" and \"Gt\", are rejected.\n* effect is required and must be \"NoSchedule\", \"PreferNoSchedule\", or\n  \"NoExecute\"; omitted and empty effects are rejected.\n* value must be empty when operator is \"Exists\". * key must be non-empty. A toleration with an empty key is rejected; in\n  particular, a toleration with an empty key and operator \"Exists\", which\n  tolerates all taints, is rejected.\n* key must be a qualified label key: a 1-63 character name consisting of\n  alphanumeric characters, '-', '_', or '.', beginning and ending with an\n  alphanumeric character, optionally preceded by a lowercase DNS subdomain\n  prefix of at most 253 characters and a '/'. The total limit is 317 characters.\n* value for \"Equal\" must be empty or a label value of at most 63 characters,\n  using the same characters and beginning/end constraints as the key name.\n* tolerationSeconds may be specified only when effect is \"NoExecute\".\n\nAt least 1 and no more than 32 tolerations may be specified.\n\nList order, duplicate tolerations, and overlapping tolerations are preserved. For NoExecute, omitted tolerationSeconds means tolerating indefinitely; finite values are preserved, including zero and negative values.\n\nSee https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(operatorv1.CanaryToleration{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.CanaryToleration{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1_CanaryToleration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CanaryToleration describes a toleration added to the ingress canary daemonset.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key is required and identifies the taint to tolerate. It must be a qualified label key of 1-317 characters: an alphanumeric-bounded name of 1-63 characters using alphanumerics, '-', '_', or '.', optionally preceded by a lowercase DNS subdomain prefix of at most 253 characters and a '/'.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"operator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "operator is required and specifies how the taint value is matched. Equal matches the specified value; Exists matches any value and requires value to be empty or omitted. Only Equal and Exists are allowed; omitted or empty operators are rejected.\n\nPossible enum values:\n - `\"Equal\"` matches taints whose value equals the toleration's value.\n - `\"Exists\"` matches all taints that have the toleration's key, regardless of the taint's value.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Equal", "Exists"},
+						},
+					},
+					"value": {
+						SchemaProps: spec.SchemaProps{
+							Description: "value is optional and defaults to the empty string when omitted. For Equal, it must be empty or a label value of at most 63 characters, consisting of alphanumerics, '-', '_', or '.', beginning and ending with an alphanumeric character. For Exists, it must be empty or omitted.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"effect": {
+						SchemaProps: spec.SchemaProps{
+							Description: "effect is required and specifies the taint effect to match. Only NoSchedule, PreferNoSchedule, and NoExecute are allowed; omitted or empty effects are rejected. NoSchedule prevents scheduling, PreferNoSchedule expresses a scheduling preference, and NoExecute also evicts pods that do not tolerate it.\n\nPossible enum values:\n - `\"NoExecute\"` Evict any already-running pods that do not tolerate the taint. Currently enforced by NodeController.\n - `\"NoSchedule\"` Do not allow new pods to schedule onto the node unless they tolerate the taint, but allow all pods submitted to Kubelet without going through the scheduler to start, and allow all already-running pods to continue running. Enforced by the scheduler.\n - `\"PreferNoSchedule\"` Like TaintEffectNoSchedule, but the scheduler tries not to schedule new pods onto the node, rather than prohibiting new pods from scheduling onto the node entirely. Enforced by the scheduler.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"NoExecute", "NoSchedule", "PreferNoSchedule"},
+						},
+					},
+					"tolerationSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tolerationSeconds is optional and may be set only for effect NoExecute. When omitted, the taint is tolerated indefinitely. When specified, this is the duration in seconds for which the taint is tolerated. Zero and negative values are preserved by the API and treated as zero by Kubernetes.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+				Required: []string{"key", "operator", "effect"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_Capability(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -58391,6 +58478,28 @@ func schema_openshift_api_operator_v1_Ingress(ref common.ReferenceCallback) comm
 	}
 }
 
+func schema_openshift_api_operator_v1_IngressCanary(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressCanary holds configuration for the ingress canary daemonset.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nodePlacement": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodePlacement enables explicit control over the scheduling of the ingress canary daemonset pods.\n\nnodePlacement is optional. To leave the canary daemonset with its default scheduling configuration, which tolerates the node-role.kubernetes.io/infra taint, omit the parent canary field entirely: because canary requires at least one field, nodePlacement can only be absent when canary itself is absent. When specified, nodePlacement must set at least one of its fields; an empty object is rejected.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.CanaryNodePlacement{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.CanaryNodePlacement{}.OpenAPIModelName()},
+	}
+}
+
 func schema_openshift_api_operator_v1_IngressController(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -59356,11 +59465,18 @@ func schema_openshift_api_operator_v1_IngressSpec(ref common.ReferenceCallback) 
 							Ref:         ref(operatorv1.GatewayAPIIngressConfig{}.OpenAPIModelName()),
 						},
 					},
+					"canary": {
+						SchemaProps: spec.SchemaProps{
+							Description: "canary holds configuration for the ingress canary daemonset (the ingress-canary DaemonSet in the openshift-ingress-canary namespace).\n\ncanary is optional. When omitted, the ingress canary daemonset keeps its default configuration. When specified, canary must set at least one of its fields; an empty object is rejected.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.IngressCanary{}.OpenAPIModelName()),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			operatorv1.GatewayAPIIngressConfig{}.OpenAPIModelName()},
+			operatorv1.GatewayAPIIngressConfig{}.OpenAPIModelName(), operatorv1.IngressCanary{}.OpenAPIModelName()},
 	}
 }
 

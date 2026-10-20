@@ -98,7 +98,7 @@ type ImageSpec struct {
 	// decided based on the payload type advertised by the ClusterVersion status, i.e single arch payload
 	// implies the import mode is Legacy and multi payload implies PreserveOriginal.
 	// +optional
-	ImageStreamImportMode ImportModeType `json:"imageStreamImportMode"`
+	ImageStreamImportMode ImportModeType `json:"imageStreamImportMode,omitempty"`
 }
 
 type ImageStatus struct {

@@ -1,0 +1,2729 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "ClusterAPI"
+crdName: clusterapis.operator.openshift.io
+version: v1
+tests:
+  onCreate:
+    - name: Should be able to create a minimal ClusterAPI
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+
+    - name: Should be able to create ClusterAPI with unmanagedCustomResourceDefinitions
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+            - machines.cluster.x-k8s.io
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+            - machines.cluster.x-k8s.io
+
+    - name: Should reject empty string in unmanagedCustomResourceDefinitions
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - ""
+      expectedError: "a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters"
+
+    - name: Should reject CRD name which is not a valid DNS-1123 subdomain in unmanagedCustomResourceDefinitions
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - Clusters.cluster.x-k8s.io
+      expectedError: "a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters"
+
+    - name: Should accept valid CRD names with hyphens and dots in unmanagedCustomResourceDefinitions
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - a.b.c.d
+            - name-with-hyphens.domain-with-hyphens.io
+            - valid-name.example.io
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - a.b.c.d
+            - name-with-hyphens.domain-with-hyphens.io
+            - valid-name.example.io
+
+    - name: Should require at least two dots in unmanagedCustomResourceDefinitions names
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - a.b
+      expectedError: "CRD names must contain at least two '.' characters."
+
+  onUpdate:
+    - name: Should not allow removing items from unmanagedCustomResourceDefinitions
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+            - machines.cluster.x-k8s.io
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+      expectedError: "items cannot be removed from unmanagedCustomResourceDefinitions list"
+
+    - name: Should not allow unsetting unmanagedCustomResourceDefinitions once set
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+            - machines.cluster.x-k8s.io
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      expectedError: "unmanagedCustomResourceDefinitions cannot be unset once set"
+
+    - name: Should allow adding items to unmanagedCustomResourceDefinitions
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+            - machinehealthchecks.cluster.x-k8s.io
+            - machines.cluster.x-k8s.io
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+            - machinehealthchecks.cluster.x-k8s.io
+            - machines.cluster.x-k8s.io
+
+    # Status subresource tests for revisions
+
+    - name: Should accept revision name with release version
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-1
+          revisions:
+          - name: 4.18.0-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-1
+          revisions:
+          - name: 4.18.0-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+
+    - name: Should accept revision name with prerelease version
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.22.0-0.nightly-2026-10-29-abcdef12-1
+          revisions:
+          - name: 4.22.0-0.nightly-2026-10-29-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.22.0-0.nightly-2026-10-29-abcdef12-1
+          revisions:
+          - name: 4.22.0-0.nightly-2026-10-29-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+
+    - name: Should accept revision name with build metadata
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.22.0-rc.1+Build.2-abcdef12-1
+          revisions:
+          - name: 4.22.0-rc.1+Build.2-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.22.0-rc.1+Build.2-abcdef12-1
+          revisions:
+          - name: 4.22.0-rc.1+Build.2-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+
+    - name: Should accept revision name with unknown version
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: unknown-abcdef12-1
+          revisions:
+          - name: unknown-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: unknown-abcdef12-1
+          revisions:
+          - name: unknown-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+
+    - name: Should accept revision name with minimum length
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: v-abcdef12-1
+          revisions:
+          - name: v-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: v-abcdef12-1
+          revisions:
+          - name: v-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+
+    - name: Should accept revision name with truncated version
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-abcdef12-1
+          revisions:
+          - name: vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-abcdef12-1
+          revisions:
+          - name: vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+
+    - name: Should reject revision name with missing release version
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: -abcdef12-1
+          revisions:
+          - name: -abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expectedStatusError: "at least 12"
+
+    - name: Should reject revision name with short content prefix
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef1-1
+          revisions:
+          - name: 4.18.0-abcdef1-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expectedStatusError: "must match"
+
+    - name: Should reject revision name with long content prefix
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef123-1
+          revisions:
+          - name: 4.18.0-abcdef123-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expectedStatusError: "must match"
+
+    - name: Should reject revision name with uppercase content prefix
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-ABCDEF12-1
+          revisions:
+          - name: 4.18.0-ABCDEF12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expectedStatusError: "must match"
+
+    - name: Should reject revision name with nonhexadecimal content prefix
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef1g-1
+          revisions:
+          - name: 4.18.0-abcdef1g-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expectedStatusError: "must match"
+
+    - name: Should reject revision name with zero revision number
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-0
+          revisions:
+          - name: 4.18.0-abcdef12-0
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expectedStatusError: "must match"
+
+    - name: Should reject revision name with negative revision number
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12--1
+          revisions:
+          - name: 4.18.0-abcdef12--1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expectedStatusError: "must match"
+
+    - name: Should reject revision name with leading zero in revision number
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-01
+          revisions:
+          - name: 4.18.0-abcdef12-01
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expectedStatusError: "must match"
+
+    - name: Should reject revision name with space in release version
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0 bad-abcdef12-1
+          revisions:
+          - name: 4.18.0 bad-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expectedStatusError: "must match"
+
+    - name: Should reject revision name with underscore in release version
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0_bad-abcdef12-1
+          revisions:
+          - name: 4.18.0_bad-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expectedStatusError: "must match"
+
+    - name: Should reject revision name with missing revision number
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12
+          revisions:
+          - name: 4.18.0-abcdef12
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expectedStatusError: "must match"
+
+    - name: Should reject revision name with excessive length
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-abcdef12-1
+          revisions:
+          - name: vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expectedStatusError: "may not be more than 255 bytes"
+
+    - name: Should reject malformed desiredRevision
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: not-a-revision
+          revisions:
+          - name: 4.18.0-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+      expectedStatusError: "must match"
+
+    - name: Should reject malformed currentRevision
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-1
+          revisions:
+          - name: 4.18.0-abcdef12-1
+            revision: 1
+            contentID: abcdef120123456789abcdef0123456789abcdef0123456789abcdef01234567
+          currentRevision: not-a-revision
+      expectedStatusError: "must match"
+
+    - name: Should accept contentID with all zero digits
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-1
+          revisions:
+          - name: 4.18.0-abcdef12-1
+            revision: 1
+            contentID: '0000000000000000000000000000000000000000000000000000000000000000'
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-1
+          revisions:
+          - name: 4.18.0-abcdef12-1
+            revision: 1
+            contentID: '0000000000000000000000000000000000000000000000000000000000000000'
+
+    - name: Should accept contentID with all hexadecimal letters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-1
+          revisions:
+          - name: 4.18.0-abcdef12-1
+            revision: 1
+            contentID: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-1
+          revisions:
+          - name: 4.18.0-abcdef12-1
+            revision: 1
+            contentID: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+
+    - name: Should reject contentID with empty value
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-1
+          revisions:
+          - name: 4.18.0-abcdef12-1
+            revision: 1
+            contentID: ''
+      expectedStatusError: "at least 64"
+
+    - name: Should reject contentID with 63 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-1
+          revisions:
+          - name: 4.18.0-abcdef12-1
+            revision: 1
+            contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      expectedStatusError: "at least 64"
+
+    - name: Should reject contentID with 65 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-1
+          revisions:
+          - name: 4.18.0-abcdef12-1
+            revision: 1
+            contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      expectedStatusError: "may not be more than 64 bytes"
+
+    - name: Should reject contentID with uppercase hexadecimal
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-1
+          revisions:
+          - name: 4.18.0-abcdef12-1
+            revision: 1
+            contentID: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+      expectedStatusError: "must match"
+
+    - name: Should reject contentID with nonhexadecimal characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-1
+          revisions:
+          - name: 4.18.0-abcdef12-1
+            revision: 1
+            contentID: gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+      expectedStatusError: "must match"
+
+    - name: Should reject contentID with SHA256 prefix
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-1
+          revisions:
+          - name: 4.18.0-abcdef12-1
+            revision: 1
+            contentID: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      expectedStatusError: "may not be more than 64 bytes"
+
+    - name: Should reject contentID with trailing whitespace
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-abcdef12-1
+          revisions:
+          - name: 4.18.0-abcdef12-1
+            revision: 1
+            contentID: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa '
+      expectedStatusError: "must match"
+
+
+    - name: Should reject a component without a source
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - name: core
+      expectedStatusError: "source: Required value"
+
+    - name: Should reject a component source without a type
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expectedStatusError: "source.type: Required value"
+
+    - name: Should accept the maximum revision number
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 9007199254740991
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 9007199254740991
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+    - name: Should reject a revision number greater than the maximum
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 9007199254740992
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      expectedStatusError: "should be less than or equal to"
+
+    - name: Should reject status with revisions having duplicate names
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-bbbbbbbb-2
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 2
+              contentID: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      profile: default
+      expectedStatusError: "each revision must have a unique name"
+
+    - name: Should reject status with revisions having duplicate revision numbers
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-bbbbbbbb-2
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+            - name: 4.18.0-bbbbbbbb-2
+              revision: 1
+              contentID: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      profile: default
+      expectedStatusError: "each revision must have a unique revision number"
+
+    - name: Should reject desiredRevision not matching the revision with highest number
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+            - name: 4.18.0-bbbbbbbb-2
+              revision: 2
+              contentID: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      profile: default
+      expectedStatusError: "desiredRevision must be the name of the revision with the highest revision number"
+
+    - name: Should accept desiredRevision matching the revision with highest number
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-bbbbbbbb-2
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+            - name: 4.18.0-bbbbbbbb-2
+              revision: 2
+              contentID: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-bbbbbbbb-2
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+            - name: 4.18.0-bbbbbbbb-2
+              revision: 2
+              contentID: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      profile: default
+
+    - name: Should reject currentRevision not corresponding to an entry in revisions list
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          currentRevision: 4.18.0-ffffffff-1
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expectedStatusError: "currentRevision must correspond to an entry in the revisions list"
+
+    - name: Should accept currentRevision corresponding to an entry in revisions list
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          currentRevision: 4.18.0-aaaaaaaa-1
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          currentRevision: 4.18.0-aaaaaaaa-1
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    - name: Should accept absent currentRevision
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    - name: Should reject modifying an existing revision
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expectedStatusError: "revisions are immutable"
+
+    - name: Should allow deleting a revision from the list
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-bbbbbbbb-2
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+            - name: 4.18.0-bbbbbbbb-2
+              revision: 2
+              contentID: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      profile: default
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-bbbbbbbb-2
+          revisions:
+            - name: 4.18.0-bbbbbbbb-2
+              revision: 2
+              contentID: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-bbbbbbbb-2
+          revisions:
+            - name: 4.18.0-bbbbbbbb-2
+              revision: 2
+              contentID: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      profile: default
+
+    - name: Should reject adding revision with number less than highest existing
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 5
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-bbbbbbbb-2
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 5
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+            - name: 4.18.0-bbbbbbbb-2
+              revision: 3
+              contentID: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      profile: default
+      expectedStatusError: "new revisions must have a revision number greater than all existing revisions"
+
+    - name: Should accept adding revision with number greater than all existing
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-bbbbbbbb-2
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+            - name: 4.18.0-bbbbbbbb-2
+              revision: 2
+              contentID: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-bbbbbbbb-2
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+            - name: 4.18.0-bbbbbbbb-2
+              revision: 2
+              contentID: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      profile: default
+
+    # ManifestSubstitution key validation tests
+
+    - name: Should accept valid envsubst key in manifestSubstitutions
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              manifestSubstitutions:
+                - key: EXP_BOOTSTRAP_FORMAT_IGNITION
+                  value: "true"
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              manifestSubstitutions:
+                - key: EXP_BOOTSTRAP_FORMAT_IGNITION
+                  value: "true"
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    - name: Should accept envsubst key starting with underscore
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              manifestSubstitutions:
+                - key: _FOO
+                  value: bar
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              manifestSubstitutions:
+                - key: _FOO
+                  value: bar
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    - name: Should accept lowercase envsubst key
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              manifestSubstitutions:
+                - key: my_var
+                  value: something
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              manifestSubstitutions:
+                - key: my_var
+                  value: something
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    - name: Should reject envsubst key starting with digit
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              manifestSubstitutions:
+                - key: 1BAD
+                  value: something
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expectedStatusError: "key must start with a letter or underscore"
+
+    - name: Should reject envsubst key with hyphens
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              manifestSubstitutions:
+                - key: my-key
+                  value: something
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expectedStatusError: "key must start with a letter or underscore"
+
+    - name: Should accept empty value in manifestSubstitutions
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              manifestSubstitutions:
+                - key: MY_VAR
+                  value: ""
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              manifestSubstitutions:
+                - key: MY_VAR
+                  value: ""
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    # ManifestSubstitution unique key validation tests
+
+    - name: Should accept multiple manifestSubstitutions with distinct keys
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              manifestSubstitutions:
+                - key: VAR_A
+                  value: value-a
+                - key: VAR_B
+                  value: value-b
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              manifestSubstitutions:
+                - key: VAR_A
+                  value: value-a
+                - key: VAR_B
+                  value: value-b
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    - name: Should reject duplicate keys in manifestSubstitutions
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              manifestSubstitutions:
+                - key: MY_VAR
+                  value: value-1
+                - key: MY_VAR
+                  value: value-2
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expectedStatusError: "status.revisions[0].manifestSubstitutions[1]: Duplicate value:"
+
+    - name: Should reject non-adjacent duplicate keys in manifestSubstitutions
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              manifestSubstitutions:
+                - key: VAR_A
+                  value: value-1
+                - key: VAR_B
+                  value: value-2
+                - key: VAR_A
+                  value: value-3
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expectedStatusError: "status.revisions[0].manifestSubstitutions[2]: Duplicate value:"
+
+    # Component name validation tests
+
+    - name: Should accept component name with hyphens
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - name: core-provider
+                  source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - name: core-provider
+                  source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    - name: Should accept component name with uppercase letters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - name: CoreProvider
+                  source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - name: CoreProvider
+                  source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    - name: Should reject component name with underscores
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - name: core_provider
+                  source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expectedStatusError: "name must consist of alphanumeric characters or '-'"
+
+    - name: Should reject component name with dots
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - name: core.provider
+                  source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expectedStatusError: "name must consist of alphanumeric characters or '-'"
+
+    # Component union discriminator tests
+
+    - name: Should reject component with type Image but no image field
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+      expectedStatusError: "image is required when type is Image, and forbidden otherwise"
+
+    # observedRevisionGeneration validation tests
+
+    - name: Should reject observedGeneration less than 1
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 0
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expectedStatusError: "should be greater than or equal to 1"
+
+    - name: Should accept increasing observedGeneration
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 1
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 2
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 2
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    - name: Should accept keeping observedGeneration the same
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 1
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 1
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 1
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    - name: Should reject decreasing observedGeneration
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 5
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 3
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expectedStatusError: "observedRevisionGeneration may not decrease"
+
+    - name: Should reject unsetting observedGeneration once set
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 1
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expectedStatusError: "observedRevisionGeneration may not be unset once set"
+
+    - name: Should accept image with single path segment
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    - name: Should accept image with deep mirror path (5+ segments)
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: registry.example.com/team/project/product/component/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: registry.example.com/team/project/product/component/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    - name: Should accept image with registry port and deep path
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: registry.example.com:5000/org/team/project/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: registry.example.com:5000/org/team/project/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    - name: Should reject image with invalid digest format (too short)
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:invalid
+                      profile: default
+      expectedStatusError: "the OCI Image reference must end with a valid '@sha256:<digest>' suffix"
+
+    - name: Should reject image with uppercase in digest
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/cluster-api@sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                      profile: default
+      expectedStatusError: "the OCI Image reference must end with a valid '@sha256:<digest>' suffix"
+
+    - name: Should reject image without path segments
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expectedStatusError: "the OCI Image name should follow the host[:port][/namespace[/namespace...]]/name format, where host is a domain name, IPv4, or IPv6 address in brackets"
+
+    - name: Should reject image with uppercase in path component
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: quay.io/openshift/Cluster-API@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expectedStatusError: "the OCI Image name should follow the host[:port][/namespace[/namespace...]]/name format, where host is a domain name, IPv4, or IPv6 address in brackets"
+
+    - name: Should accept IPv4 address with port
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: 192.168.1.1:5000/org/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: 192.168.1.1:5000/org/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    - name: Should accept IPv4 address without port
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: 10.0.0.1/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: 10.0.0.1/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+
+    - name: Should accept IPv6 address with port
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: "[fd00::1]:5000/org/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: "[fd00::1]:5000/org/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                      profile: default
+
+    - name: Should accept IPv6 address without port
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: "[2001:db8::1]/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: "[2001:db8::1]/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                      profile: default
+
+    - name: Should accept localhost
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: localhost/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: 4.18.0-aaaaaaaa-1
+          revisions:
+            - name: 4.18.0-aaaaaaaa-1
+              revision: 1
+              contentID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              components:
+                - source:
+                    type: Image
+                    image:
+                      ref: localhost/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                      profile: default

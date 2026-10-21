@@ -549,7 +549,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.CRIOCredentialProviderConfigList{}.OpenAPIModelName():                   schema_openshift_api_config_v1alpha1_CRIOCredentialProviderConfigList(ref),
 		configv1alpha1.CRIOCredentialProviderConfigSpec{}.OpenAPIModelName():                   schema_openshift_api_config_v1alpha1_CRIOCredentialProviderConfigSpec(ref),
 		configv1alpha1.CRIOCredentialProviderConfigStatus{}.OpenAPIModelName():                 schema_openshift_api_config_v1alpha1_CRIOCredentialProviderConfigStatus(ref),
-		configv1alpha1.CertificateConfig{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_CertificateConfig(ref),
 		configv1alpha1.ClusterMonitoring{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_ClusterMonitoring(ref),
 		configv1alpha1.ClusterMonitoringList{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ClusterMonitoringList(ref),
 		configv1alpha1.ClusterMonitoringSpec{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref),
@@ -558,10 +557,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.ControllerManager{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_ControllerManager(ref),
 		configv1alpha1.ControllerManagerList{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ControllerManagerList(ref),
 		configv1alpha1.ControllerManagerSpec{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ControllerManagerSpec(ref),
-		configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName():                                    schema_openshift_api_config_v1alpha1_CustomPKIPolicy(ref),
-		configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_DefaultCertificateConfig(ref),
 		configv1alpha1.DropEqualActionConfig{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_DropEqualActionConfig(ref),
-		configv1alpha1.ECDSAKeyConfig{}.OpenAPIModelName():                                     schema_openshift_api_config_v1alpha1_ECDSAKeyConfig(ref),
 		configv1alpha1.EtcdBackupSpec{}.OpenAPIModelName():                                     schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref),
 		configv1alpha1.GatherConfig{}.OpenAPIModelName():                                       schema_openshift_api_config_v1alpha1_GatherConfig(ref),
 		configv1alpha1.HashModActionConfig{}.OpenAPIModelName():                                schema_openshift_api_config_v1alpha1_HashModActionConfig(ref),
@@ -570,7 +566,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.InsightsDataGatherSpec{}.OpenAPIModelName():                             schema_openshift_api_config_v1alpha1_InsightsDataGatherSpec(ref),
 		configv1alpha1.InsightsDataGatherStatus{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref),
 		configv1alpha1.KeepEqualActionConfig{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_KeepEqualActionConfig(ref),
-		configv1alpha1.KeyConfig{}.OpenAPIModelName():                                          schema_openshift_api_config_v1alpha1_KeyConfig(ref),
 		configv1alpha1.KubeStateMetricsConfig{}.OpenAPIModelName():                             schema_openshift_api_config_v1alpha1_KubeStateMetricsConfig(ref),
 		configv1alpha1.KubeStateMetricsResourceLabels{}.OpenAPIModelName():                     schema_openshift_api_config_v1alpha1_KubeStateMetricsResourceLabels(ref),
 		configv1alpha1.Label{}.OpenAPIModelName():                                              schema_openshift_api_config_v1alpha1_Label(ref),
@@ -604,9 +599,16 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.OAuth2EndpointParam{}.OpenAPIModelName():                                schema_openshift_api_config_v1alpha1_OAuth2EndpointParam(ref),
 		configv1alpha1.OpenShiftStateMetricsConfig{}.OpenAPIModelName():                        schema_openshift_api_config_v1alpha1_OpenShiftStateMetricsConfig(ref),
 		configv1alpha1.PKI{}.OpenAPIModelName():                                                schema_openshift_api_config_v1alpha1_PKI(ref),
-		configv1alpha1.PKICertificateManagement{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_PKICertificateManagement(ref),
+		configv1alpha1.PKICertificateConfig{}.OpenAPIModelName():                               schema_openshift_api_config_v1alpha1_PKICertificateConfig(ref),
+		configv1alpha1.PKICertificatePolicy{}.OpenAPIModelName():                               schema_openshift_api_config_v1alpha1_PKICertificatePolicy(ref),
+		configv1alpha1.PKIDefaultCertificateConfig{}.OpenAPIModelName():                        schema_openshift_api_config_v1alpha1_PKIDefaultCertificateConfig(ref),
+		configv1alpha1.PKIECDSAKeyConfig{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_PKIECDSAKeyConfig(ref),
+		configv1alpha1.PKIKeyConfig{}.OpenAPIModelName():                                       schema_openshift_api_config_v1alpha1_PKIKeyConfig(ref),
+		configv1alpha1.PKIKeyPolicy{}.OpenAPIModelName():                                       schema_openshift_api_config_v1alpha1_PKIKeyPolicy(ref),
 		configv1alpha1.PKIList{}.OpenAPIModelName():                                            schema_openshift_api_config_v1alpha1_PKIList(ref),
-		configv1alpha1.PKIProfile{}.OpenAPIModelName():                                         schema_openshift_api_config_v1alpha1_PKIProfile(ref),
+		configv1alpha1.PKINamedCertificateConfig{}.OpenAPIModelName():                          schema_openshift_api_config_v1alpha1_PKINamedCertificateConfig(ref),
+		configv1alpha1.PKINamedKeyConfig{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_PKINamedKeyConfig(ref),
+		configv1alpha1.PKIRSAKeyConfig{}.OpenAPIModelName():                                    schema_openshift_api_config_v1alpha1_PKIRSAKeyConfig(ref),
 		configv1alpha1.PKISpec{}.OpenAPIModelName():                                            schema_openshift_api_config_v1alpha1_PKISpec(ref),
 		configv1alpha1.PersistentVolumeClaimReference{}.OpenAPIModelName():                     schema_openshift_api_config_v1alpha1_PersistentVolumeClaimReference(ref),
 		configv1alpha1.PersistentVolumeConfig{}.OpenAPIModelName():                             schema_openshift_api_config_v1alpha1_PersistentVolumeConfig(ref),
@@ -615,7 +617,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.PrometheusOperatorConfig{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_PrometheusOperatorConfig(ref),
 		configv1alpha1.PrometheusRemoteWriteHeader{}.OpenAPIModelName():                        schema_openshift_api_config_v1alpha1_PrometheusRemoteWriteHeader(ref),
 		configv1alpha1.QueueConfig{}.OpenAPIModelName():                                        schema_openshift_api_config_v1alpha1_QueueConfig(ref),
-		configv1alpha1.RSAKeyConfig{}.OpenAPIModelName():                                       schema_openshift_api_config_v1alpha1_RSAKeyConfig(ref),
 		configv1alpha1.RelabelActionConfig{}.OpenAPIModelName():                                schema_openshift_api_config_v1alpha1_RelabelActionConfig(ref),
 		configv1alpha1.RelabelConfig{}.OpenAPIModelName():                                      schema_openshift_api_config_v1alpha1_RelabelConfig(ref),
 		configv1alpha1.RemoteWriteAuthorization{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_RemoteWriteAuthorization(ref),
@@ -24574,28 +24575,6 @@ func schema_openshift_api_config_v1alpha1_CRIOCredentialProviderConfigStatus(ref
 	}
 }
 
-func schema_openshift_api_config_v1alpha1_CertificateConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CertificateConfig specifies configuration parameters for certificates. At least one property must be specified.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"key": {
-						SchemaProps: spec.SchemaProps{
-							Description: "key specifies the cryptographic parameters for the certificate's key pair. Currently this is the only configurable parameter. When omitted in an overrides entry, the key configuration from defaults is used.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.KeyConfig{}.OpenAPIModelName()),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			configv1alpha1.KeyConfig{}.OpenAPIModelName()},
-	}
-}
-
 func schema_openshift_api_config_v1alpha1_ClusterMonitoring(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24955,73 +24934,6 @@ func schema_openshift_api_config_v1alpha1_ControllerManagerSpec(ref common.Refer
 	}
 }
 
-func schema_openshift_api_config_v1alpha1_CustomPKIPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CustomPKIPolicy contains administrator-specified cryptographic configuration. Administrators must specify defaults for all certificates and may optionally override specific categories of certificates.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"defaults": {
-						SchemaProps: spec.SchemaProps{
-							Description: "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName()),
-						},
-					},
-					"signerCertificates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
-						},
-					},
-					"servingCertificates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
-						},
-					},
-					"clientCertificates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
-						},
-					},
-				},
-				Required: []string{"defaults"},
-			},
-		},
-		Dependencies: []string{
-			configv1alpha1.CertificateConfig{}.OpenAPIModelName(), configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName()},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_DefaultCertificateConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DefaultCertificateConfig specifies the default certificate configuration parameters. All fields are required to ensure that defaults are fully specified for all certificates.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"key": {
-						SchemaProps: spec.SchemaProps{
-							Description: "key specifies the cryptographic parameters for the certificate's key pair. This field is required in defaults to ensure all certificates have a well-defined key configuration.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.KeyConfig{}.OpenAPIModelName()),
-						},
-					},
-				},
-				Required: []string{"key"},
-			},
-		},
-		Dependencies: []string{
-			configv1alpha1.KeyConfig{}.OpenAPIModelName()},
-	}
-}
-
 func schema_openshift_api_config_v1alpha1_DropEqualActionConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -25038,27 +24950,6 @@ func schema_openshift_api_config_v1alpha1_DropEqualActionConfig(ref common.Refer
 					},
 				},
 				Required: []string{"targetLabel"},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_ECDSAKeyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ECDSAKeyConfig specifies parameters for ECDSA key generation.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"curve": {
-						SchemaProps: spec.SchemaProps{
-							Description: "curve specifies the NIST elliptic curve for ECDSA keys. Valid values are \"P256\", \"P384\", and \"P521\".\n\nWhen set to P256, the NIST P-256 curve (also known as secp256r1) is used, providing 128-bit security.\n\nWhen set to P384, the NIST P-384 curve (also known as secp384r1) is used, providing 192-bit security.\n\nWhen set to P521, the NIST P-521 curve (also known as secp521r1) is used, providing 256-bit security.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"curve"},
 			},
 		},
 	}
@@ -25334,56 +25225,6 @@ func schema_openshift_api_config_v1alpha1_KeepEqualActionConfig(ref common.Refer
 				Required: []string{"targetLabel"},
 			},
 		},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_KeyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "KeyConfig specifies cryptographic parameters for key generation.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"algorithm": {
-						SchemaProps: spec.SchemaProps{
-							Description: "algorithm specifies the key generation algorithm. Valid values are \"RSA\" and \"ECDSA\".\n\nWhen set to RSA, the rsa field must be specified and the generated key will be an RSA key with the configured key size.\n\nWhen set to ECDSA, the ecdsa field must be specified and the generated key will be an ECDSA key using the configured elliptic curve.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"rsa": {
-						SchemaProps: spec.SchemaProps{
-							Description: "rsa specifies RSA key parameters. Required when algorithm is RSA, and forbidden otherwise.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.RSAKeyConfig{}.OpenAPIModelName()),
-						},
-					},
-					"ecdsa": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ecdsa specifies ECDSA key parameters. Required when algorithm is ECDSA, and forbidden otherwise.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.ECDSAKeyConfig{}.OpenAPIModelName()),
-						},
-					},
-				},
-				Required: []string{"algorithm"},
-			},
-			VendorExtensible: spec.VendorExtensible{
-				Extensions: spec.Extensions{
-					"x-kubernetes-unions": []interface{}{
-						map[string]interface{}{
-							"discriminator": "algorithm",
-							"fields-to-discriminateBy": map[string]interface{}{
-								"ecdsa": "ECDSA",
-								"rsa":   "RSA",
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			configv1alpha1.ECDSAKeyConfig{}.OpenAPIModelName(), configv1alpha1.RSAKeyConfig{}.OpenAPIModelName()},
 	}
 }
 
@@ -26763,37 +26604,176 @@ func schema_openshift_api_config_v1alpha1_PKI(ref common.ReferenceCallback) comm
 	}
 }
 
-func schema_openshift_api_config_v1alpha1_PKICertificateManagement(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_config_v1alpha1_PKICertificateConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PKICertificateManagement determines whether components use hardcoded defaults (Unmanaged), follow OpenShift best practices (Default), or use administrator-specified cryptographic parameters (Custom). This provides flexibility for organizations with specific compliance requirements or security policies while maintaining backwards compatibility for existing clusters.",
+				Description: "PKICertificateConfig specifies configuration parameters for certificates. At least one property must be specified.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"mode": {
+					"key": {
 						SchemaProps: spec.SchemaProps{
-							Description: "mode determines how PKI configuration is managed. Valid values are \"Unmanaged\", \"Default\", and \"Custom\".\n\nWhen set to Unmanaged, components use their existing hardcoded certificate generation behavior, exactly as if this feature did not exist. Each component generates certificates using whatever parameters it was using before this feature. While most components use RSA 2048, some may use different parameters. Use of this mode might prevent upgrading to the next major OpenShift release.\n\nWhen set to Default, OpenShift-recommended best practices for certificate generation are applied. The specific parameters may evolve across OpenShift releases to adopt improved cryptographic standards. In the initial release, this matches Unmanaged behavior for each component. In future releases, this may adopt ECDSA or larger RSA keys based on industry best practices. Recommended for most customers who want to benefit from security improvements automatically.\n\nWhen set to Custom, the certificate management parameters can be set explicitly. Use the custom field to specify certificate generation parameters.",
+							Description: "key specifies the cryptographic parameters for the certificate's key pair. Currently this is the only configurable parameter. When omitted in an overrides entry, the key configuration from defaults is used.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKICertificatePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKICertificatePolicy is the cluster's policy for internally-generated certificates: a required defaults, optional per-category overrides, and optional overrides for specific named certificates. The most-specific setting wins.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"defaults": {
+						SchemaProps: spec.SchemaProps{
+							Description: "defaults specifies the default certificate configuration applied to any certificate that has no more-specific (category or named) override. This field is required so that every certificate has a well-defined configuration.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIDefaultCertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"caCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "caCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all CA certificates. When omitted, defaults are used for CA certificates.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"serverCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "serverCertificates optionally overrides certificate parameters for TLS server certificates. When set, these parameters take precedence over defaults for all server certificates. When omitted, defaults are used for server certificates.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"clientCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "clientCertificates optionally overrides certificate parameters for client authentication certificates. When set, these parameters take precedence over defaults for all client certificates. When omitted, defaults are used for client certificates.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"namedCertificates": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "namedCertificates optionally overrides certificate parameters for specific certificates identified by their well-known name. These overrides have the highest precedence (named, then category, then defaults). Entries are keyed by name, so a given name may appear at most once. When omitted, no named overrides are applied. When present, the list must contain at least one entry. At most 32 named certificate overrides may be specified.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(configv1alpha1.PKINamedCertificateConfig{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"defaults"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.PKICertificateConfig{}.OpenAPIModelName(), configv1alpha1.PKIDefaultCertificateConfig{}.OpenAPIModelName(), configv1alpha1.PKINamedCertificateConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKIDefaultCertificateConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKIDefaultCertificateConfig specifies the default certificate configuration parameters. All fields are required to ensure that defaults are fully specified for all certificates.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key specifies the cryptographic parameters for the certificate's key pair. This field is required in defaults to ensure all certificates have a well-defined key configuration.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"key"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKIECDSAKeyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKIECDSAKeyConfig specifies parameters for ECDSA key generation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"curve": {
+						SchemaProps: spec.SchemaProps{
+							Description: "curve specifies the NIST elliptic curve for ECDSA keys. Valid values are \"P256\", \"P384\", and \"P521\".\n\nWhen set to P256, the NIST P-256 curve (also known as secp256r1) is used, providing 128-bit security.\n\nWhen set to P384, the NIST P-384 curve (also known as secp384r1) is used, providing 192-bit security.\n\nWhen set to P521, the NIST P-521 curve (also known as secp521r1) is used, providing 256-bit security.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"custom": {
+				},
+				Required: []string{"curve"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKIKeyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKIKeyConfig specifies cryptographic parameters for key generation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"algorithm": {
 						SchemaProps: spec.SchemaProps{
-							Description: "custom contains administrator-specified cryptographic configuration. Use the defaults and category override fields to specify certificate generation parameters. Required when mode is Custom, and forbidden otherwise.",
+							Description: "algorithm specifies the key generation algorithm. Valid values are \"RSA\" and \"ECDSA\".\n\nWhen set to RSA, the rsa field must be specified and the generated key will be an RSA key with the configured key size.\n\nWhen set to ECDSA, the ecdsa field must be specified and the generated key will be an ECDSA key using the configured elliptic curve.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"rsa": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rsa specifies RSA key parameters. Required when algorithm is RSA, and forbidden otherwise.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName()),
+							Ref:         ref(configv1alpha1.PKIRSAKeyConfig{}.OpenAPIModelName()),
+						},
+					},
+					"ecdsa": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ecdsa specifies ECDSA key parameters. Required when algorithm is ECDSA, and forbidden otherwise.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIECDSAKeyConfig{}.OpenAPIModelName()),
 						},
 					},
 				},
-				Required: []string{"mode"},
+				Required: []string{"algorithm"},
 			},
 			VendorExtensible: spec.VendorExtensible{
 				Extensions: spec.Extensions{
 					"x-kubernetes-unions": []interface{}{
 						map[string]interface{}{
-							"discriminator": "mode",
+							"discriminator": "algorithm",
 							"fields-to-discriminateBy": map[string]interface{}{
-								"custom": "Custom",
+								"ecdsa": "ECDSA",
+								"rsa":   "RSA",
 							},
 						},
 					},
@@ -26801,7 +26781,43 @@ func schema_openshift_api_config_v1alpha1_PKICertificateManagement(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName()},
+			configv1alpha1.PKIECDSAKeyConfig{}.OpenAPIModelName(), configv1alpha1.PKIRSAKeyConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKIKeyPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKIKeyPolicy configures keys generated outside of any certificate, by well-known name. When set, at least one field must be specified; an empty object is rejected.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"namedKeys": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "namedKeys configures keys generated outside of any certificate, such as the bound service-account token signing key, identified by their well-known name. Entries are opt-in with no inherited default and are keyed by name, so a given name may appear at most once. When keys is set, at least one named key must be specified. At most 16 named keys may be specified.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(configv1alpha1.PKINamedKeyConfig{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.PKINamedKeyConfig{}.OpenAPIModelName()},
 	}
 }
 
@@ -26855,47 +26871,84 @@ func schema_openshift_api_config_v1alpha1_PKIList(ref common.ReferenceCallback) 
 	}
 }
 
-func schema_openshift_api_config_v1alpha1_PKIProfile(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_config_v1alpha1_PKINamedCertificateConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PKIProfile defines the certificate generation parameters that OpenShift components use to create certificates. Category overrides take precedence over defaults.",
+				Description: "PKINamedCertificateConfig overrides certificate parameters for a specific certificate identified by its well-known name.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"defaults": {
+					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName()),
+							Description: "name is the well-known override name of the targeted certificate. It is a DNS subdomain prefix, a \"/\", then a name made of alphanumerics, \"-\", \"_\" and \".\" (for example \"openshift.io/service-ca.service-serving-signer\"). The prefix is at most 253 characters and the name after the \"/\" at most 63. The name is validated for format only; there is no registry of valid names, because certificates can be registered dynamically. Core-platform certificates use the bare \"openshift.io/\" prefix; names outside the core platform use an owner subdomain prefix (for example \"hypershift.openshift.io/\"). This field is required so that every named certificate override identifies the certificate it applies to.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
-					"signerCertificates": {
+					"key": {
 						SchemaProps: spec.SchemaProps{
-							Description: "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates.",
+							Description: "key specifies the cryptographic parameters for the certificate's key pair. Currently this is the only configurable parameter. When omitted in an overrides entry, the key configuration from defaults is used.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
-						},
-					},
-					"servingCertificates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
-						},
-					},
-					"clientCertificates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
+							Ref:         ref(configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()),
 						},
 					},
 				},
-				Required: []string{"defaults"},
+				Required: []string{"name"},
 			},
 		},
 		Dependencies: []string{
-			configv1alpha1.CertificateConfig{}.OpenAPIModelName(), configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName()},
+			configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKINamedKeyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKINamedKeyConfig configures the cryptographic parameters for a single key generated outside of any certificate, identified by its well-known name.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the well-known name of the key. It is a DNS subdomain prefix, a \"/\", then a name made of alphanumerics, \"-\", \"_\" and \".\" (for example \"openshift.io/kube-apiserver.bound-service-account-token-signer\"). The prefix is at most 253 characters and the name after the \"/\" at most 63. The name is validated for format only, using the same rules as a named certificate override. This field is required so that every named key entry identifies the key it configures.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key specifies the cryptographic parameters for this key. It is required because keys configured here have no inherited default.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"name", "key"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKIRSAKeyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKIRSAKeyConfig specifies parameters for RSA key generation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"keySize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keySize specifies the size of RSA keys in bits. Valid values are multiples of 1024 from 2048 to 4096.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"keySize"},
+			},
+		},
 	}
 }
 
@@ -26906,19 +26959,26 @@ func schema_openshift_api_config_v1alpha1_PKISpec(ref common.ReferenceCallback) 
 				Description: "PKISpec holds the specification for PKI configuration.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"certificateManagement": {
+					"certificates": {
 						SchemaProps: spec.SchemaProps{
-							Description: "certificateManagement specifies how PKI configuration is managed for internally-generated certificates. This controls the certificate generation approach for all OpenShift components that create certificates internally, including certificate authorities, serving certificates, and client certificates.",
+							Description: "certificates specifies the cluster's certificate policy for internally-generated certificates, resolved most-specific-wins: a named certificate override, then a category override (CA, server, client), then the required defaults. This field is required so that every PKI resource specifies a certificate policy. This field names a configuration policy; it is unrelated to the X.509 certificate-policies extension.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.PKICertificateManagement{}.OpenAPIModelName()),
+							Ref:         ref(configv1alpha1.PKICertificatePolicy{}.OpenAPIModelName()),
+						},
+					},
+					"keys": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keys optionally configures keys generated outside of any certificate, such as the bound service-account token signing key. Entries are named and opt-in with no inherited default. When omitted, no keys are configured by this resource. When set, at least one field must be specified; an empty object is rejected.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIKeyPolicy{}.OpenAPIModelName()),
 						},
 					},
 				},
-				Required: []string{"certificateManagement"},
+				Required: []string{"certificates"},
 			},
 		},
 		Dependencies: []string{
-			configv1alpha1.PKICertificateManagement{}.OpenAPIModelName()},
+			configv1alpha1.PKICertificatePolicy{}.OpenAPIModelName(), configv1alpha1.PKIKeyPolicy{}.OpenAPIModelName()},
 	}
 }
 
@@ -27417,27 +27477,6 @@ func schema_openshift_api_config_v1alpha1_QueueConfig(ref common.ReferenceCallba
 						},
 					},
 				},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_RSAKeyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RSAKeyConfig specifies parameters for RSA key generation.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"keySize": {
-						SchemaProps: spec.SchemaProps{
-							Description: "keySize specifies the size of RSA keys in bits. Valid values are multiples of 1024 from 2048 to 8192.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-				},
-				Required: []string{"keySize"},
 			},
 		},
 	}

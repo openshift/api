@@ -1148,6 +1148,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1.CloudCredentialList{}.OpenAPIModelName():                                    schema_openshift_api_operator_v1_CloudCredentialList(ref),
 		operatorv1.CloudCredentialSpec{}.OpenAPIModelName():                                    schema_openshift_api_operator_v1_CloudCredentialSpec(ref),
 		operatorv1.CloudCredentialStatus{}.OpenAPIModelName():                                  schema_openshift_api_operator_v1_CloudCredentialStatus(ref),
+		operatorv1.ClusterAPI{}.OpenAPIModelName():                                             schema_openshift_api_operator_v1_ClusterAPI(ref),
+		operatorv1.ClusterAPIInstallerComponent{}.OpenAPIModelName():                           schema_openshift_api_operator_v1_ClusterAPIInstallerComponent(ref),
+		operatorv1.ClusterAPIInstallerComponentImage{}.OpenAPIModelName():                      schema_openshift_api_operator_v1_ClusterAPIInstallerComponentImage(ref),
+		operatorv1.ClusterAPIInstallerComponentSource{}.OpenAPIModelName():                     schema_openshift_api_operator_v1_ClusterAPIInstallerComponentSource(ref),
+		operatorv1.ClusterAPIInstallerRevision{}.OpenAPIModelName():                            schema_openshift_api_operator_v1_ClusterAPIInstallerRevision(ref),
+		operatorv1.ClusterAPIInstallerRevisionManifestSubstitution{}.OpenAPIModelName():        schema_openshift_api_operator_v1_ClusterAPIInstallerRevisionManifestSubstitution(ref),
+		operatorv1.ClusterAPIList{}.OpenAPIModelName():                                         schema_openshift_api_operator_v1_ClusterAPIList(ref),
+		operatorv1.ClusterAPISpec{}.OpenAPIModelName():                                         schema_openshift_api_operator_v1_ClusterAPISpec(ref),
+		operatorv1.ClusterAPIStatus{}.OpenAPIModelName():                                       schema_openshift_api_operator_v1_ClusterAPIStatus(ref),
 		operatorv1.ClusterBootImageAutomatic{}.OpenAPIModelName():                              schema_openshift_api_operator_v1_ClusterBootImageAutomatic(ref),
 		operatorv1.ClusterBootImageManual{}.OpenAPIModelName():                                 schema_openshift_api_operator_v1_ClusterBootImageManual(ref),
 		operatorv1.ClusterCSIDriver{}.OpenAPIModelName():                                       schema_openshift_api_operator_v1_ClusterCSIDriver(ref),
@@ -55197,6 +55206,421 @@ func schema_openshift_api_operator_v1_CloudCredentialStatus(ref common.Reference
 		},
 		Dependencies: []string{
 			operatorv1.GenerationStatus{}.OpenAPIModelName(), operatorv1.OperatorCondition{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1_ClusterAPI(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterAPI provides configuration for the capi-operator.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec is the specification of the desired behavior of the capi-operator.",
+							Ref:         ref(operatorv1.ClusterAPISpec{}.OpenAPIModelName()),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status defines the observed status of the capi-operator.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.ClusterAPIStatus{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"metadata", "spec"},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.ClusterAPISpec{}.OpenAPIModelName(), operatorv1.ClusterAPIStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1_ClusterAPIInstallerComponent(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterAPIInstallerComponent defines a component which will be installed by this revision.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the human-readable name of the component. The value has no effect, and will not be set if the component does not define a name in its manifests. If set it must consist of alphanumeric characters, or '-', and may not exceed 255 characters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "source is the required source of the component's manifests. It specifies the source type and its corresponding configuration.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.ClusterAPIInstallerComponentSource{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"source"},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.ClusterAPIInstallerComponentSource{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1_ClusterAPIInstallerComponentImage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterAPIInstallerComponentImage defines an image source for a component.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ref": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ref is an image reference to the image containing the component manifests. The reference must be a valid image digest reference in the format host[:port][/namespace]/name@sha256:<digest>. The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the field must be between 1 to 447 characters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"profile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "profile is the name of a profile to use from the image.\n\nA profile name may be up to 255 characters long. It must consist of alphanumeric characters, '-', or '_'.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"ref", "profile"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1_ClusterAPIInstallerComponentSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterAPIInstallerComponentSource defines the source of a component which will be installed by this revision.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is the source type of the component. The only valid value is Image. When set to Image, the image field must be set and will define an image source for the component.\n\nPossible enum values:\n - `\"Image\"` is an image source for a component.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Image"},
+						},
+					},
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Description: "image defines an image source for a component. The image must contain a /capi-operator-installer directory containing the component manifests.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.ClusterAPIInstallerComponentImage{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"image": "Image",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.ClusterAPIInstallerComponentImage{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1_ClusterAPIInstallerRevision(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of a revision.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"revision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "revision is a monotonically increasing number that is assigned to a revision. It must be greater than or equal to 1, and less than 2^53.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"contentID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "contentID uniquely identifies the content of this revision. The contentID must be between 1 and 255 characters long.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"unmanagedCustomResourceDefinitions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "unmanagedCustomResourceDefinitions is a list of the names of ClusterResourceDefinition (CRD) objects which are included in this revision, but which should not be installed or updated. If not set, all CRDs in the revision will be managed by the CAPI operator.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"manifestSubstitutions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"key",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "manifestSubstitutions is a list of envsubst style substitutions which will be applied to manifests in the revision during rendering. If defined it must not be empty, and may not contain more than 32 items. Each manifest substitution must have a unique key.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(operatorv1.ClusterAPIInstallerRevisionManifestSubstitution{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"components": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "components is a list of components which will be installed by this revision. Components will be installed in the order they are listed. If omitted no components will be installed.\n\nThe maximum number of components is 32.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(operatorv1.ClusterAPIInstallerComponent{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name", "revision", "contentID"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-map-type": "atomic",
+				},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.ClusterAPIInstallerComponent{}.OpenAPIModelName(), operatorv1.ClusterAPIInstallerRevisionManifestSubstitution{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1_ClusterAPIInstallerRevisionManifestSubstitution(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterAPIInstallerRevisionManifestSubstitution defines an envsubst style substitution which will be applied to manifests in a revision during rendering.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key is the name of the envsubst variable to substitute. It must be a valid envsubst variable name, consisting of letters, digits, and underscores, and must start with a letter or underscore. The key must not be empty, and must not exceed 255 characters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"value": {
+						SchemaProps: spec.SchemaProps{
+							Description: "value is the value to substitute for the envsubst variable. It may be empty, in which case the variable will be substituted with an empty string. The value must not exceed 4096 characters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"key", "value"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1_ClusterAPIList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterAPIList contains a list of ClusterAPI configurations\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ListMeta{}.OpenAPIModelName()),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items contains the items",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(operatorv1.ClusterAPI{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.ClusterAPI{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1_ClusterAPISpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterAPISpec defines the desired configuration of the capi-operator. The spec is required but we deliberately allow it to be empty.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"unmanagedCustomResourceDefinitions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "unmanagedCustomResourceDefinitions is a list of ClusterResourceDefinition (CRD) names that should not be managed by the capi-operator installer controller. This allows external actors to own specific CRDs while capi-operator manages others.\n\nEach CRD name must be a valid DNS-1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character, with a maximum length of 253 characters. CRD names must contain at least two '.' characters. Example: \"clusters.cluster.x-k8s.io\"\n\nItems cannot be removed from this list once added.\n\nThe maximum number of unmanagedCustomResourceDefinitions is 128.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1_ClusterAPIStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterAPIStatus describes the current state of the capi-operator.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"currentRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "currentRevision is the name of the most recently fully applied revision. It is written by the installer controller. If it is absent, it indicates that no revision has been fully applied yet. If set, currentRevision must correspond to an entry in the revisions list.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"desiredRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "desiredRevision is the name of the desired revision. It is written by the revision controller. It must be set to the name of the entry in the revisions list with the highest revision number.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"revisions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "revisions is a list of all currently active revisions. A revision is active until the installer controller updates currentRevision to a later revision. It is written by the revision controller.\n\nThe maximum number of revisions is 16. All revisions must have a unique name. All revisions must have a unique revision number. When adding a revision, the revision number must be greater than the highest revision number in the list. Revisions are immutable, although they can be deleted.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(operatorv1.ClusterAPIInstallerRevision{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"observedRevisionGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedRevisionGeneration is the generation of the ClusterAPI object that was last observed by the revision controller. If specified it must be greater than or equal to 1, and less than 2^53. It may not decrease or be unset once set.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+				Required: []string{"desiredRevision", "revisions"},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.ClusterAPIInstallerRevision{}.OpenAPIModelName()},
 	}
 }
 

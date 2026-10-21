@@ -1105,6 +1105,7 @@ var (
 					contactPerson("sairameshv").
 					productScope(kubernetes).
 					enhancementPR("https://github.com/kubernetes/enhancements/issues/4671").
+					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
 	FeatureGatePodGroupPreemptionPolicy = newFeatureGate("PodGroupPreemptionPolicy").
@@ -1112,6 +1113,7 @@ var (
 						contactPerson("sairameshv").
 						productScope(kubernetes).
 						enhancementPR("https://github.com/kubernetes/enhancements/issues/5710").
+						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 
 	FeatureGateCompositePodGroup = newFeatureGate("CompositePodGroup").
@@ -1126,6 +1128,7 @@ var (
 							contactPerson("sairameshv").
 							productScope(kubernetes).
 							enhancementPR("https://github.com/kubernetes/enhancements/issues/5732").
+							enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 							mustRegister()
 
 	FeatureGateDRAWorkloadResourceClaims = newFeatureGate("DRAWorkloadResourceClaims").
@@ -1133,5 +1136,6 @@ var (
 						contactPerson("sairameshv").
 						productScope(kubernetes).
 						enhancementPR("https://github.com/kubernetes/enhancements/issues/5729").
+						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 )

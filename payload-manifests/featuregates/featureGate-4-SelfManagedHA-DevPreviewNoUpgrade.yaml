@@ -26,13 +26,7 @@
                         "name": "CompositePodGroup"
                     },
                     {
-                        "name": "DRAWorkloadResourceClaims"
-                    },
-                    {
                         "name": "EventedPLEG"
-                    },
-                    {
-                        "name": "GenericWorkload"
                     },
                     {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
@@ -59,13 +53,7 @@
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
-                        "name": "PodGroupPreemptionPolicy"
-                    },
-                    {
                         "name": "ShortCertRotation"
-                    },
-                    {
-                        "name": "TopologyAwareWorkloadScheduling"
                     }
                 ],
                 "enabled": [
@@ -187,6 +175,9 @@
                         "name": "DRADeviceTaintRules"
                     },
                     {
+                        "name": "DRAWorkloadResourceClaims"
+                    },
+                    {
                         "name": "DualReplica"
                     },
                     {
@@ -245,6 +236,9 @@
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
+                        "name": "GenericWorkload"
                     },
                     {
                         "name": "GomaxprocsInjection"
@@ -379,6 +373,9 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
+                        "name": "PodGroupPreemptionPolicy"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
@@ -401,6 +398,9 @@
                     },
                     {
                         "name": "TLSGroupPreferences"
+                    },
+                    {
+                        "name": "TopologyAwareWorkloadScheduling"
                     },
                     {
                         "name": "UnifiedClusterManagedDNSAndLB"

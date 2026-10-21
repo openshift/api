@@ -89,7 +89,7 @@ tests:
           desiredUpdate:
             architecture: Multi
       expectedError: "Version must be set if Architecture is set"
-    - name: Should not allow image and architecture to be set
+    - name: Should allow image and architecture Multi to be set
       initial: |
         apiVersion: config.openshift.io/v1
         kind: ClusterVersion
@@ -99,7 +99,15 @@ tests:
             architecture: Multi
             version: 4.11.1
             image: bar
-      expectedError: "cannot set both Architecture and Image"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+            image: bar
     - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities baremetal and MachineAPI
       initial: |
         apiVersion: config.openshift.io/v1
@@ -267,7 +275,7 @@ tests:
           clusterID: foo
           signatureStores: []
   onUpdate:
-    - name: Should not allow image to be set if architecture set
+    - name: Should allow image to be set if architecture is Multi
       initial: |
         apiVersion: config.openshift.io/v1
         kind: ClusterVersion
@@ -285,8 +293,16 @@ tests:
             architecture: Multi
             version: 4.11.1
             image: bar
-      expectedError: "cannot set both Architecture and Image"
-    - name: Should not allow architecture to be set if image set
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+            image: bar
+    - name: Should allow architecture Multi to be set if image set
       initial: |
         apiVersion: config.openshift.io/v1
         kind: ClusterVersion
@@ -303,7 +319,15 @@ tests:
             architecture: Multi
             version: 4.11.1
             image: bar
-      expectedError: "cannot set both Architecture and Image"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+            image: bar
     - name: Should be able to add the baremetal capability with a ClusterVersion with base capability None, and implicitly enabled MachineAPI
       initial: |
         apiVersion: config.openshift.io/v1

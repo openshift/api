@@ -122,11 +122,6 @@ func (in *PacemakerClusterNodeStatus) DeepCopyInto(out *PacemakerClusterNodeStat
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	if in.FencingEventCount24h != nil {
-		in, out := &in.FencingEventCount24h, &out.FencingEventCount24h
-		*out = new(int32)
-		**out = **in
-	}
 	return
 }
 

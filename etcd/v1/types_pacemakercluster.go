@@ -656,24 +656,6 @@ type PacemakerClusterNodeStatus struct {
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x.name == y.name))",message="fencing agent names must be unique"
 	// +required
 	FencingAgents []PacemakerClusterFencingAgentStatus `json:"fencingAgents,omitempty"`
-
-	// fencingEventCount24h is the number of fencing events recorded against this node in
-	// Pacemaker's fence history in the CIB within the trailing 24 hours, as of the last status
-	// collection. This is a count, not event detail: it exists to let an administrator detect
-	// repeated fencing (for example, a node being fenced multiple times in a short period due to
-	// a flapping fence device or an underlying hardware issue) without requiring per-event fields
-	// in this API. Individual fencing events are also recorded as Kubernetes Events in the
-	// operator's namespace, which can be consulted for event-level detail (action, outcome,
-	// requester, timestamps) while they remain within the cluster's event retention period. This
-	// field is optional and is omitted when the status collector has not yet observed a fencing
-	// event count for this node, for example immediately after an upgrade from a version that
-	// does not report it. The value must be between 0 and 1000, a sanity bound well above any
-	// realistic fencing rate: a healthy two-node cluster should see zero or one fencing events in
-	// a day, and sustained double-digit counts already indicate a cluster in a failure loop.
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=1000
-	// +optional
-	FencingEventCount24h *int32 `json:"fencingEventCount24h,omitempty"`
 }
 
 // PacemakerClusterFencingAgentStatus represents the status of a fencing agent that can fence a node.

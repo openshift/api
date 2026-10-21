@@ -30337,15 +30337,8 @@ func schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref common.Referenc
 							},
 						},
 					},
-					"fencingEventCount24h": {
-						SchemaProps: spec.SchemaProps{
-							Description: "fencingEventCount24h is the number of fencing events recorded against this node in Pacemaker's fence history in the CIB within the trailing 24 hours, as of the last status collection. This is a count, not event detail: it exists to let an administrator detect repeated fencing (for example, a node being fenced multiple times in a short period due to a flapping fence device or an underlying hardware issue) without requiring per-event fields in this API. Individual fencing events are also recorded as Kubernetes Events in the operator's namespace, which can be consulted for event-level detail (action, outcome, requester, timestamps) while they remain within the cluster's event retention period. This field is required and is populated with 0 when no fencing events have been observed for this node in the trailing 24 hours; it is never omitted once the node's status is reported. The value must be between 0 and 1000, a sanity bound well above any realistic fencing rate: a healthy two-node cluster should see zero or one fencing events in a day, and sustained double-digit counts already indicate a cluster in a failure loop.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
 				},
-				Required: []string{"conditions", "nodeName", "addresses", "resources", "fencingAgents", "fencingEventCount24h"},
+				Required: []string{"conditions", "nodeName", "addresses", "resources", "fencingAgents"},
 			},
 		},
 		Dependencies: []string{
@@ -30755,15 +30748,8 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref common.Re
 							},
 						},
 					},
-					"fencingEventCount24h": {
-						SchemaProps: spec.SchemaProps{
-							Description: "fencingEventCount24h is the number of fencing events recorded against this node in Pacemaker's fence history in the CIB within the trailing 24 hours, as of the last status collection. This is a count, not event detail: it exists to let an administrator detect repeated fencing (for example, a node being fenced multiple times in a short period due to a flapping fence device or an underlying hardware issue) without requiring per-event fields in this API. Individual fencing events are also recorded as Kubernetes Events in the operator's namespace, which can be consulted for event-level detail (action, outcome, requester, timestamps) while they remain within the cluster's event retention period. This field is required and is populated with 0 when no fencing events have been observed for this node in the trailing 24 hours; it is never omitted once the node's status is reported. The value must be between 0 and 1000, a sanity bound well above any realistic fencing rate: a healthy two-node cluster should see zero or one fencing events in a day, and sustained double-digit counts already indicate a cluster in a failure loop.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
 				},
-				Required: []string{"conditions", "nodeName", "addresses", "resources", "fencingAgents", "fencingEventCount24h"},
+				Required: []string{"conditions", "nodeName", "addresses", "resources", "fencingAgents"},
 			},
 		},
 		Dependencies: []string{

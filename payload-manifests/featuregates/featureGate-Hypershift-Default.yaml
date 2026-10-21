@@ -203,9 +203,6 @@
                         "name": "VSphereMixedNodeEnv"
                     },
                     {
-                        "name": "VSphereMultiVCenterDay2"
-                    },
-                    {
                         "name": "VolumeAttributesClass"
                     },
                     {
@@ -323,6 +320,9 @@
                     },
                     {
                         "name": "VSphereMultiNetworks"
+                    },
+                    {
+                        "name": "VSphereMultiVCenterDay2"
                     }
                 ],
                 "version": ""

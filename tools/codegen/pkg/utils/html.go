@@ -5,10 +5,29 @@ type HTMLTemplateData struct {
 }
 
 type HTMLFeatureGate struct {
-	Name       string
-	Sufficient bool
-	Variants   []HTMLVariantColumn
-	Tests      []HTMLTestRow
+	Name         string
+	Sufficient   bool
+	Requirements []HTMLRequirementRow
+	Variants     []HTMLVariantColumn
+	Tests        []HTMLTestRow
+}
+
+// HTMLRequirementRow is one SKU/variant line in the requirements checklist.
+type HTMLRequirementRow struct {
+	Status            string
+	Passed            bool
+	Warning           bool
+	Variant           string
+	TestCountActual   int
+	TestCountExpected int
+	TestCountPassed   bool
+	MinRunsActual     int
+	MinRunsExpected   int
+	MinRunsPassed     bool
+	MinPassActual     int
+	MinPassExpected   int
+	MinPassPassed     bool
+	HasCandidateTier  bool
 }
 
 type HTMLVariantColumn struct {
@@ -66,8 +85,17 @@ const HTMLTemplateSrc = `<!DOCTYPE html>
         .alert { padding: 12px 20px; margin-bottom: 20px; border-radius: 4px; }
         .alert-success { background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
         .alert-danger { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .alert-warning { background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; }
+        .req-pass { color: #155724; font-weight: bold; }
+        .req-fail { color: #721c24; font-weight: bold; }
+        .req-warn { color: #856404; font-weight: bold; }
+        .num-pass { background-color: #d4edda; }
+        .num-fail { background-color: #f8d7da; }
         h1 { margin-bottom: 24px; }
         h2 { margin-top: 32px; margin-bottom: 12px; }
+        h3 { margin-top: 20px; margin-bottom: 8px; font-size: 1.1rem; }
+        .req-table { max-width: 1100px; }
+        .req-table td, .req-table th { font-size: 0.9em; }
     </style>
 </head>
 <body>
@@ -81,17 +109,37 @@ const HTMLTemplateSrc = `<!DOCTYPE html>
     {{else}}
     <div class="alert alert-danger">
         <strong>INSUFFICIENT</strong> CI testing for &quot;{{$fg.Name}}&quot;.
-        <ul>
-            <li>At least five tests are expected for a feature</li>
-            <li>Tests must be run on every TechPreview platform (ask for an exception if your feature doesn&#39;t support a variant)</li>
-            <li>All tests must run at least 14 times on every platform</li>
-            <li>All tests must pass at least 95% of the time</li>
-        </ul>
     </div>
     {{end}}
-    {{if $fg.Tests}}
-    <table id="table-{{$fgIdx}}">
+    {{if $fg.Requirements}}
+    <h3>Requirements checklist</h3>
+    <p>Expected: ≥5 tests, ≥14 runs/test, ≥95% pass rate per SKU.</p>
+    <table class="req-table">
         <thead>
+            <tr>
+                <th>Status</th>
+                <th>SKU / Variant</th>
+                <th>Tests (actual / expected)</th>
+                <th>Min runs (actual / expected)</th>
+                <th>Min pass rate (actual / expected)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range $req := $fg.Requirements}}
+            <tr>
+                <td class="{{if $req.Passed}}req-pass{{else if $req.Warning}}req-warn{{else}}req-fail{{end}}">{{$req.Status}}</td>
+                <td style="text-align:left">{{$req.Variant}}{{if $req.HasCandidateTier}} <em>(candidate-tier data)</em>{{end}}</td>
+                <td class="{{if $req.TestCountPassed}}num-pass{{else}}num-fail{{end}}">{{$req.TestCountActual}} / ≥{{$req.TestCountExpected}}</td>
+                <td class="{{if $req.MinRunsPassed}}num-pass{{else}}num-fail{{end}}">{{$req.MinRunsActual}} / ≥{{$req.MinRunsExpected}}</td>
+                <td class="{{if $req.MinPassPassed}}num-pass{{else}}num-fail{{end}}">{{$req.MinPassActual}}% / ≥{{$req.MinPassExpected}}%</td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+    {{end}}
+    {{if $fg.Tests}}
+    <h3>Per-test detail</h3>
+    <table id="table-{{$fgIdx}}">        <thead>
             <tr>
                 <th class="sortable sort-indicator" data-table="{{$fgIdx}}" data-col="0" data-sort="text">Test Name</th>
                 {{range $v := $fg.Variants}}

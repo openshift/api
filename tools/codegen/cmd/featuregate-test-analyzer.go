@@ -186,62 +186,24 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 			return err
 		}
 
+		requirementSummaries := buildVariantRequirementSummaries(testingResults)
+		writeRequirementsOverview(enabledFeatureGate, requirementSummaries, md, o.Out)
+
 		writeTestingMarkDown(testingResults, md)
 
 		validationResults := checkIfTestingIsSufficient(enabledFeatureGate, testingResults)
 
-		// Separate warnings from blocking errors
+		// Only add blocking errors to the error list (warnings don't fail the job;
+		// they are surfaced in the requirements overview instead).
 		blockingErrors := []error{}
-		warnings := []error{}
 		for _, vr := range validationResults {
-			if vr.IsWarning {
-				warnings = append(warnings, vr.Error)
-			} else {
+			if !vr.IsWarning {
 				blockingErrors = append(blockingErrors, vr.Error)
 			}
 		}
 
-		if len(validationResults) == 0 {
-			md.Textf("Sufficient CI testing for %q.\n", enabledFeatureGate)
-			fmt.Fprintf(o.Out, "Sufficient CI testing for %q.\n", enabledFeatureGate)
-		} else {
-			if len(blockingErrors) > 0 {
-				md.Textf("INSUFFICIENT CI testing for %q.\n", enabledFeatureGate)
-				fmt.Fprintf(o.Out, "INSUFFICIENT CI testing for %q.\n", enabledFeatureGate)
-			} else {
-				md.Textf("CI testing issues found for %q (non-blocking warnings).\n", enabledFeatureGate)
-				fmt.Fprintf(o.Out, "CI testing issues found for %q (non-blocking warnings).\n", enabledFeatureGate)
-			}
-
-			md.Textf("* At least five tests are expected for a feature\n")
-			md.Textf("* Tests must be be run on every TechPreview platform (ask for an exception if your feature doesn't support a variant)")
-			md.Textf("* All tests must run at least 14 times on every platform")
-			md.Textf("* All tests must pass at least 95%% of the time")
-			md.Textf("* JobTier must be one of: standard, informing, blocking, candidate (candidate is allowed but produces a warning as it is not covered by Component Readiness)\n")
-			md.Text("")
-
-			if len(warnings) > 0 {
-				md.Textf("**Non-blocking warnings (optional variants):**\n")
-				for _, warn := range warnings {
-					md.Textf("  - %s\n", warn.Error())
-				}
-				md.Text("")
-			}
-
-			if len(blockingErrors) > 0 {
-				md.Textf("**Blocking errors:**\n")
-				for _, err := range blockingErrors {
-					md.Textf("  - %s\n", err.Error())
-				}
-				md.Text("")
-			}
-			md.Text("")
-		}
-
-		// Only add blocking errors to the error list (warnings don't fail the job)
 		errs = append(errs, blockingErrors...)
-		featureGateHTMLData = append(featureGateHTMLData, buildHTMLFeatureGateData(enabledFeatureGate, testingResults, blockingErrors, release))
-
+		featureGateHTMLData = append(featureGateHTMLData, buildHTMLFeatureGateData(enabledFeatureGate, testingResults, blockingErrors, requirementSummaries, release))
 	}
 
 	summaryMarkdown := md.ExactBytes()
@@ -267,7 +229,304 @@ func topologyDisplayName(topology string) string {
 	return topology
 }
 
-func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*TestingResults, blockingErrors []error, release string) utils.HTMLFeatureGate {
+// VariantRequirementSummary is a digestible pass/fail overview for one SKU/variant.
+type VariantRequirementSummary struct {
+	Variant JobVariant
+
+	// OverallPassed is true when every blocking requirement for this variant is met.
+	OverallPassed bool
+	// IsWarning is true when failures on this variant are non-blocking (optional SKUs).
+	IsWarning bool
+
+	TestCountActual   int
+	TestCountExpected int
+	TestCountPassed   bool
+
+	// MinRunsActual is the lowest TotalRuns across tests for this variant (0 if no tests).
+	MinRunsActual   int
+	MinRunsExpected int
+	MinRunsPassed   bool
+
+	// MinPassRateActual is the lowest pass rate across tests for this variant, as a percent.
+	MinPassRateActual   int
+	MinPassRateExpected int
+	MinPassRatePassed   bool
+
+	HasCandidateTier bool
+
+	// TestFailures lists only tests that miss run-count or pass-rate requirements.
+	TestFailures []TestRequirementFailure
+}
+
+// TestRequirementFailure describes a single test that missed a numeric requirement.
+type TestRequirementFailure struct {
+	TestName string
+
+	RunsActual   int
+	RunsExpected int
+	RunsPassed   bool
+
+	PassRateActual   int
+	PassRateExpected int
+	PassRatePassed   bool
+}
+
+func jobVariantLabel(jv JobVariant) string {
+	parts := []string{topologyDisplayName(jv.Topology), jv.Cloud, jv.Architecture}
+	if jv.NetworkStack != "" {
+		parts = append(parts, jv.NetworkStack)
+	}
+	if jv.OS != "" {
+		parts = append(parts, "OS:"+jv.OS)
+	}
+	if jv.JobTiers != "" {
+		parts = append(parts, "Tiers:"+jv.JobTiers)
+	}
+	if jv.Optional {
+		parts = append(parts, "(optional)")
+	}
+	return strings.Join(parts, " / ")
+}
+
+func buildVariantRequirementSummaries(testingResults map[JobVariant]*TestingResults) []VariantRequirementSummary {
+	jobVariants := OrderedJobVariants(sets.KeySet(testingResults).UnsortedList())
+	sort.Sort(jobVariants)
+
+	summaries := make([]VariantRequirementSummary, 0, len(jobVariants))
+	for _, jobVariant := range jobVariants {
+		summaries = append(summaries, evaluateVariantRequirements(jobVariant, testingResults[jobVariant]))
+	}
+	return summaries
+}
+
+func evaluateVariantRequirements(jobVariant JobVariant, testedVariant *TestingResults) VariantRequirementSummary {
+	summary := VariantRequirementSummary{
+		Variant:             jobVariant,
+		IsWarning:           jobVariant.Optional,
+		TestCountExpected:   requiredNumberOfTests,
+		MinRunsExpected:     requiredNumberOfTestRunsPerVariant,
+		MinPassRateExpected: int(requiredPassRateOfTestsPerVariant * 100),
+		MinRunsPassed:       true,
+		MinPassRatePassed:   true,
+	}
+	if testedVariant == nil {
+		summary.TestCountPassed = false
+		summary.MinRunsPassed = false
+		summary.MinPassRatePassed = false
+		summary.OverallPassed = false
+		return summary
+	}
+
+	summary.HasCandidateTier = testedVariant.HasCandidateTierResults
+	summary.TestCountActual = len(testedVariant.TestResults)
+	summary.TestCountPassed = summary.TestCountActual >= requiredNumberOfTests
+
+	seenRuns := false
+	seenPassRate := false
+	for _, testResults := range testedVariant.TestResults {
+		runsPassed := testResults.TotalRuns >= requiredNumberOfTestRunsPerVariant
+		passRateActual := 0
+		passRatePassed := true
+		if testResults.TotalRuns > 0 {
+			passPercent := float32(testResults.SuccessfulRuns) / float32(testResults.TotalRuns)
+			passRateActual = int(passPercent * 100)
+			passRatePassed = passPercent >= requiredPassRateOfTestsPerVariant
+		}
+
+		if !seenRuns || testResults.TotalRuns < summary.MinRunsActual {
+			summary.MinRunsActual = testResults.TotalRuns
+			seenRuns = true
+		}
+		// Pass rate is only meaningful when the test has runs (matches checkIfTestingIsSufficient).
+		if testResults.TotalRuns > 0 && (!seenPassRate || passRateActual < summary.MinPassRateActual) {
+			summary.MinPassRateActual = passRateActual
+			seenPassRate = true
+		}
+
+		if !runsPassed {
+			summary.MinRunsPassed = false
+		}
+		if !passRatePassed {
+			summary.MinPassRatePassed = false
+		}
+
+		if !runsPassed || !passRatePassed {
+			summary.TestFailures = append(summary.TestFailures, TestRequirementFailure{
+				TestName:         testResults.TestName,
+				RunsActual:       testResults.TotalRuns,
+				RunsExpected:     requiredNumberOfTestRunsPerVariant,
+				RunsPassed:       runsPassed,
+				PassRateActual:   passRateActual,
+				PassRateExpected: int(requiredPassRateOfTestsPerVariant * 100),
+				PassRatePassed:   passRatePassed,
+			})
+		}
+	}
+
+	if len(testedVariant.TestResults) == 0 {
+		summary.MinRunsPassed = false
+		summary.MinPassRatePassed = false
+	}
+
+	summary.OverallPassed = summary.TestCountPassed && summary.MinRunsPassed && summary.MinPassRatePassed
+	return summary
+}
+
+func statusMark(passed bool, warning bool) string {
+	switch {
+	case passed:
+		return "✓"
+	case warning:
+		return "⚠"
+	default:
+		return "✗"
+	}
+}
+
+func writeRequirementsOverview(featureGate string, summaries []VariantRequirementSummary, md *utils.Markdown, out io.Writer) {
+	blockingFailures := 0
+	warnings := 0
+	for _, s := range summaries {
+		if s.OverallPassed && !s.HasCandidateTier {
+			continue
+		}
+		if !s.OverallPassed {
+			if s.IsWarning {
+				warnings++
+			} else {
+				blockingFailures++
+			}
+		}
+		if s.HasCandidateTier {
+			warnings++
+		}
+	}
+
+	var statusLine string
+	switch {
+	case blockingFailures > 0:
+		statusLine = fmt.Sprintf("INSUFFICIENT CI testing for %q (%d blocking, %d warnings).", featureGate, blockingFailures, warnings)
+	case warnings > 0:
+		statusLine = fmt.Sprintf("CI testing issues found for %q (non-blocking warnings).", featureGate)
+	default:
+		statusLine = fmt.Sprintf("Sufficient CI testing for %q.", featureGate)
+	}
+
+	fmt.Fprintf(out, "\n=== Requirements overview: %s ===\n", featureGate)
+	fmt.Fprintf(out, "%s\n\n", statusLine)
+	md.Textf("%s\n", statusLine)
+	md.Textf("### Requirements checklist\n")
+	md.Textf("Expected: ≥%d tests, ≥%d runs/test, ≥%d%% pass rate per SKU.\n",
+		requiredNumberOfTests, requiredNumberOfTestRunsPerVariant, int(requiredPassRateOfTestsPerVariant*100))
+	fmt.Fprintf(out, "Expected: ≥%d tests, ≥%d runs/test, ≥%d%% pass rate per SKU.\n\n",
+		requiredNumberOfTests, requiredNumberOfTestRunsPerVariant, int(requiredPassRateOfTestsPerVariant*100))
+
+	md.NextTableColumn()
+	md.Exact("Status ")
+	md.NextTableColumn()
+	md.Exact("SKU / Variant ")
+	md.NextTableColumn()
+	md.Exact("Tests (actual / expected) ")
+	md.NextTableColumn()
+	md.Exact("Min runs (actual / expected) ")
+	md.NextTableColumn()
+	md.Exact("Min pass rate (actual / expected) ")
+	md.EndTableRow()
+	md.NextTableColumn()
+	md.Exact(":---: ")
+	md.NextTableColumn()
+	md.Exact(":------ ")
+	md.NextTableColumn()
+	md.Exact(":---: ")
+	md.NextTableColumn()
+	md.Exact(":---: ")
+	md.NextTableColumn()
+	md.Exact(":---: ")
+	md.EndTableRow()
+
+	for _, s := range summaries {
+		mark := statusMark(s.OverallPassed, s.IsWarning && !s.OverallPassed)
+		label := jobVariantLabel(s.Variant)
+
+		testsCell := fmt.Sprintf("%s %d / ≥%d", statusMark(s.TestCountPassed, s.IsWarning && !s.TestCountPassed), s.TestCountActual, s.TestCountExpected)
+		runsCell := fmt.Sprintf("%s %d / ≥%d", statusMark(s.MinRunsPassed, s.IsWarning && !s.MinRunsPassed), s.MinRunsActual, s.MinRunsExpected)
+		passCell := fmt.Sprintf("%s %d%% / ≥%d%%", statusMark(s.MinPassRatePassed, s.IsWarning && !s.MinPassRatePassed), s.MinPassRateActual, s.MinPassRateExpected)
+
+		md.NextTableColumn()
+		md.Exact(mark + " ")
+		md.NextTableColumn()
+		md.Exact(label + " ")
+		md.NextTableColumn()
+		md.Exact(testsCell + " ")
+		md.NextTableColumn()
+		md.Exact(runsCell + " ")
+		md.NextTableColumn()
+		md.Exact(passCell + " ")
+		md.EndTableRow()
+
+		fmt.Fprintf(out, "%s %s\n", mark, label)
+		fmt.Fprintf(out, "    tests:     %s\n", testsCell)
+		fmt.Fprintf(out, "    min runs:  %s\n", runsCell)
+		fmt.Fprintf(out, "    min pass:  %s\n", passCell)
+
+		if s.HasCandidateTier {
+			fmt.Fprintf(out, "    ⚠ includes candidate-tier job data (not covered by Component Readiness)\n")
+		}
+		for _, failure := range s.TestFailures {
+			detailParts := []string{}
+			if !failure.RunsPassed {
+				detailParts = append(detailParts, fmt.Sprintf("runs %d / ≥%d", failure.RunsActual, failure.RunsExpected))
+			}
+			if !failure.PassRatePassed {
+				detailParts = append(detailParts, fmt.Sprintf("pass %d%% / ≥%d%%", failure.PassRateActual, failure.PassRateExpected))
+			}
+			fmt.Fprintf(out, "    └─ %s: %s\n", failure.TestName, strings.Join(detailParts, ", "))
+		}
+		fmt.Fprintln(out)
+	}
+
+	if hasAnyTestFailures(summaries) {
+		md.Text("")
+		md.Textf("**Failing tests:**\n")
+		for _, s := range summaries {
+			if len(s.TestFailures) == 0 {
+				continue
+			}
+			md.Textf("- %s\n", jobVariantLabel(s.Variant))
+			for _, failure := range s.TestFailures {
+				detailParts := []string{}
+				if !failure.RunsPassed {
+					detailParts = append(detailParts, fmt.Sprintf("runs %d / ≥%d", failure.RunsActual, failure.RunsExpected))
+				}
+				if !failure.PassRatePassed {
+					detailParts = append(detailParts, fmt.Sprintf("pass %d%% / ≥%d%%", failure.PassRateActual, failure.PassRateExpected))
+				}
+				md.Textf("  - `%s`: %s\n", failure.TestName, strings.Join(detailParts, ", "))
+			}
+		}
+	}
+
+	for _, s := range summaries {
+		if s.HasCandidateTier {
+			md.Textf("- ⚠ %s includes candidate-tier job data (not covered by Component Readiness)\n", jobVariantLabel(s.Variant))
+		}
+	}
+
+	md.Text("")
+	md.Text("")
+	fmt.Fprintln(out)
+}
+
+func hasAnyTestFailures(summaries []VariantRequirementSummary) bool {
+	for _, s := range summaries {
+		if len(s.TestFailures) > 0 {
+			return true
+		}
+	}
+	return false
+}
+
+func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*TestingResults, blockingErrors []error, requirementSummaries []VariantRequirementSummary, release string) utils.HTMLFeatureGate {
 	jobVariantsSet := sets.KeySet(testingResults)
 	jobVariants := OrderedJobVariants(jobVariantsSet.UnsortedList())
 
@@ -334,11 +593,32 @@ func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*Testin
 		tests = append(tests, row)
 	}
 
+	htmlRequirements := make([]utils.HTMLRequirementRow, 0, len(requirementSummaries))
+	for _, s := range requirementSummaries {
+		htmlRequirements = append(htmlRequirements, utils.HTMLRequirementRow{
+			Status:            statusMark(s.OverallPassed, s.IsWarning && !s.OverallPassed),
+			Passed:            s.OverallPassed,
+			Warning:           s.IsWarning && !s.OverallPassed,
+			Variant:           jobVariantLabel(s.Variant),
+			TestCountActual:   s.TestCountActual,
+			TestCountExpected: s.TestCountExpected,
+			TestCountPassed:   s.TestCountPassed,
+			MinRunsActual:     s.MinRunsActual,
+			MinRunsExpected:   s.MinRunsExpected,
+			MinRunsPassed:     s.MinRunsPassed,
+			MinPassActual:     s.MinPassRateActual,
+			MinPassExpected:   s.MinPassRateExpected,
+			MinPassPassed:     s.MinPassRatePassed,
+			HasCandidateTier:  s.HasCandidateTier,
+		})
+	}
+
 	return utils.HTMLFeatureGate{
-		Name:       name,
-		Sufficient: len(blockingErrors) == 0,
-		Variants:   variants,
-		Tests:      tests,
+		Name:         name,
+		Sufficient:   len(blockingErrors) == 0,
+		Requirements: htmlRequirements,
+		Variants:     variants,
+		Tests:        tests,
 	}
 }
 

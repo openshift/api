@@ -5,36 +5,59 @@ featureGates:
 - AutomatedEtcdBackup
 tests:
   onCreate:
-    - name: Should be able to create an EtcdBackup with a valid spec
+    - name: Should be able to create an EtcdBackup with local storage
       initial: |
         apiVersion: operator.openshift.io/v1alpha1
         kind: EtcdBackup
         spec:
-          pvcName: etcdbackup-pvc
+          storage:
+            type: Local
+            local:
+              hostPath: /etc/etcd/backups
       expected: |
         apiVersion: operator.openshift.io/v1alpha1
         kind: EtcdBackup
         spec:
-          pvcName: etcdbackup-pvc
-    - name: Should be able to create an EtcdBackup without the pvcName specified
+          storage:
+            type: Local
+            local:
+              hostPath: /etc/etcd/backups
+    - name: Should be able to create an EtcdBackup with pvc storage
       initial: |
         apiVersion: operator.openshift.io/v1alpha1
         kind: EtcdBackup
-        spec: {}
+        spec:
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+              path: /etcdbackups
       expected: |
         apiVersion: operator.openshift.io/v1alpha1
         kind: EtcdBackup
-        spec: {}
+        spec:
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+              path: /etcdbackups
   onUpdate:
-    - name: pvcName is immutable once set
+    - name: etcdbackup is immutable once created
       initial: |
         apiVersion: operator.openshift.io/v1alpha1
         kind: EtcdBackup
         spec:
-          pvcName: etcdbackup-pvc
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
       updated: |
         apiVersion: operator.openshift.io/v1alpha1
         kind: EtcdBackup
         spec:
-          pvcName: updated-etcdbackup-pvc
-      expectedError: "spec.pvcName: Invalid value: \"string\": pvcName is immutable once set"
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+              path: /etcdbackups
+      expectedError: "spec: Invalid value: \"object\": spec is immutable"

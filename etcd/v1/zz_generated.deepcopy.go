@@ -145,6 +145,16 @@ func (in *PacemakerClusterResourceStatus) DeepCopyInto(out *PacemakerClusterReso
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.FailCount != nil {
+		in, out := &in.FailCount, &out.FailCount
+		*out = new(int32)
+		**out = **in
+	}
+	if in.MigrationThreshold != nil {
+		in, out := &in.MigrationThreshold, &out.MigrationThreshold
+		*out = new(int32)
+		**out = **in
+	}
 	return
 }
 

@@ -14,6 +14,7 @@ const (
 	// Specifically, it aggregates the following conditions:
 	// - ClusterInServiceConditionType
 	// - ClusterNodeCountAsExpectedConditionType
+	// - ClusterFencingEnabledConditionType
 	// - NodeHealthyConditionType (for each node)
 	// When True, the cluster is healthy with reason "ClusterHealthy".
 	// When False, the cluster is unhealthy with reason "ClusterUnhealthy".
@@ -30,6 +31,16 @@ const (
 	// When True, the expected number of nodes are present with reason "AsExpected".
 	// When False, the node count is incorrect with reason "InsufficientNodes" or "ExcessiveNodes".
 	ClusterNodeCountAsExpectedConditionType = "NodeCountAsExpected"
+
+	// ClusterFencingEnabledConditionType tracks whether STONITH (fencing) is enabled in the cluster.
+	// Fencing is the mechanism that isolates failed nodes by powering them off via BMC. In Two Node
+	// OpenShift with Fencing, fencing is mandatory — without it, a network partition leaves both nodes
+	// running and data diverges. If someone runs `pcs property set stonith-enabled=false`, fencing is
+	// globally disabled and the cluster cannot recover from node failures.
+	// When True, fencing is enabled with reason "FencingEnabled". This is the normal operating state.
+	// When False, fencing is globally disabled with reason "FencingDisabled". This is a critical state.
+	// When Unknown, the fencing-enabled property has not yet been observed with reason "Pending".
+	ClusterFencingEnabledConditionType = "FencingEnabled"
 )
 
 // ClusterHealthy condition reasons
@@ -70,6 +81,23 @@ const (
 	// never happen during normal cluster operation. It is possible to enter this state with manual user intervention,
 	// but will also require user intervention to restore normal functionality.
 	ClusterNodeCountAsExpectedReasonExcessiveNodes = "ExcessiveNodes"
+)
+
+// ClusterFencingEnabled condition reasons
+const (
+	// ClusterFencingEnabledReasonEnabled means fencing (STONITH) is enabled in the cluster.
+	// This is the normal and expected operating state for Two Node OpenShift with Fencing.
+	ClusterFencingEnabledReasonEnabled = "FencingEnabled"
+
+	// ClusterFencingEnabledReasonDisabled means fencing (STONITH) is globally disabled in the cluster.
+	// Without fencing, the cluster cannot isolate failed nodes and etcd quorum recovery cannot happen.
+	// This is a critical state that should be investigated immediately.
+	ClusterFencingEnabledReasonDisabled = "FencingDisabled"
+
+	// ClusterFencingEnabledReasonPending means the fencing-enabled property has not yet been observed
+	// by the status collector. This is expected to be temporary, for example immediately after upgrade
+	// or before the first successful status collection.
+	ClusterFencingEnabledReasonPending = "Pending"
 )
 
 // Node-level condition types for PacemakerCluster.status.nodes[].conditions
@@ -301,7 +329,12 @@ const (
 	ResourceStartedConditionType = "Started"
 
 	// ResourceSchedulableConditionType tracks whether a resource is schedulable (not blocked).
-	// A resource that is not schedulable is unable to start or move to a different node.
+	// A resource that is not schedulable is unable to start or move to a different node. On a given
+	// node, this happens once that node's failCount reaches its migrationThreshold for this resource
+	// (see PacemakerClusterResourceStatus.failCount) — Pacemaker bans the resource from the node at
+	// that point, unless migrationThreshold is 0, which disables banning for this resource entirely.
+	// failCount/migrationThreshold expose the raw counters behind that ban; this condition surfaces
+	// the resulting verdict.
 	// In Two Node OpenShift with Fencing, we do not expect any resources to be unschedulable.
 	// When True, the resource is schedulable with reason "Schedulable". This is the normal operating state.
 	// When False, the resource is not schedulable with reason "Unschedulable". This is an unexpected state.
@@ -502,11 +535,15 @@ type PacemakerCluster struct {
 // +kubebuilder:validation:XValidation:rule="!has(oldSelf.lastUpdated) || self.lastUpdated >= oldSelf.lastUpdated",message="lastUpdated may not be set to an earlier timestamp"
 type PacemakerClusterStatus struct {
 	// conditions represent the observations of the pacemaker cluster's current state.
-	// Known condition types are: "Healthy", "InService", "NodeCountAsExpected".
+	// Known condition types are: "Healthy", "InService", "NodeCountAsExpected", "FencingEnabled".
 	// The "Healthy" condition is an aggregate that tracks the overall health of the cluster.
 	// The "InService" condition tracks whether the cluster is in service (not in maintenance mode).
 	// The "NodeCountAsExpected" condition tracks whether the expected number of nodes are present.
-	// Each of these conditions is required, so the array must contain at least 3 items.
+	// The "FencingEnabled" condition tracks whether STONITH (fencing) is enabled in the cluster.
+	// The "Healthy", "InService", and "NodeCountAsExpected" conditions are required, so the array
+	// must contain at least 3 items. The "FencingEnabled" condition is optional and is omitted
+	// when the status collector has not yet observed the stonith-enabled property, for example
+	// immediately after an upgrade from a version that does not report it.
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MinItems=3
@@ -716,6 +753,40 @@ type PacemakerClusterResourceStatus struct {
 	// Fencing agents are tracked separately in the node's fencingAgents field.
 	// +required
 	Name PacemakerClusterResourceName `json:"name,omitempty"`
+
+	// failCount is the current failure count Pacemaker records for this resource on
+	// this node, as reported by the CIB. Pacemaker increments this count each time an
+	// operation for this resource fails, and resets it to zero when a `pcs resource
+	// cleanup` is performed. Once failCount reaches migrationThreshold, Pacemaker bans
+	// this resource from this node (unless migrationThreshold is 0 — see its doc);
+	// that derived state is surfaced on this resource's ResourceSchedulableConditionType,
+	// which goes False with reason "Unschedulable" at that point. The value must be
+	// between 0 and 1000000, Pacemaker's representation of INFINITY, the sentinel it
+	// uses for a permanently-failed resource. This field is optional and is omitted
+	// when the status collector has not yet observed a fail count for this resource,
+	// for example on a freshly bootstrapped cluster or for a resource that has never
+	// failed.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1000000
+	// +optional
+	FailCount *int32 `json:"failCount,omitempty"`
+
+	// migrationThreshold is the configured number of failures after which Pacemaker
+	// will no longer attempt to run this resource on this node, as reported by the
+	// CIB. Without this value, failCount alone is uninterpretable — whether
+	// failCount 3 is alarming depends on whether the threshold is 5 or 1000000
+	// (Pacemaker's default INFINITY). See failCount's doc for how this threshold
+	// relates to the ResourceSchedulableConditionType. The value must be between 0
+	// and 1000000, Pacemaker's representation of INFINITY, with one special case:
+	// a value of 0 does not mean the resource is banned after zero failures —
+	// it means the opposite, Pacemaker disables this threshold entirely and will
+	// never ban the resource from this node regardless of how high failCount
+	// climbs. This field is optional and is omitted when the status collector has
+	// not yet observed a migration threshold for this resource.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1000000
+	// +optional
+	MigrationThreshold *int32 `json:"migrationThreshold,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -3278,7 +3278,7 @@ tests:
                 writeRelabelConfigs:
                   - name: empty-regex
                     sourceLabels:
-                      - __name__
+                      - job
                     regex: ""
                     action:
                       type: Keep
@@ -3295,7 +3295,7 @@ tests:
                 writeRelabelConfigs:
                   - name: empty-regex
                     sourceLabels:
-                      - __name__
+                      - job
                     regex: ""
                     action:
                       type: Keep
@@ -3313,7 +3313,7 @@ tests:
                 writeRelabelConfigs:
                   - name: omit-regex
                     sourceLabels:
-                      - __name__
+                      - job
                     action:
                       type: Keep
       expected: |
@@ -3329,7 +3329,7 @@ tests:
                 writeRelabelConfigs:
                   - name: omit-regex
                     sourceLabels:
-                      - __name__
+                      - job
                     action:
                       type: Keep
     - name: Should reject prometheusConfig remoteWrite writeRelabelConfigs regex above maxLength

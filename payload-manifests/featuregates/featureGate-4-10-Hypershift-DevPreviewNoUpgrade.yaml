@@ -388,9 +388,6 @@
                         "name": "SELinuxMount"
                     },
                     {
-                        "name": "SELinuxMountGAReadiness"
-                    },
-                    {
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {

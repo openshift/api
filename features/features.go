@@ -619,6 +619,14 @@ var (
 							enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 							mustRegister()
 
+	FeatureGateClusterAPIOperator = newFeatureGate("ClusterAPIOperator").
+						reportProblemsToJiraComponent("Cloud Compute / Cluster API Providers").
+						contactPerson("mdbooth").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/2149").
+						enable(inClusterProfile(SelfManaged), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						mustRegister()
+
 	FeatureGateClusterMonitoringConfig = newFeatureGate("ClusterMonitoringConfig").
 						reportProblemsToJiraComponent("Monitoring").
 						contactPerson("marioferh").

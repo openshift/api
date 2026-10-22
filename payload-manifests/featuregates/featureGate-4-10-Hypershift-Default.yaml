@@ -99,6 +99,9 @@
                         "name": "ClusterAPIMachineManagementVSphere"
                     },
                     {
+                        "name": "ClusterAPIOperator"
+                    },
+                    {
                         "name": "ClusterMonitoringConfig"
                     },
                     {

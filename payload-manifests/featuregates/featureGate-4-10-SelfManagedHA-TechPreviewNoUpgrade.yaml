@@ -226,6 +226,9 @@
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
+                        "name": "FencingResourceObservability"
+                    },
+                    {
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {

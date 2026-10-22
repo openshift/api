@@ -509,7 +509,6 @@ const (
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/2544
 // +openshift:file-pattern=cvoRunLevel=0000_25,operatorName=etcd,operatorOrdering=01,operatorComponent=two-node-fencing
-// +openshift:enable:FeatureGate=DualReplica
 // +kubebuilder:validation:XValidation:rule="self.metadata.name == 'cluster'",message="PacemakerCluster must be named 'cluster'"
 // +kubebuilder:validation:XValidation:rule="!has(oldSelf.status) || has(self.status)",message="status may not be removed once set"
 type PacemakerCluster struct {
@@ -543,7 +542,9 @@ type PacemakerClusterStatus struct {
 	// The "Healthy", "InService", and "NodeCountAsExpected" conditions are required, so the array
 	// must contain at least 3 items. The "FencingEnabled" condition is optional and is omitted
 	// when the status collector has not yet observed the stonith-enabled property, for example
-	// immediately after an upgrade from a version that does not report it.
+	// immediately after an upgrade from a version that does not report it. The "FencingEnabled"
+	// condition requires the FencingResourceObservability feature gate; when that gate is disabled,
+	// conditions must not contain a condition of type FencingEnabled.
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MinItems=3
@@ -551,6 +552,7 @@ type PacemakerClusterStatus struct {
 	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Healthy')",message="conditions must contain a condition of type Healthy"
 	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'InService')",message="conditions must contain a condition of type InService"
 	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'NodeCountAsExpected')",message="conditions must contain a condition of type NodeCountAsExpected"
+	// +openshift:validation:FeatureGateAwareXValidation:featureGate="",rule="!self.exists(c, c.type == 'FencingEnabled')",message="the FencingEnabled condition requires the FencingResourceObservability feature gate"
 	// +required
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
@@ -718,6 +720,7 @@ type PacemakerClusterFencingAgentStatus struct {
 //
 // Fencing agents are tracked separately in the fencingAgents field because they are mapped to
 // their target node (the node they can fence), not the node where monitoring operations are scheduled.
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=FencingResourceObservability,rule="has(self.failCount) == has(self.migrationThreshold)",message="failCount and migrationThreshold must be set together; failCount alone cannot be interpreted without its migrationThreshold"
 type PacemakerClusterResourceStatus struct {
 	// conditions represent the observations of the resource's current state.
 	// Known condition types are: "Healthy", "InService", "Managed", "Enabled", "Operational",
@@ -765,10 +768,13 @@ type PacemakerClusterResourceStatus struct {
 	// uses for a permanently-failed resource. This field is optional and is omitted
 	// when the status collector has not yet observed a fail count for this resource,
 	// for example on a freshly bootstrapped cluster or for a resource that has never
-	// failed.
+	// failed. This field requires the FencingResourceObservability feature gate; it is
+	// not present on clusters where that gate is disabled. failCount and
+	// migrationThreshold are always set or omitted together.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=1000000
 	// +optional
+	// +openshift:enable:FeatureGate=FencingResourceObservability
 	FailCount *int32 `json:"failCount,omitempty"`
 
 	// migrationThreshold is the configured number of failures after which Pacemaker
@@ -782,10 +788,14 @@ type PacemakerClusterResourceStatus struct {
 	// it means the opposite, Pacemaker disables this threshold entirely and will
 	// never ban the resource from this node regardless of how high failCount
 	// climbs. This field is optional and is omitted when the status collector has
-	// not yet observed a migration threshold for this resource.
+	// not yet observed a migration threshold for this resource. This field requires
+	// the FencingResourceObservability feature gate; it is not present on clusters
+	// where that gate is disabled. failCount and migrationThreshold are always set
+	// or omitted together.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=1000000
 	// +optional
+	// +openshift:enable:FeatureGate=FencingResourceObservability
 	MigrationThreshold *int32 `json:"migrationThreshold,omitempty"`
 }
 

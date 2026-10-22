@@ -3,9 +3,10 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/2544
-    api.openshift.io/merged-by-featuregates: "true"
-    include.release.openshift.io/ibm-cloud-managed: "true"
-    include.release.openshift.io/self-managed-high-availability: "true"
+    api.openshift.io/filename-cvo-runlevel: "0000_25"
+    api.openshift.io/filename-operator: etcd
+    api.openshift.io/filename-ordering: "01"
+    feature-gate.release.openshift.io/: "true"
   name: pacemakerclusters.etcd.openshift.io
 spec:
   group: etcd.openshift.io
@@ -16,7 +17,7 @@ spec:
     singular: pacemakercluster
   scope: Cluster
   versions:
-  - name: v1alpha1
+  - name: v1
     schema:
       openAPIV3Schema:
         description: |-
@@ -24,7 +25,7 @@ spec:
           PacemakerCluster is a cluster-scoped singleton resource. The name of this instance is "cluster". This
           resource provides a view into the health and status of a pacemaker-managed cluster in Two Node OpenShift with Fencing deployments.
 
-          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+          Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
         properties:
           apiVersion:
             description: |-
@@ -62,7 +63,9 @@ spec:
                   The "Healthy", "InService", and "NodeCountAsExpected" conditions are required, so the array
                   must contain at least 3 items. The "FencingEnabled" condition is optional and is omitted
                   when the status collector has not yet observed the stonith-enabled property, for example
-                  immediately after an upgrade from a version that does not report it.
+                  immediately after an upgrade from a version that does not report it. The "FencingEnabled"
+                  condition requires the FencingResourceObservability feature gate; when that gate is disabled,
+                  conditions must not contain a condition of type FencingEnabled.
                 items:
                   description: Condition contains details for one aspect of the current
                     state of this API Resource.
@@ -124,6 +127,9 @@ spec:
                 - type
                 x-kubernetes-list-type: map
                 x-kubernetes-validations:
+                - message: the FencingEnabled condition requires the FencingResourceObservability
+                    feature gate
+                  rule: '!self.exists(c, c.type == ''FencingEnabled'')'
                 - message: conditions must contain a condition of type Healthy
                   rule: self.exists(c, c.type == 'Healthy')
                 - message: conditions must contain a condition of type InService
@@ -575,42 +581,6 @@ spec:
                             - message: conditions must contain a condition of type
                                 Schedulable
                               rule: self.exists(c, c.type == 'Schedulable')
-                          failCount:
-                            description: |-
-                              failCount is the current failure count Pacemaker records for this resource on
-                              this node, as reported by the CIB. Pacemaker increments this count each time an
-                              operation for this resource fails, and resets it to zero when a `pcs resource
-                              cleanup` is performed. Once failCount reaches migrationThreshold, Pacemaker bans
-                              this resource from this node (unless migrationThreshold is 0 — see its doc);
-                              that derived state is surfaced on this resource's ResourceSchedulableConditionType,
-                              which goes False with reason "Unschedulable" at that point. The value must be
-                              between 0 and 1000000, Pacemaker's representation of INFINITY, the sentinel it
-                              uses for a permanently-failed resource. This field is optional and is omitted
-                              when the status collector has not yet observed a fail count for this resource,
-                              for example on a freshly bootstrapped cluster or for a resource that has never
-                              failed.
-                            format: int32
-                            maximum: 1000000
-                            minimum: 0
-                            type: integer
-                          migrationThreshold:
-                            description: |-
-                              migrationThreshold is the configured number of failures after which Pacemaker
-                              will no longer attempt to run this resource on this node, as reported by the
-                              CIB. Without this value, failCount alone is uninterpretable — whether
-                              failCount 3 is alarming depends on whether the threshold is 5 or 1000000
-                              (Pacemaker's default INFINITY). See failCount's doc for how this threshold
-                              relates to the ResourceSchedulableConditionType. The value must be between 0
-                              and 1000000, Pacemaker's representation of INFINITY, with one special case:
-                              a value of 0 does not mean the resource is banned after zero failures —
-                              it means the opposite, Pacemaker disables this threshold entirely and will
-                              never ban the resource from this node regardless of how high failCount
-                              climbs. This field is optional and is omitted when the status collector has
-                              not yet observed a migration threshold for this resource.
-                            format: int32
-                            maximum: 1000000
-                            minimum: 0
-                            type: integer
                           name:
                             description: |-
                               name is the name of the pacemaker resource.

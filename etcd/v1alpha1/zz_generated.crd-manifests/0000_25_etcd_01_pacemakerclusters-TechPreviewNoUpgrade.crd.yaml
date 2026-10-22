@@ -6,6 +6,7 @@ metadata:
     api.openshift.io/merged-by-featuregates: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: TechPreviewNoUpgrade
   name: pacemakerclusters.etcd.openshift.io
 spec:
   group: etcd.openshift.io
@@ -16,7 +17,7 @@ spec:
     singular: pacemakercluster
   scope: Cluster
   versions:
-  - name: v1
+  - name: v1alpha1
     schema:
       openAPIV3Schema:
         description: |-
@@ -24,7 +25,7 @@ spec:
           PacemakerCluster is a cluster-scoped singleton resource. The name of this instance is "cluster". This
           resource provides a view into the health and status of a pacemaker-managed cluster in Two Node OpenShift with Fencing deployments.
 
-          Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
         properties:
           apiVersion:
             description: |-
@@ -62,7 +63,9 @@ spec:
                   The "Healthy", "InService", and "NodeCountAsExpected" conditions are required, so the array
                   must contain at least 3 items. The "FencingEnabled" condition is optional and is omitted
                   when the status collector has not yet observed the stonith-enabled property, for example
-                  immediately after an upgrade from a version that does not report it.
+                  immediately after an upgrade from a version that does not report it. The "FencingEnabled"
+                  condition requires the FencingResourceObservability feature gate; when that gate is disabled,
+                  conditions must not contain a condition of type FencingEnabled.
                 items:
                   description: Condition contains details for one aspect of the current
                     state of this API Resource.
@@ -588,7 +591,9 @@ spec:
                               uses for a permanently-failed resource. This field is optional and is omitted
                               when the status collector has not yet observed a fail count for this resource,
                               for example on a freshly bootstrapped cluster or for a resource that has never
-                              failed.
+                              failed. This field requires the FencingResourceObservability feature gate; it is
+                              not present on clusters where that gate is disabled. failCount and
+                              migrationThreshold are always set or omitted together.
                             format: int32
                             maximum: 1000000
                             minimum: 0
@@ -606,7 +611,10 @@ spec:
                               it means the opposite, Pacemaker disables this threshold entirely and will
                               never ban the resource from this node regardless of how high failCount
                               climbs. This field is optional and is omitted when the status collector has
-                              not yet observed a migration threshold for this resource.
+                              not yet observed a migration threshold for this resource. This field requires
+                              the FencingResourceObservability feature gate; it is not present on clusters
+                              where that gate is disabled. failCount and migrationThreshold are always set
+                              or omitted together.
                             format: int32
                             maximum: 1000000
                             minimum: 0
@@ -626,6 +634,10 @@ spec:
                         - conditions
                         - name
                         type: object
+                        x-kubernetes-validations:
+                        - message: failCount and migrationThreshold must be set together;
+                            failCount alone cannot be interpreted without its migrationThreshold
+                          rule: has(self.failCount) == has(self.migrationThreshold)
                       maxItems: 8
                       minItems: 2
                       type: array

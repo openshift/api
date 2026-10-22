@@ -302,6 +302,9 @@
                         "name": "SignatureStores"
                     },
                     {
+                        "name": "StoragePathAlert"
+                    },
+                    {
                         "name": "TLSGroupPreferences"
                     },
                     {

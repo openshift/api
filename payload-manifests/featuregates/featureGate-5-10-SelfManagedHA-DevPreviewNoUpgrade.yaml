@@ -247,6 +247,9 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
+                        "name": "ImagePolicyDenyByDefault"
+                    },
+                    {
                         "name": "ImageStreamImportMode"
                     },
                     {

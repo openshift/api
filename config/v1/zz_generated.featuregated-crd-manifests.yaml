@@ -99,7 +99,8 @@ clusterimagepolicies.config.openshift.io:
   CRDName: clusterimagepolicies.config.openshift.io
   Capability: ""
   Category: ""
-  FeatureGates: []
+  FeatureGates:
+  - ImagePolicyDenyByDefault
   FilenameOperatorName: config-operator
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_10"
@@ -342,7 +343,8 @@ imagepolicies.config.openshift.io:
   CRDName: imagepolicies.config.openshift.io
   Capability: ""
   Category: ""
-  FeatureGates: []
+  FeatureGates:
+  - ImagePolicyDenyByDefault
   FilenameOperatorName: config-operator
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_10"

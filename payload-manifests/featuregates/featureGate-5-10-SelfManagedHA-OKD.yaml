@@ -38,9 +38,6 @@
                         "name": "AzureDualStackInstall"
                     },
                     {
-                        "name": "AzureMultiDisk"
-                    },
-                    {
                         "name": "BGPBasedVIPManagement"
                     },
                     {
@@ -314,6 +311,9 @@
                     },
                     {
                         "name": "AuthenticationComponentProxy"
+                    },
+                    {
+                        "name": "AzureMultiDisk"
                     },
                     {
                         "name": "BuildCSIVolumes"

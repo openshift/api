@@ -31568,6 +31568,247 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.ClusterAPI": {
+      "description": "ClusterAPI provides configuration for the capi-operator.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata",
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the specification of the desired behavior of the capi-operator.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterAPISpec"
+        },
+        "status": {
+          "description": "status defines the observed status of the capi-operator.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterAPIStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.ClusterAPIInstallerComponent": {
+      "description": "ClusterAPIInstallerComponent defines a component which will be installed by this revision.",
+      "type": "object",
+      "required": [
+        "source"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the human-readable name of the component. The value has no effect, and will not be set if the component does not define a name in its manifests. If set it must consist of alphanumeric characters, or '-', and may not exceed 255 characters.",
+          "type": "string"
+        },
+        "source": {
+          "description": "source is the required source of the component's manifests. It specifies the source type and its corresponding configuration.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterAPIInstallerComponentSource"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.ClusterAPIInstallerComponentImage": {
+      "description": "ClusterAPIInstallerComponentImage defines an image source for a component.",
+      "type": "object",
+      "required": [
+        "ref",
+        "profile"
+      ],
+      "properties": {
+        "profile": {
+          "description": "profile is the name of a profile to use from the image.\n\nA profile name may be up to 255 characters long. It must consist of alphanumeric characters, '-', or '_'.",
+          "type": "string"
+        },
+        "ref": {
+          "description": "ref is an image reference to the image containing the component manifests. The reference must be a valid image digest reference in the format host[:port][/namespace]/name@sha256:<digest>. The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the field must be between 1 to 447 characters.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.ClusterAPIInstallerComponentSource": {
+      "description": "ClusterAPIInstallerComponentSource defines the source of a component which will be installed by this revision.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "image": {
+          "description": "image defines an image source for a component. The image must contain a /capi-operator-installer directory containing the component manifests.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterAPIInstallerComponentImage"
+        },
+        "type": {
+          "description": "type is the source type of the component. The only valid value is Image. When set to Image, the image field must be set and will define an image source for the component.\n\nPossible enum values:\n - `\"Image\"` is an image source for a component.",
+          "type": "string",
+          "enum": [
+            "Image"
+          ]
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "image": "Image"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1.ClusterAPIInstallerRevision": {
+      "type": "object",
+      "required": [
+        "name",
+        "revision",
+        "contentID"
+      ],
+      "properties": {
+        "components": {
+          "description": "components is a list of components which will be installed by this revision. Components will be installed in the order they are listed. If omitted no components will be installed.\n\nThe maximum number of components is 32.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterAPIInstallerComponent"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "contentID": {
+          "description": "contentID uniquely identifies the content of this revision. The contentID must be between 1 and 255 characters long.",
+          "type": "string"
+        },
+        "manifestSubstitutions": {
+          "description": "manifestSubstitutions is a list of envsubst style substitutions which will be applied to manifests in the revision during rendering. If defined it must not be empty, and may not contain more than 32 items. Each manifest substitution must have a unique key.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterAPIInstallerRevisionManifestSubstitution"
+          },
+          "x-kubernetes-list-map-keys": [
+            "key"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "name": {
+          "description": "name is the name of a revision.",
+          "type": "string"
+        },
+        "revision": {
+          "description": "revision is a monotonically increasing number that is assigned to a revision. It must be greater than or equal to 1, and less than 2^53.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "unmanagedCustomResourceDefinitions": {
+          "description": "unmanagedCustomResourceDefinitions is a list of the names of ClusterResourceDefinition (CRD) objects which are included in this revision, but which should not be installed or updated. If not set, all CRDs in the revision will be managed by the CAPI operator.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      },
+      "x-kubernetes-map-type": "atomic"
+    },
+    "com.github.openshift.api.operator.v1.ClusterAPIInstallerRevisionManifestSubstitution": {
+      "description": "ClusterAPIInstallerRevisionManifestSubstitution defines an envsubst style substitution which will be applied to manifests in a revision during rendering.",
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "description": "key is the name of the envsubst variable to substitute. It must be a valid envsubst variable name, consisting of letters, digits, and underscores, and must start with a letter or underscore. The key must not be empty, and must not exceed 255 characters.",
+          "type": "string"
+        },
+        "value": {
+          "description": "value is the value to substitute for the envsubst variable. It may be empty, in which case the variable will be substituted with an empty string. The value must not exceed 4096 characters.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.ClusterAPIList": {
+      "description": "ClusterAPIList contains a list of ClusterAPI configurations\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items contains the items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterAPI"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.ClusterAPISpec": {
+      "description": "ClusterAPISpec defines the desired configuration of the capi-operator. The spec is required but we deliberately allow it to be empty.",
+      "type": "object",
+      "properties": {
+        "unmanagedCustomResourceDefinitions": {
+          "description": "unmanagedCustomResourceDefinitions is a list of ClusterResourceDefinition (CRD) names that should not be managed by the capi-operator installer controller. This allows external actors to own specific CRDs while capi-operator manages others.\n\nEach CRD name must be a valid DNS-1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character, with a maximum length of 253 characters. CRD names must contain at least two '.' characters. Example: \"clusters.cluster.x-k8s.io\"\n\nItems cannot be removed from this list once added.\n\nThe maximum number of unmanagedCustomResourceDefinitions is 128.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-kubernetes-list-type": "set"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.ClusterAPIStatus": {
+      "description": "ClusterAPIStatus describes the current state of the capi-operator.",
+      "type": "object",
+      "required": [
+        "desiredRevision",
+        "revisions"
+      ],
+      "properties": {
+        "currentRevision": {
+          "description": "currentRevision is the name of the most recently fully applied revision. It is written by the installer controller. If it is absent, it indicates that no revision has been fully applied yet. If set, currentRevision must correspond to an entry in the revisions list.",
+          "type": "string"
+        },
+        "desiredRevision": {
+          "description": "desiredRevision is the name of the desired revision. It is written by the revision controller. It must be set to the name of the entry in the revisions list with the highest revision number.",
+          "type": "string"
+        },
+        "observedRevisionGeneration": {
+          "description": "observedRevisionGeneration is the generation of the ClusterAPI object that was last observed by the revision controller. If specified it must be greater than or equal to 1, and less than 2^53. It may not decrease or be unset once set.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "revisions": {
+          "description": "revisions is a list of all currently active revisions. A revision is active until the installer controller updates currentRevision to a later revision. It is written by the revision controller.\n\nThe maximum number of revisions is 16. All revisions must have a unique name. All revisions must have a unique revision number. When adding a revision, the revision number must be greater than the highest revision number in the list. Revisions are immutable, although they can be deleted.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterAPIInstallerRevision"
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.ClusterBootImageAutomatic": {
       "description": "ClusterBootImageAutomatic is used to describe the cluster boot image in Automatic mode. It stores the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image. At least one of these values are required. If ocpVersion and rhcosVersion are defined, both values will be used for checking skew compliance. If only ocpVersion is defined, only that value will be used for checking skew compliance. If only rhcosVersion is defined, only that value will be used for checking skew compliance.",
       "type": "object",

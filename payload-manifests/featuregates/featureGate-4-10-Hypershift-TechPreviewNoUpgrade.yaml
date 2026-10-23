@@ -226,9 +226,6 @@
                         "name": "DRAWorkloadResourceClaims"
                     },
                     {
-                        "name": "DualReplica"
-                    },
-                    {
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {

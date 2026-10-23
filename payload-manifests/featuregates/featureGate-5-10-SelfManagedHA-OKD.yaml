@@ -325,9 +325,6 @@
                         "name": "CRIOCredentialProviderConfig"
                     },
                     {
-                        "name": "DualReplica"
-                    },
-                    {
                         "name": "EVPN"
                     },
                     {

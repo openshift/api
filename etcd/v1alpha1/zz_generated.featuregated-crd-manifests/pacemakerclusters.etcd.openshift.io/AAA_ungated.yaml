@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_25"
     api.openshift.io/filename-operator: etcd
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/DualReplica: "true"
+    feature-gate.release.openshift.io/: "true"
   name: pacemakerclusters.etcd.openshift.io
 spec:
   group: etcd.openshift.io

@@ -177,9 +177,6 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
-                        "name": "IngressComponentRouteLabels"
-                    },
-                    {
                         "name": "IngressControllerLBSecurityGroupsAWS"
                     },
                     {
@@ -354,6 +351,9 @@
                     },
                     {
                         "name": "ImageStreamImportMode"
+                    },
+                    {
+                        "name": "IngressComponentRouteLabels"
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"

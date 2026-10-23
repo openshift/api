@@ -364,9 +364,6 @@
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
-                        "name": "ImageStreamImportMode"
-                    },
-                    {
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {

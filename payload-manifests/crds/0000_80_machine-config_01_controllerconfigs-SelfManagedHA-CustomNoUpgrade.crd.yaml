@@ -897,6 +897,15 @@ spec:
                                 x-kubernetes-list-type: atomic
                                 x-kubernetes-validations:
                                 - rule: self.all(x, self.exists_one(y, x == y))
+                              maxAllowedAddressPairs:
+                                description: |-
+                                  maxAllowedAddressPairs is the maximum number of allowed address pairs
+                                  configured in Neutron. When set, the value must be greater than or equal to 1.
+                                  When unset, Neutron's default configuration of 10 is used.
+                                format: int32
+                                maximum: 2147483647
+                                minimum: 1
+                                type: integer
                             type: object
                             x-kubernetes-validations:
                             - message: apiServerInternalIPs list is required once

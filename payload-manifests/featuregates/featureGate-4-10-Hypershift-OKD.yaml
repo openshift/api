@@ -287,6 +287,9 @@
                         "name": "OnPremDNSRecords"
                     },
                     {
+                        "name": "PacemakerAlertAgentStatus"
+                    },
+                    {
                         "name": "PodGroupPreemptionPolicy"
                     },
                     {

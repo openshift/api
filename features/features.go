@@ -754,6 +754,14 @@ var (
 				enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 				mustRegister()
 
+	FeatureGatePacemakerAlertAgentStatus = newFeatureGate("PacemakerAlertAgentStatus").
+						reportProblemsToJiraComponent("Two Node Fencing").
+						contactPerson("jaypoulz").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1675").
+						enable(inTechPreviewNoUpgrade()).
+						mustRegister()
+
 	FeatureShortCertRotation = newFeatureGate("ShortCertRotation").
 					reportProblemsToJiraComponent("kube-apiserver").
 					contactPerson("vrutkovs").

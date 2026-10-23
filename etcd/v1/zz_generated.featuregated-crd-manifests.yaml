@@ -6,6 +6,7 @@ pacemakerclusters.etcd.openshift.io:
   Category: ""
   FeatureGates:
   - DualReplica
+  - PacemakerAlertAgentStatus
   FilenameOperatorName: etcd
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_25"

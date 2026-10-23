@@ -1616,17 +1616,19 @@ type AdditionalAlertmanagerConfig struct {
 	// The current default value is `HTTP`.
 	// +optional
 	Scheme AlertmanagerScheme `json:"scheme,omitempty"`
-	// staticConfigs is a list of statically configured Alertmanager endpoints in the form
-	// of `<host>:<port>`. Each entry must be a valid hostname, IPv4 address, or IPv6 address
-	// (in brackets) followed by a colon and a valid port number (1-65535).
-	// Examples: "alertmanager.example.com:9093", "192.168.1.100:9093", "[::1]:9093"
+	// staticConfigs is a list of statically configured Alertmanager endpoints.
+	// Each entry must be a valid hostname, IPv4 address, or IPv6 address (in brackets),
+	// optionally followed by a colon and a port number (1-65535).
+	// When the port is omitted, Prometheus uses the default port for the configured scheme
+	// (80 for HTTP, 443 for HTTPS).
+	// Examples: "alertmanager.example.com", "alertmanager.example.com:9093", "192.168.1.100:9093", "[::1]:9093"
 	// At least one endpoint must be specified (minimum 1, maximum 10 endpoints).
 	// Each entry must be unique and non-empty (empty string is invalid).
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:items:MinLength=1
 	// +kubebuilder:validation:items:MaxLength=255
-	// +kubebuilder:validation:items:XValidation:rule="isURL('http://' + self) && size(url('http://' + self).getHostname()) > 0 && size(url('http://' + self).getPort()) > 0 && int(url('http://' + self).getPort()) >= 1 && int(url('http://' + self).getPort()) <= 65535",message="must be a valid 'host:port' where host is a DNS name, IPv4, or IPv6 address (in brackets), and port is 1-65535"
+	// +kubebuilder:validation:items:XValidation:rule="isURL('http://' + self) && size(url('http://' + self).getHostname()) > 0 && (size(url('http://' + self).getPort()) == 0 || (int(url('http://' + self).getPort()) >= 1 && int(url('http://' + self).getPort()) <= 65535))",message="must be a valid host or host:port where host is a DNS name, IPv4, or IPv6 address (in brackets), and port (if specified) is 1-65535"
 	// +listType=set
 	// +required
 	StaticConfigs []string `json:"staticConfigs,omitempty"`

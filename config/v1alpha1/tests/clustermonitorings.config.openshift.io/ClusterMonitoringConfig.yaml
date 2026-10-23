@@ -4,6 +4,138 @@ crdName: clustermonitorings.config.openshift.io
 featureGate: ClusterMonitoringConfig
 tests:
   onCreate:
+    - name: Should accept remoteWrite URL simple query
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?tenant=example"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?tenant=example"
+    - name: Should accept remoteWrite URL multiple query parameters
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?tenant=example&region=eu"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?tenant=example&region=eu"
+    - name: Should accept remoteWrite URL escaped query parameters
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?tenant=team%2Fa&filter=a%26b%3Dc"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?tenant=team%2Fa&filter=a%26b%3Dc"
+    - name: Should accept remoteWrite URL http query parameters
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "http://remote.example.com/write?tenant=example"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "http://remote.example.com/write?tenant=example"
+    - name: Should reject remoteWrite URL unsupported scheme with query
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "ftp://remote.example.com/write?tenant=example"
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].url: Invalid value'
+    - name: Should reject remoteWrite URL missing hostname with query
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https:///write?tenant=example"
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].url: Invalid value'
+    - name: Should reject remoteWrite URL fragment with query
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?tenant=example#fragment"
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].url: Invalid value'
+    - name: Should reject remoteWrite URL user information with query
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://user:password@remote.example.com/write?tenant=example"
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].url: Invalid value'
     - name: Should be able to create a minimal ClusterMonitoring
       initial: |
         apiVersion: config.openshift.io/v1alpha1

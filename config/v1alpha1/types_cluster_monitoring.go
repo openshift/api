@@ -1666,7 +1666,7 @@ type Label struct {
 type RemoteWriteSpec struct {
 	// url is the URL of the remote write endpoint.
 	// Must be a valid URL with http or https scheme and a non-empty hostname.
-	// Query parameters, fragments, and user information (e.g. user:password@host) are not allowed.
+	// Query parameters are allowed. Fragments and user information (e.g. user:password@host) are not allowed.
 	// Empty string is invalid. Must be between 1 and 2048 characters in length.
 	// +required
 	// +kubebuilder:validation:MaxLength=2048
@@ -1674,7 +1674,6 @@ type RemoteWriteSpec struct {
 	// +kubebuilder:validation:XValidation:rule="isURL(self)",message="must be a valid URL"
 	// +kubebuilder:validation:XValidation:rule="!isURL(self) || url(self).getScheme() == 'http' || url(self).getScheme() == 'https'",message="must use http or https scheme"
 	// +kubebuilder:validation:XValidation:rule="!isURL(self) || size(url(self).getHostname()) > 0",message="must have a non-empty hostname"
-	// +kubebuilder:validation:XValidation:rule="!isURL(self) || url(self).getQuery().size() == 0",message="query parameters are not allowed"
 	// +kubebuilder:validation:XValidation:rule="!self.matches('.*#.*')",message="fragments are not allowed"
 	// +kubebuilder:validation:XValidation:rule="!self.matches('.*@.*')",message="user information (e.g. user:password@host) is not allowed"
 	URL string `json:"url,omitempty"`

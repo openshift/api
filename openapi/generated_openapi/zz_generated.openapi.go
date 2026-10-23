@@ -23996,7 +23996,14 @@ func schema_openshift_api_config_v1alpha1_AdditionalAlertmanagerConfig(ref commo
 					},
 					"timeoutSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "timeoutSeconds defines the timeout in seconds for requests to Alertmanager. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Currently the default is 10 seconds. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
+							Description: "timeoutSeconds defines the timeout in seconds for requests to Alertmanager. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Currently the default is 10 seconds. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes). Deprecated: use timeoutMilliseconds instead. When both fields are set, timeoutMilliseconds takes precedence.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"timeoutMilliseconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "timeoutMilliseconds defines the timeout in milliseconds for requests to Alertmanager. When both timeout fields are set, timeoutMilliseconds takes precedence over timeoutSeconds. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Currently the default is 10000 milliseconds (10 seconds). Minimum value is 1 millisecond. Maximum value is 600000 milliseconds (10 minutes).",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},

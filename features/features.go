@@ -536,7 +536,7 @@ var (
 
 	FeatureGateMachineAPIMigrationNutanix = newFeatureGate("MachineAPIMigrationNutanix").
 						reportProblemsToJiraComponent("Cloud Compute / Cluster API Providers").
-						contactPerson("Abhay Aggrawal").
+						contactPerson("abhay-nutanix").
 						productScope(ocpSpecific).
 						enhancementPR("https://github.com/openshift/enhancements/pull/1465").
 						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).

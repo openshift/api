@@ -227,6 +227,9 @@
                         "name": "MaxUnavailableStatefulSet"
                     },
                     {
+                        "name": "MetalEnrollmentAPI"
+                    },
+                    {
                         "name": "MinimumKubeletVersion"
                     },
                     {

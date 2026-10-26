@@ -304,6 +304,9 @@
                         "name": "MaxUnavailableStatefulSet"
                     },
                     {
+                        "name": "MetalEnrollmentAPI"
+                    },
+                    {
                         "name": "MetricsCollectionProfiles"
                     },
                     {

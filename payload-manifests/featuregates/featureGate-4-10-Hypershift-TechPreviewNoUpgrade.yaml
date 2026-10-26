@@ -83,6 +83,9 @@
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
+                        "name": "MetalEnrollmentAPI"
+                    },
+                    {
                         "name": "MultiArchInstallAzure"
                     },
                     {

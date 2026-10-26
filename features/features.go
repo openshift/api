@@ -534,6 +534,14 @@ var (
 						enhancementPR("https://github.com/openshift/enhancements/pull/1465").
 						mustRegister()
 
+	FeatureGateMachineAPIMigrationNutanix = newFeatureGate("MachineAPIMigrationNutanix").
+						reportProblemsToJiraComponent("Cloud Compute / Cluster API Providers").
+						contactPerson("Abhay Aggrawal").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1465").
+						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						mustRegister()
+
 	FeatureGateMachineAPIMigrationBareMetal = newFeatureGate("MachineAPIMigrationBareMetal").
 						reportProblemsToJiraComponent("Cloud Compute / BareMetal Provider").
 						contactPerson("ddonati").
@@ -620,12 +628,12 @@ var (
 							mustRegister()
 
 	FeatureGateClusterAPIOperator = newFeatureGate("ClusterAPIOperator").
-						reportProblemsToJiraComponent("Cloud Compute / Cluster API Providers").
-						contactPerson("mdbooth").
-						productScope(ocpSpecific).
-						enhancementPR("https://github.com/openshift/enhancements/pull/2149").
-						enable(inClusterProfile(SelfManaged), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-						mustRegister()
+					reportProblemsToJiraComponent("Cloud Compute / Cluster API Providers").
+					contactPerson("mdbooth").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/2149").
+					enable(inClusterProfile(SelfManaged), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					mustRegister()
 
 	FeatureGateClusterMonitoringConfig = newFeatureGate("ClusterMonitoringConfig").
 						reportProblemsToJiraComponent("Monitoring").

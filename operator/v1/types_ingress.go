@@ -1,7 +1,6 @@
 package v1
 
 import (
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -202,17 +201,14 @@ type CanaryNodePlacement struct {
 	// +listType=atomic
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=32
-	// +kubebuilder:validation:XValidation:rule=`self.all(t, has(t.operator) && t.operator in ['Exists', 'Equal'])`,message="tolerations operator must be 'Exists' or 'Equal'"
-	// +kubebuilder:validation:XValidation:rule=`self.all(t, has(t.effect) && t.effect in ['NoSchedule', 'PreferNoSchedule', 'NoExecute'])`,message="tolerations effect must be 'NoSchedule', 'PreferNoSchedule', or 'NoExecute'"
-	// +kubebuilder:validation:XValidation:rule=`self.all(t, !has(t.operator) || t.operator != 'Exists' || !has(t.value) || t.value == '')`,message="tolerations value must be empty when operator is 'Exists'"
-	// +kubebuilder:validation:XValidation:rule=`self.all(t, has(t.key) && t.key != '')`,message="tolerations key must be non-empty"
-	// +kubebuilder:validation:XValidation:rule=`self.all(t, !has(t.key) || !format.qualifiedName().validate(t.key).hasValue())`,message="tolerations key must be a qualified label key with a name of 1-63 characters and an optional DNS prefix of at most 253 characters"
-	// +kubebuilder:validation:XValidation:rule=`self.all(t, !has(t.operator) || t.operator != 'Equal' || !has(t.value) || !format.labelValue().validate(t.value).hasValue())`,message="tolerations Equal value must be a valid label value of at most 63 characters"
-	// +kubebuilder:validation:XValidation:rule=`self.all(t, !has(t.tolerationSeconds) || (has(t.effect) && t.effect == 'NoExecute'))`,message="tolerations effect must be 'NoExecute' when tolerationSeconds is set"
 	Tolerations []CanaryToleration `json:"tolerations,omitempty"`
 }
 
 // CanaryToleration describes a toleration added to the ingress canary daemonset.
+//
+// +kubebuilder:validation:XValidation:rule=`!has(self.operator) || self.operator != 'Exists' || !has(self.value) || self.value == ""`,message="tolerations value must be empty when operator is 'Exists'"
+// +kubebuilder:validation:XValidation:rule=`!has(self.operator) || self.operator != 'Equal' || !has(self.value) || !format.labelValue().validate(self.value).hasValue()`,message="tolerations Equal value must be a valid label value of at most 63 characters"
+// +kubebuilder:validation:XValidation:rule=`!has(self.tolerationSeconds) || (has(self.effect) && self.effect == 'NoExecute')`,message="tolerations effect must be 'NoExecute' when tolerationSeconds is set"
 type CanaryToleration struct {
 	// key is required and identifies the taint to tolerate. It must be a qualified
 	// label key of 1-317 characters: an alphanumeric-bounded name of 1-63
@@ -221,6 +217,7 @@ type CanaryToleration struct {
 	// +required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=317
+	// +kubebuilder:validation:XValidation:rule=`!format.qualifiedName().validate(self).hasValue()`,message="tolerations key must be a qualified label key with a name of 1-63 characters and an optional DNS prefix of at most 253 characters"
 	Key string `json:"key,omitempty"`
 
 	// operator is required and specifies how the taint value is matched.
@@ -230,8 +227,9 @@ type CanaryToleration struct {
 	// +required
 	Operator CanaryTolerationOperator `json:"operator,omitempty"`
 
-	// value is optional and defaults to the empty string when omitted. For Equal,
-	// it must be empty or a label value of at most 63 characters, consisting of
+	// value is optional and there is no semantic difference between omitting it and
+	// setting it to the empty string; both mean no value is matched. For Equal, it
+	// must be empty or a label value of at most 63 characters, consisting of
 	// alphanumerics, '-', '_', or '.', beginning and ending with an alphanumeric
 	// character. For Exists, it must be empty or omitted.
 	// +optional
@@ -244,8 +242,7 @@ type CanaryToleration struct {
 	// rejected. NoSchedule prevents scheduling, PreferNoSchedule expresses a
 	// scheduling preference, and NoExecute also evicts pods that do not tolerate it.
 	// +required
-	// +kubebuilder:validation:Enum=NoSchedule;PreferNoSchedule;NoExecute
-	Effect corev1.TaintEffect `json:"effect,omitempty"`
+	Effect CanaryTolerationEffect `json:"effect,omitempty"`
 
 	// tolerationSeconds is optional and may be set only for effect NoExecute.
 	// When omitted, the taint is tolerated indefinitely. When specified, this is
@@ -254,6 +251,26 @@ type CanaryToleration struct {
 	// +optional
 	TolerationSeconds *int64 `json:"tolerationSeconds,omitempty"`
 }
+
+// CanaryTolerationEffect is the effect of a taint that an ingress canary
+// toleration matches.
+// +kubebuilder:validation:Enum=NoSchedule;PreferNoSchedule;NoExecute
+// +enum
+type CanaryTolerationEffect string
+
+const (
+	// CanaryTolerationEffectNoSchedule prevents scheduling of pods that do not
+	// tolerate the taint.
+	CanaryTolerationEffectNoSchedule CanaryTolerationEffect = "NoSchedule"
+
+	// CanaryTolerationEffectPreferNoSchedule expresses a scheduling preference
+	// against scheduling pods that do not tolerate the taint.
+	CanaryTolerationEffectPreferNoSchedule CanaryTolerationEffect = "PreferNoSchedule"
+
+	// CanaryTolerationEffectNoExecute prevents scheduling and evicts running
+	// pods that do not tolerate the taint.
+	CanaryTolerationEffectNoExecute CanaryTolerationEffect = "NoExecute"
+)
 
 // CanaryTolerationOperator describes how an ingress canary toleration matches
 // the value of the taint it tolerates.

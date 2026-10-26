@@ -55196,14 +55196,14 @@ func schema_openshift_api_operator_v1_CanaryToleration(ref common.ReferenceCallb
 					},
 					"value": {
 						SchemaProps: spec.SchemaProps{
-							Description: "value is optional and defaults to the empty string when omitted. For Equal, it must be empty or a label value of at most 63 characters, consisting of alphanumerics, '-', '_', or '.', beginning and ending with an alphanumeric character. For Exists, it must be empty or omitted.",
+							Description: "value is optional and there is no semantic difference between omitting it and setting it to the empty string; both mean no value is matched. For Equal, it must be empty or a label value of at most 63 characters, consisting of alphanumerics, '-', '_', or '.', beginning and ending with an alphanumeric character. For Exists, it must be empty or omitted.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"effect": {
 						SchemaProps: spec.SchemaProps{
-							Description: "effect is required and specifies the taint effect to match. Only NoSchedule, PreferNoSchedule, and NoExecute are allowed; omitted or empty effects are rejected. NoSchedule prevents scheduling, PreferNoSchedule expresses a scheduling preference, and NoExecute also evicts pods that do not tolerate it.\n\nPossible enum values:\n - `\"NoExecute\"` Evict any already-running pods that do not tolerate the taint. Currently enforced by NodeController.\n - `\"NoSchedule\"` Do not allow new pods to schedule onto the node unless they tolerate the taint, but allow all pods submitted to Kubelet without going through the scheduler to start, and allow all already-running pods to continue running. Enforced by the scheduler.\n - `\"PreferNoSchedule\"` Like TaintEffectNoSchedule, but the scheduler tries not to schedule new pods onto the node, rather than prohibiting new pods from scheduling onto the node entirely. Enforced by the scheduler.",
+							Description: "effect is required and specifies the taint effect to match. Only NoSchedule, PreferNoSchedule, and NoExecute are allowed; omitted or empty effects are rejected. NoSchedule prevents scheduling, PreferNoSchedule expresses a scheduling preference, and NoExecute also evicts pods that do not tolerate it.\n\nPossible enum values:\n - `\"NoExecute\"` prevents scheduling and evicts running pods that do not tolerate the taint.\n - `\"NoSchedule\"` prevents scheduling of pods that do not tolerate the taint.\n - `\"PreferNoSchedule\"` expresses a scheduling preference against scheduling pods that do not tolerate the taint.",
 							Type:        []string{"string"},
 							Format:      "",
 							Enum:        []interface{}{"NoExecute", "NoSchedule", "PreferNoSchedule"},

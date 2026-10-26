@@ -59,8 +59,8 @@ type APIServerSpec struct {
 	// tlsSecurityProfile specifies settings for TLS connections for externally exposed servers.
 	//
 	// If unset, a default (which may change between releases) is chosen. Note that only Old,
-	// Intermediate and Custom profiles are currently supported, and the maximum available
-	// minTLSVersion is VersionTLS12.
+	// Intermediate, Modern and Custom profiles are currently supported, and the maximum available
+	// minTLSVersion is VersionTLS13.
 	// +optional
 	TLSSecurityProfile *TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
 	// audit specifies the settings for audit configuration to be applied to all OpenShift-provided

@@ -14,9 +14,6 @@ type TLSSecurityProfile struct {
 	// are found to be insecure.  Depending on precisely which ciphers are available to a process, the list may be
 	// reduced.
 	//
-	// Note that the Modern profile is currently not supported because it is not
-	// yet well adopted by common software libraries.
-	//
 	// +unionDiscriminator
 	// +optional
 	Type TLSProfileType `json:"type"`

@@ -297,8 +297,8 @@ spec:
                   tlsSecurityProfile specifies settings for TLS connections for externally exposed servers.
 
                   If unset, a default (which may change between releases) is chosen. Note that only Old,
-                  Intermediate and Custom profiles are currently supported, and the maximum available
-                  minTLSVersion is VersionTLS12.
+                  Intermediate, Modern and Custom profiles are currently supported, and the maximum available
+                  minTLSVersion is VersionTLS13.
                 properties:
                   custom:
                     description: |-
@@ -483,9 +483,6 @@ spec:
                       The profiles are intent based, so they may change over time as new ciphers are developed and existing ciphers
                       are found to be insecure.  Depending on precisely which ciphers are available to a process, the list may be
                       reduced.
-
-                      Note that the Modern profile is currently not supported because it is not
-                      yet well adopted by common software libraries.
                     enum:
                     - Old
                     - Intermediate

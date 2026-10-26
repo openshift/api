@@ -116,6 +116,71 @@ tests:
           - directive: ImgSrc
             values:
             - https://img1.com/
+    - name: Should accept ObjectSrc CSP configuration
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsolePlugin
+        spec:
+          displayName: foo
+          backend:
+            type: Service
+          contentSecurityPolicy:
+          - directive: ObjectSrc
+            values:
+            - https://objects.example.com
+      expected: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsolePlugin
+        spec:
+          displayName: foo
+          backend:
+            type: Service
+          contentSecurityPolicy:
+          - directive: ObjectSrc
+            values:
+            - https://objects.example.com
+    - name: Should reject MediaSrc while outside supported CSP scope
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsolePlugin
+        spec:
+          displayName: foo
+          backend:
+            type: Service
+          contentSecurityPolicy:
+          - directive: MediaSrc
+            values:
+            - https://media.example.com
+      expectedError: 'Unsupported value: "MediaSrc"'
+    - name: Should reject duplicate ObjectSrc CSP directive entries
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsolePlugin
+        spec:
+          displayName: foo
+          backend:
+            type: Service
+          contentSecurityPolicy:
+          - directive: ObjectSrc
+            values:
+            - https://objects.example.com
+          - directive: ObjectSrc
+            values:
+            - https://objects2.example.com
+      expectedError: 'Duplicate value:'
+    - name: Should reject quoted ObjectSrc CSP values
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsolePlugin
+        spec:
+          displayName: foo
+          backend:
+            type: Service
+          contentSecurityPolicy:
+          - directive: ObjectSrc
+            values:
+            - "'none'"
+      expectedError: 'CSP directive value cannot contain a quote'
     - name: Should throw an error for duplicate CSP directive entries
       initial: |
         apiVersion: console.openshift.io/v1

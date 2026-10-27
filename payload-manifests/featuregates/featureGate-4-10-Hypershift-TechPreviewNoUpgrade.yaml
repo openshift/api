@@ -334,6 +334,9 @@
                         "name": "MachineAPIMigrationAWS"
                     },
                     {
+                        "name": "MachineAPIMigrationNutanix"
+                    },
+                    {
                         "name": "MachineAPIMigrationOpenStack"
                     },
                     {

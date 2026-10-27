@@ -382,6 +382,9 @@
                         "name": "TLSGroupPreferences"
                     },
                     {
+                        "name": "TNFObservability"
+                    },
+                    {
                         "name": "UpgradeStatus"
                     },
                     {

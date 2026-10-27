@@ -278,6 +278,9 @@
                         "name": "TLSGroupPreferences"
                     },
                     {
+                        "name": "TNFObservability"
+                    },
+                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {

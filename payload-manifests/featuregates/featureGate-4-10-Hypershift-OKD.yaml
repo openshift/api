@@ -209,6 +209,9 @@
                         "name": "MachineAPIMigrationGCP"
                     },
                     {
+                        "name": "MachineAPIMigrationNutanix"
+                    },
+                    {
                         "name": "MachineAPIMigrationOpenStack"
                     },
                     {

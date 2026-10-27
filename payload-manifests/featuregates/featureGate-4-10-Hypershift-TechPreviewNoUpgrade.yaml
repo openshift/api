@@ -313,6 +313,9 @@
                         "name": "IngressControllerMultipleHAProxyVersions"
                     },
                     {
+                        "name": "IngressControllerResourceConfiguration"
+                    },
+                    {
                         "name": "InsightsConfig"
                     },
                     {

@@ -1983,6 +1983,140 @@ spec:
                   These defaults are subject to change.
                 format: int32
                 type: integer
+              resources:
+                description: |-
+                  resources optionally configures the router regular container and the haproxy
+                  restartable init container in the ingress pod, independently. When omitted,
+                  the operator's resource configuration is unchanged. No baseline allocations
+                  or default limits are stored in this field.
+                  Resource configuration requires corresponding operator support. Resource
+                  claims are not supported for ingress containers and are not part of this
+                  API. Disabling the feature gate after configuration may prune this field
+                  and reset resource overrides; preservation is not guaranteed.
+                minProperties: 0
+                properties:
+                  haproxy:
+                    description: |-
+                      haproxy optionally configures resources for initContainers[name=haproxy],
+                      a restartable init sidecar in the same pod as router. When omitted, no
+                      resource-map overrides are specified for haproxy.
+                    minProperties: 0
+                    properties:
+                      limits:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        description: |-
+                          limits optionally overrides the operator baseline limits for the
+                          container. Each map may contain at most eight entries. Omitted keys have
+                          no limit unless an
+                          admission policy adds one; the operator resolves a limit without an
+                          explicit request by using the limit as the effective request.
+                          Extended-resource limits must be whole numbers.
+                        type: object
+                      requests:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        description: |-
+                          requests optionally overrides the operator baseline requests for the
+                          container. Each key is a resource name, such as cpu, memory, or a
+                          domain-qualified extended resource name, and each value is a quantity.
+                          Each map may contain at most eight entries. Requests must not exceed the
+                          corresponding limits.
+                          Extended resources must be whole numbers appearing with equal values in
+                          both requests and limits; an extended resource without a matching limit
+                          is rejected. Omitted keys keep the operator baseline request.
+                        type: object
+                    type: object
+                    x-kubernetes-validations:
+                    - message: requests and limits may each contain at most eight
+                        entries
+                      rule: (!has(self.requests) || self.requests.size() <= 8) &&
+                        (!has(self.limits) || self.limits.size() <= 8)
+                    - message: requests must be valid nonnegative quantities of at
+                        most 64 characters, must not exceed limits, and extended resources
+                        (domain-qualified names) must be whole numbers with equal
+                        values in both requests and limits
+                      rule: '[has(self.requests) ? self.requests : {}].all(m, m.all(k,
+                        string(m[k]).size() <= 64 && isQuantity(string(m[k])) && quantity(string(m[k])).compareTo(quantity(''0''))
+                        >= 0 && (!has(self.limits) || !(k in self.limits) || quantity(string(m[k])).compareTo(quantity(string(self.limits[k])))
+                        <= 0) && (!k.contains(''/'') || (has(self.limits) && (k in
+                        self.limits) && quantity(string(m[k])).isInteger() && quantity(string(m[k])).compareTo(quantity(string(self.limits[k])))
+                        == 0))))'
+                    - message: limits must be valid nonnegative quantities of at most
+                        64 characters, and extended resource limits (domain-qualified
+                        names) must be whole numbers
+                      rule: '[has(self.limits) ? self.limits : {}].all(m, m.all(k,
+                        string(m[k]).size() <= 64 && isQuantity(string(m[k])) && quantity(string(m[k])).compareTo(quantity(''0''))
+                        >= 0 && (!k.contains(''/'') || quantity(string(m[k])).isInteger())))'
+                  router:
+                    description: |-
+                      router optionally configures resources for containers[name=router]. When
+                      omitted, no resource-map overrides are specified for router.
+                    minProperties: 0
+                    properties:
+                      limits:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        description: |-
+                          limits optionally overrides the operator baseline limits for the
+                          container. Each map may contain at most eight entries. Omitted keys have
+                          no limit unless an
+                          admission policy adds one; the operator resolves a limit without an
+                          explicit request by using the limit as the effective request.
+                          Extended-resource limits must be whole numbers.
+                        type: object
+                      requests:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        description: |-
+                          requests optionally overrides the operator baseline requests for the
+                          container. Each key is a resource name, such as cpu, memory, or a
+                          domain-qualified extended resource name, and each value is a quantity.
+                          Each map may contain at most eight entries. Requests must not exceed the
+                          corresponding limits.
+                          Extended resources must be whole numbers appearing with equal values in
+                          both requests and limits; an extended resource without a matching limit
+                          is rejected. Omitted keys keep the operator baseline request.
+                        type: object
+                    type: object
+                    x-kubernetes-validations:
+                    - message: requests and limits may each contain at most eight
+                        entries
+                      rule: (!has(self.requests) || self.requests.size() <= 8) &&
+                        (!has(self.limits) || self.limits.size() <= 8)
+                    - message: requests must be valid nonnegative quantities of at
+                        most 64 characters, must not exceed limits, and extended resources
+                        (domain-qualified names) must be whole numbers with equal
+                        values in both requests and limits
+                      rule: '[has(self.requests) ? self.requests : {}].all(m, m.all(k,
+                        string(m[k]).size() <= 64 && isQuantity(string(m[k])) && quantity(string(m[k])).compareTo(quantity(''0''))
+                        >= 0 && (!has(self.limits) || !(k in self.limits) || quantity(string(m[k])).compareTo(quantity(string(self.limits[k])))
+                        <= 0) && (!k.contains(''/'') || (has(self.limits) && (k in
+                        self.limits) && quantity(string(m[k])).isInteger() && quantity(string(m[k])).compareTo(quantity(string(self.limits[k])))
+                        == 0))))'
+                    - message: limits must be valid nonnegative quantities of at most
+                        64 characters, and extended resource limits (domain-qualified
+                        names) must be whole numbers
+                      rule: '[has(self.limits) ? self.limits : {}].all(m, m.all(k,
+                        string(m[k]).size() <= 64 && isQuantity(string(m[k])) && quantity(string(m[k])).compareTo(quantity(''0''))
+                        >= 0 && (!k.contains(''/'') || quantity(string(m[k])).isInteger())))'
+                type: object
               routeAdmission:
                 description: |-
                   routeAdmission defines a policy for handling new route claims (for example,

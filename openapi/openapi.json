@@ -33987,6 +33987,40 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.IngressControllerResourceRequirements": {
+      "description": "IngressControllerResourceRequirements configures the resources of one ingress container. Each map may contain at most eight entries. Quantity representations must parse, be nonnegative, and contain at most 64 characters.",
+      "type": "object",
+      "properties": {
+        "limits": {
+          "description": "limits optionally overrides the operator baseline limits for the container. Each map may contain at most eight entries. Omitted keys have no limit unless an admission policy adds one; the operator resolves a limit without an explicit request by using the limit as the effective request. Extended-resource limits must be whole numbers.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+          }
+        },
+        "requests": {
+          "description": "requests optionally overrides the operator baseline requests for the container. Each key is a resource name, such as cpu, memory, or a domain-qualified extended resource name, and each value is a quantity. Each map may contain at most eight entries. Requests must not exceed the corresponding limits. Extended resources must be whole numbers appearing with equal values in both requests and limits; an extended resource without a matching limit is rejected. Omitted keys keep the operator baseline request.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.IngressControllerResources": {
+      "description": "IngressControllerResources configures resources for the two ingress containers. Omitted components and empty or omitted resource maps provide no resource-map overrides. Partial maps override only specified keys; removing a key restores the operator baseline during reconciliation. Limits without explicit requests are resolved by the operator, not defaulted into this API. For each resource present in both maps, the request must not exceed the limit. Extended resources (domain-qualified names, such as qat.intel.com/cy) must be whole numbers, must appear in both requests and limits with equal values, and cannot be requested without a matching limit. Hugepage page-size alignment and validation against resolved operator baselines are not enforced by this API; the consumer must validate workload configuration before changing workloads, report invalid or unsupported configuration through existing conditions, and retain the last valid workload rather than silently round quantities. If no valid workload exists, the consumer must not create an invalid one. Corrected supported configuration must allow normal reconciliation to resume. Resource claims are not supported for ingress containers and are not part of this API. An empty object specifies no resource configuration for either container.",
+      "type": "object",
+      "properties": {
+        "haproxy": {
+          "description": "haproxy optionally configures resources for initContainers[name=haproxy], a restartable init sidecar in the same pod as router. When omitted, no resource-map overrides are specified for haproxy.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerResourceRequirements"
+        },
+        "router": {
+          "description": "router optionally configures resources for containers[name=router]. When omitted, no resource-map overrides are specified for router.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerResourceRequirements"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.IngressControllerSetHTTPHeader": {
       "description": "IngressControllerSetHTTPHeader defines the value which needs to be set on an HTTP header.",
       "type": "object",
@@ -34070,6 +34104,10 @@
           "description": "replicas is the desired number of ingress controller replicas. If unset, the default depends on the value of the defaultPlacement field in the cluster config.openshift.io/v1/ingresses status.\n\nThe value of replicas is set based on the value of a chosen field in the Infrastructure CR. If defaultPlacement is set to ControlPlane, the chosen field will be controlPlaneTopology. If it is set to Workers the chosen field will be infrastructureTopology. Replicas will then be set to 1 or 2 based whether the chosen field's value is SingleReplica or HighlyAvailable, respectively.\n\nThese defaults are subject to change.",
           "type": "integer",
           "format": "int32"
+        },
+        "resources": {
+          "description": "resources optionally configures the router regular container and the haproxy restartable init container in the ingress pod, independently. When omitted, the operator's resource configuration is unchanged. No baseline allocations or default limits are stored in this field. Resource configuration requires corresponding operator support. Resource claims are not supported for ingress containers and are not part of this API. Disabling the feature gate after configuration may prune this field and reset resource overrides; preservation is not guaranteed.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerResources"
         },
         "routeAdmission": {
           "description": "routeAdmission defines a policy for handling new route claims (for example, to allow or deny claims across namespaces).\n\nIf empty, defaults will be applied. See specific routeAdmission fields for details about their defaults.",

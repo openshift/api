@@ -4,6 +4,72 @@ crdName: clustermonitorings.config.openshift.io
 featureGate: ClusterMonitoringConfig
 tests:
   onCreate:
+    - name: Should accept remoteWrite URL at sign in query value
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?contact=ops@example.com"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?contact=ops@example.com"
+    - name: Should accept remoteWrite URL at sign in path
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/team@ops/write?tenant=example"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/team@ops/write?tenant=example"
+    - name: Should reject remoteWrite URL username-only user information
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://user@remote.example.com/write?tenant=example"
+      expectedError: 'user information (e.g. user:password@host) is not allowed'
+    - name: Should reject remoteWrite URL encoded user information
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://user%40example.com:password@remote.example.com/write?tenant=example"
+      expectedError: 'user information (e.g. user:password@host) is not allowed'
     - name: Should accept remoteWrite URL simple query
       initial: |
         apiVersion: config.openshift.io/v1alpha1

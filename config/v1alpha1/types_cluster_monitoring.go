@@ -1675,7 +1675,7 @@ type RemoteWriteSpec struct {
 	// +kubebuilder:validation:XValidation:rule="!isURL(self) || url(self).getScheme() == 'http' || url(self).getScheme() == 'https'",message="must use http or https scheme"
 	// +kubebuilder:validation:XValidation:rule="!isURL(self) || size(url(self).getHostname()) > 0",message="must have a non-empty hostname"
 	// +kubebuilder:validation:XValidation:rule="!self.matches('.*#.*')",message="fragments are not allowed"
-	// +kubebuilder:validation:XValidation:rule="!self.matches('.*@.*')",message="user information (e.g. user:password@host) is not allowed"
+	// +kubebuilder:validation:XValidation:rule="!self.matches('^[^:]+://[^/?#]*@')",message="user information (e.g. user:password@host) is not allowed"
 	URL string `json:"url,omitempty"`
 	// name is a required identifier for this remote write configuration (name is the list key for the remoteWrite list).
 	// This name is used in metrics and logging to differentiate remote write queues.

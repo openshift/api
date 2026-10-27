@@ -4383,7 +4383,7 @@ spec:
                             rule: '!self.matches(''.*#.*'')'
                           - message: user information (e.g. user:password@host) is
                               not allowed
-                            rule: '!self.matches(''.*@.*'')'
+                            rule: '!self.matches(''^[^:]+://[^/?#]*@'')'
                         writeRelabelConfigs:
                           description: |-
                             writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.

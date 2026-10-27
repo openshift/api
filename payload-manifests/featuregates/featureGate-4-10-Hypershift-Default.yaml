@@ -315,7 +315,7 @@
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {
-                        "name": "VSpherePerComponentScopedCreds"
+                        "name": "VSpherePerComponentScopedCredsInstall"
                     }
                 ],
                 "enabled": [

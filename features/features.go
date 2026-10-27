@@ -1084,7 +1084,7 @@ var (
 					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
-	FeatureGateVSpherePerComponentScopedCreds = newFeatureGate("VSpherePerComponentScopedCreds").
+	FeatureGateVSpherePerComponentScopedCreds = newFeatureGate("VSpherePerComponentScopedCredsInstall").
 							reportProblemsToJiraComponent("splat").
 							contactPerson("rvanderp3").
 							productScope(ocpSpecific).

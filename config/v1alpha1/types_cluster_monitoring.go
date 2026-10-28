@@ -1388,10 +1388,26 @@ type PrometheusOperatorAdmissionWebhookConfig struct {
 	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
 }
 
+// EnforcedBodySizeLimitMode selects how the scrape response size limit is determined.
+// +kubebuilder:validation:Enum=Automatic;Explicit;Disabled
+// +enum
+type EnforcedBodySizeLimitMode string
+
+const (
+	// EnforcedBodySizeLimitModeAutomatic calculates the limit from cluster pod capacity.
+	EnforcedBodySizeLimitModeAutomatic EnforcedBodySizeLimitMode = "Automatic"
+	// EnforcedBodySizeLimitModeExplicit uses the configured byte limit.
+	EnforcedBodySizeLimitModeExplicit EnforcedBodySizeLimitMode = "Explicit"
+	// EnforcedBodySizeLimitModeDisabled configures no limit.
+	EnforcedBodySizeLimitModeDisabled EnforcedBodySizeLimitMode = "Disabled"
+)
+
 // PrometheusConfig provides configuration options for the Prometheus instance.
 // Use this configuration to control
 // Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations.
 // +kubebuilder:validation:MinProperties=1
+// +kubebuilder:validation:XValidation:rule="!has(self.enforcedBodySizeLimitMode) || self.enforcedBodySizeLimitMode != 'Explicit' || has(self.enforcedBodySizeLimitBytes)",message="enforcedBodySizeLimitBytes is required when enforcedBodySizeLimitMode is Explicit"
+// +kubebuilder:validation:XValidation:rule="!has(self.enforcedBodySizeLimitMode) || self.enforcedBodySizeLimitMode == 'Explicit' || !has(self.enforcedBodySizeLimitBytes)",message="enforcedBodySizeLimitBytes is forbidden when enforcedBodySizeLimitMode is Automatic or Disabled"
 type PrometheusConfig struct {
 	// additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from
 	// the Prometheus component. This is useful for organizations that need to:
@@ -1412,14 +1428,26 @@ type PrometheusConfig struct {
 	// If a scraped target's body response is larger than the limit, the scrape will fail.
 	// This helps protect Prometheus from targets that return excessively large responses.
 	// The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB).
-	// When omitted, the Cluster Monitoring Operator automatically calculates an appropriate
-	// limit based on cluster capacity. Set an explicit value to override the automatic calculation.
+	// May be set when enforcedBodySizeLimitMode is Explicit or omitted, and is required for Explicit.
+	// Must be omitted when enforcedBodySizeLimitMode is Automatic or Disabled.
+	// When omitted, enforcedBodySizeLimitMode determines the behavior. If both fields are
+	// omitted, the existing ConfigMap setting is preserved, or no limit is configured if absent.
 	// Minimum value is 10240 (10kB).
 	// Maximum value is 1073741824 (1GB).
 	// +kubebuilder:validation:Minimum=10240
 	// +kubebuilder:validation:Maximum=1073741824
 	// +optional
 	EnforcedBodySizeLimitBytes int64 `json:"enforcedBodySizeLimitBytes,omitempty"`
+	// enforcedBodySizeLimitMode optionally selects how the scrape response size limit is determined.
+	// Valid values are Automatic, Explicit and Disabled.
+	// Automatic calculates a limit based on cluster pod capacity and forbids enforcedBodySizeLimitBytes.
+	// Explicit requires enforcedBodySizeLimitBytes and uses that fixed limit.
+	// Disabled configures no limit and forbids enforcedBodySizeLimitBytes.
+	// An existing prometheusK8s section in the ConfigMap takes precedence over these CRD settings.
+	// When omitted, enforcedBodySizeLimitBytes is used if set; otherwise the existing
+	// ConfigMap setting is preserved, or no limit is configured if absent.
+	// +optional
+	EnforcedBodySizeLimitMode EnforcedBodySizeLimitMode `json:"enforcedBodySizeLimitMode,omitempty"`
 	// externalLabels defines labels to be attached to time series and alerts
 	// when communicating with external systems such as federation, remote storage,
 	// and Alertmanager. These labels are not stored with metrics on disk; they are

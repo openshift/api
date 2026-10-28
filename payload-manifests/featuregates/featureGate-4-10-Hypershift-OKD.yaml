@@ -340,9 +340,6 @@
                         "name": "BuildCSIVolumes"
                     },
                     {
-                        "name": "DualReplica"
-                    },
-                    {
                         "name": "EVPN"
                     },
                     {

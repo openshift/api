@@ -32172,6 +32172,13 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 							Ref:         ref(examplev1.FormatMarkerExamples{}.OpenAPIModelName()),
 						},
 					},
+					"openShiftReleaseVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "openShiftReleaseVersion demonstrates how to validate an OpenShift release version using the isSemver CEL function. Valid values are semantic versions, which includes stable releases (e.g. 4.22.20), early candidates (e.g. 4.23.0-ec.1), release candidates (e.g. 4.22.0-rc.5), nightly builds (e.g. 4.20.0-0.nightly-2026-10-28-054721), ci builds (e.g. 4.21.0-0.ci-2026-10-28-124831), and assembly builds (e.g. 4.16.23-assembly.art12586). The validation performed on this field matches exactly the validation performed by the Cluster Version Operator's validating webhook on the desiredUpdate field. When empty, no release version is specified. The maximum length of 128 is arbitrary and should be adjusted upwards if it is ever found to be insufficient. The minimum length of 5 is the length of the shortest valid semantic version (0.0.0).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"immutableField"},
 			},

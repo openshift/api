@@ -1,0 +1,186 @@
+apiVersion: apiextensions.k8s.io/v1
+name: "ClusterMonitoring body size limit modes"
+crdName: clustermonitorings.config.openshift.io
+featureGate: ClusterMonitoringConfig
+tests:
+  onCreate:
+    - name: Should accept automatic for scrape body size limit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitMode: "Automatic"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitMode: "Automatic"
+    - name: Should accept disabled for scrape body size limit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitMode: "Disabled"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitMode: "Disabled"
+    - name: Should accept explicit minimum for scrape body size limit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitMode: "Explicit"
+            enforcedBodySizeLimitBytes: 10240
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitMode: "Explicit"
+            enforcedBodySizeLimitBytes: 10240
+    - name: Should accept explicit maximum for scrape body size limit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitMode: "Explicit"
+            enforcedBodySizeLimitBytes: 1073741824
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitMode: "Explicit"
+            enforcedBodySizeLimitBytes: 1073741824
+    - name: Should accept legacy fixed limit for scrape body size limit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitBytes: 4194304
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitBytes: 4194304
+    - name: Should accept omitted mode and limit for scrape body size limit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            logLevel: Info
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            logLevel: Info
+    - name: Should reject explicit without bytes for scrape body size limit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitMode: "Explicit"
+      expectedError: "enforcedBodySizeLimitBytes is required"
+    - name: Should reject automatic with bytes for scrape body size limit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitMode: "Automatic"
+            enforcedBodySizeLimitBytes: 4194304
+      expectedError: "enforcedBodySizeLimitBytes is forbidden"
+    - name: Should reject disabled with bytes for scrape body size limit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitMode: "Disabled"
+            enforcedBodySizeLimitBytes: 4194304
+      expectedError: "enforcedBodySizeLimitBytes is forbidden"
+    - name: Should reject unknown mode for scrape body size limit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitMode: "Unknown"
+      expectedError: "Unsupported value"
+    - name: Should reject empty mode for scrape body size limit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitMode: ""
+      expectedError: "Unsupported value"
+    - name: Should reject explicit below minimum for scrape body size limit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitMode: "Explicit"
+            enforcedBodySizeLimitBytes: 10239
+      expectedError: "greater than or equal to 10240"
+    - name: Should reject explicit above maximum for scrape body size limit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            enforcedBodySizeLimitMode: "Explicit"
+            enforcedBodySizeLimitBytes: 1073741825
+      expectedError: "less than or equal to 1073741824"

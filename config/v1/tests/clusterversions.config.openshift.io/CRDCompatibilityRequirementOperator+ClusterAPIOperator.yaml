@@ -3,7 +3,7 @@ name: "ClusterVersion"
 crdName: clusterversions.config.openshift.io
 featureGates:
   - CRDCompatibilityRequirementOperator
-  - ClusterAPIMachineManagement
+  - ClusterAPIOperator
 tests:
   onCreate:
     - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities ClusterAPI and CompatibilityRequirements

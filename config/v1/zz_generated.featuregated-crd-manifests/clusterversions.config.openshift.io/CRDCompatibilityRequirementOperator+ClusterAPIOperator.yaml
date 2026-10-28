@@ -6,7 +6,8 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_00"
     api.openshift.io/filename-operator: cluster-version-operator
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/ClusterAPIMachineManagement: "true"
+    feature-gate.release.openshift.io/CRDCompatibilityRequirementOperator: "true"
+    feature-gate.release.openshift.io/ClusterAPIOperator: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
   name: clusterversions.config.openshift.io
 spec:
@@ -764,6 +765,15 @@ spec:
             in self.spec.capabilities.additionalEnabledCapabilities || (has(self.status)
             && has(self.status.capabilities) && has(self.status.capabilities.enabledCapabilities)
             && ''OperatorLifecycleManager'' in self.status.capabilities.enabledCapabilities)
+            : true'
+        - message: the `ClusterAPI` capability requires the `CompatibilityRequirements`
+            capability, which is neither explicitly or implicitly enabled in this
+            cluster, please enable the `CompatibilityRequirements` capability
+          rule: 'has(self.spec.capabilities) && has(self.spec.capabilities.additionalEnabledCapabilities)
+            && ''ClusterAPI'' in self.spec.capabilities.additionalEnabledCapabilities
+            ? ''CompatibilityRequirements'' in self.spec.capabilities.additionalEnabledCapabilities
+            || (has(self.status) && has(self.status.capabilities) && has(self.status.capabilities.enabledCapabilities)
+            && ''CompatibilityRequirements'' in self.status.capabilities.enabledCapabilities)
             : true'
     served: true
     storage: true

@@ -27297,9 +27297,17 @@ func schema_openshift_api_config_v1alpha1_PrometheusConfig(ref common.ReferenceC
 					},
 					"enforcedBodySizeLimitBytes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "enforcedBodySizeLimitBytes enforces a body size limit (in bytes) for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. This helps protect Prometheus from targets that return excessively large responses. The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB). When omitted, the Cluster Monitoring Operator automatically calculates an appropriate limit based on cluster capacity. Set an explicit value to override the automatic calculation. Minimum value is 10240 (10kB). Maximum value is 1073741824 (1GB).",
+							Description: "enforcedBodySizeLimitBytes enforces a body size limit (in bytes) for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. This helps protect Prometheus from targets that return excessively large responses. The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB). May be set when enforcedBodySizeLimitMode is Explicit or omitted, and is required for Explicit. Must be omitted when enforcedBodySizeLimitMode is Automatic or Disabled. When omitted, enforcedBodySizeLimitMode determines the behavior. If both fields are omitted, the existing ConfigMap setting is preserved, or no limit is configured if absent. Minimum value is 10240 (10kB). Maximum value is 1073741824 (1GB).",
 							Type:        []string{"integer"},
 							Format:      "int64",
+						},
+					},
+					"enforcedBodySizeLimitMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "enforcedBodySizeLimitMode optionally selects how the scrape response size limit is determined. Valid values are Automatic, Explicit and Disabled. Automatic calculates a limit based on cluster pod capacity and forbids enforcedBodySizeLimitBytes. Explicit requires enforcedBodySizeLimitBytes and uses that fixed limit. Disabled configures no limit and forbids enforcedBodySizeLimitBytes. An existing prometheusK8s section in the ConfigMap takes precedence over these CRD settings. When omitted, enforcedBodySizeLimitBytes is used if set; otherwise the existing ConfigMap setting is preserved, or no limit is configured if absent.\n\nPossible enum values:\n - `\"Automatic\"` calculates the limit from cluster pod capacity.\n - `\"Disabled\"` configures no limit.\n - `\"Explicit\"` uses the configured byte limit.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Automatic", "Disabled", "Explicit"},
 						},
 					},
 					"externalLabels": {

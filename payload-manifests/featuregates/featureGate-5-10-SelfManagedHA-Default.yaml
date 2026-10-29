@@ -27,9 +27,6 @@
                         "name": "AuthenticationComponentProxyExternalOIDC"
                     },
                     {
-                        "name": "AutomatedEtcdBackup"
-                    },
-                    {
                         "name": "AzureDedicatedHosts"
                     },
                     {
@@ -321,6 +318,9 @@
                     },
                     {
                         "name": "AuthenticationComponentProxy"
+                    },
+                    {
+                        "name": "AutomatedEtcdBackup"
                     },
                     {
                         "name": "BuildCSIVolumes"

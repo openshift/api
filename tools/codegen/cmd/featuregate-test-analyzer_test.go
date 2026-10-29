@@ -11,6 +11,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 
 	"github.com/openshift/api/tools/codegen/pkg/sippy"
+	"github.com/openshift/api/tools/codegen/pkg/utils"
 )
 
 func Test_listTestResultFor(t *testing.T) {
@@ -478,6 +479,150 @@ func Test_checkIfTestingIsSufficient_OptionalVariants(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func Test_evaluateVariantRequirements(t *testing.T) {
+	sufficientTests := []TestResults{
+		{TestName: "test1", TotalRuns: 20, SuccessfulRuns: 20},
+		{TestName: "test2", TotalRuns: 18, SuccessfulRuns: 18},
+		{TestName: "test3", TotalRuns: 15, SuccessfulRuns: 15},
+		{TestName: "test4", TotalRuns: 16, SuccessfulRuns: 16},
+		{TestName: "test5", TotalRuns: 14, SuccessfulRuns: 14},
+	}
+
+	tests := []struct {
+		name              string
+		variant           JobVariant
+		results           *TestingResults
+		wantOverallPassed bool
+		wantTestCount     int
+		wantMinRuns       int
+		wantMinPass       int
+		wantFailures      int
+	}{
+		{
+			name:              "all requirements met",
+			variant:           JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha"},
+			results:           &TestingResults{TestResults: sufficientTests},
+			wantOverallPassed: true,
+			wantTestCount:     5,
+			wantMinRuns:       14,
+			wantMinPass:       100,
+			wantFailures:      0,
+		},
+		{
+			name:    "insufficient tests and low pass rate",
+			variant: JobVariant{Cloud: "azure", Architecture: "amd64", Topology: "ha"},
+			results: &TestingResults{TestResults: []TestResults{
+				{TestName: "test1", TotalRuns: 20, SuccessfulRuns: 18}, // 90%
+				{TestName: "test2", TotalRuns: 10, SuccessfulRuns: 10}, // too few runs
+			}},
+			wantOverallPassed: false,
+			wantTestCount:     2,
+			wantMinRuns:       10,
+			wantMinPass:       90,
+			wantFailures:      2,
+		},
+		{
+			name:              "no tests",
+			variant:           JobVariant{Cloud: "gcp", Architecture: "amd64", Topology: "ha"},
+			results:           &TestingResults{},
+			wantOverallPassed: false,
+			wantTestCount:     0,
+			wantMinRuns:       0,
+			wantMinPass:       0,
+			wantFailures:      0,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := evaluateVariantRequirements(tt.variant, tt.results)
+			if got.OverallPassed != tt.wantOverallPassed {
+				t.Errorf("OverallPassed = %v, want %v", got.OverallPassed, tt.wantOverallPassed)
+			}
+			if got.TestCountActual != tt.wantTestCount {
+				t.Errorf("TestCountActual = %d, want %d", got.TestCountActual, tt.wantTestCount)
+			}
+			if got.MinRunsActual != tt.wantMinRuns {
+				t.Errorf("MinRunsActual = %d, want %d", got.MinRunsActual, tt.wantMinRuns)
+			}
+			if got.MinPassRateActual != tt.wantMinPass {
+				t.Errorf("MinPassRateActual = %d, want %d", got.MinPassRateActual, tt.wantMinPass)
+			}
+			if len(got.TestFailures) != tt.wantFailures {
+				t.Errorf("got %d test failures, want %d", len(got.TestFailures), tt.wantFailures)
+			}
+		})
+	}
+}
+
+func Test_writeRequirementsOverview(t *testing.T) {
+	summaries := []VariantRequirementSummary{
+		{
+			Variant:             JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha"},
+			OverallPassed:       true,
+			TestCountActual:     5,
+			TestCountExpected:   5,
+			TestCountPassed:     true,
+			MinRunsActual:       14,
+			MinRunsExpected:     14,
+			MinRunsPassed:       true,
+			MinPassRateActual:   100,
+			MinPassRateExpected: 95,
+			MinPassRatePassed:   true,
+		},
+		{
+			Variant:             JobVariant{Cloud: "azure", Architecture: "amd64", Topology: "ha"},
+			OverallPassed:       false,
+			TestCountActual:     2,
+			TestCountExpected:   5,
+			TestCountPassed:     false,
+			MinRunsActual:       10,
+			MinRunsExpected:     14,
+			MinRunsPassed:       false,
+			MinPassRateActual:   90,
+			MinPassRateExpected: 95,
+			MinPassRatePassed:   false,
+			TestFailures: []TestRequirementFailure{
+				{TestName: "flaky-test", RunsActual: 10, RunsExpected: 14, RunsPassed: false, PassRateActual: 90, PassRateExpected: 95, PassRatePassed: false},
+			},
+		},
+	}
+
+	md := utils.NewMarkdown("test")
+	var out strings.Builder
+	writeRequirementsOverview("TestFeature", summaries, md, &out)
+
+	output := out.String()
+	for _, want := range []string{
+		"INSUFFICIENT CI testing for \"TestFeature\"",
+		"✓ ha / aws / amd64",
+		"✗ ha / azure / amd64",
+		"tests:     ✗ 2 / ≥5",
+		"min runs:  ✗ 10 / ≥14",
+		"min pass:  ✗ 90% / ≥95%",
+		"flaky-test: runs 10 / ≥14, pass 90% / ≥95%",
+	} {
+		if !strings.Contains(output, want) {
+			t.Errorf("stdout missing %q\nfull output:\n%s", want, output)
+		}
+	}
+
+	mdOut := string(md.ExactBytes())
+	for _, want := range []string{
+		"Requirements checklist",
+		"✓ ",
+		"✗ ",
+		"ha / aws / amd64",
+		"ha / azure / amd64",
+		"Failing tests",
+		"flaky-test",
+	} {
+		if !strings.Contains(mdOut, want) {
+			t.Errorf("markdown missing %q\nfull markdown:\n%s", want, mdOut)
+		}
 	}
 }
 
@@ -978,7 +1123,8 @@ func Test_buildHTMLFeatureGateData(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := buildHTMLFeatureGateData(tt.featureGate, tt.testingResults, tt.blockingErrors, tt.release)
+			requirementSummaries := buildVariantRequirementSummaries(tt.testingResults)
+			result := buildHTMLFeatureGateData(tt.featureGate, tt.testingResults, tt.blockingErrors, requirementSummaries, tt.release)
 
 			if result.Name != tt.featureGate {
 				t.Errorf("Name = %q, want %q", result.Name, tt.featureGate)
@@ -991,6 +1137,9 @@ func Test_buildHTMLFeatureGateData(t *testing.T) {
 			}
 			if len(result.Tests) != tt.wantTests {
 				t.Errorf("got %d tests, want %d", len(result.Tests), tt.wantTests)
+			}
+			if len(result.Requirements) != tt.wantVariants {
+				t.Errorf("got %d requirement rows, want %d", len(result.Requirements), tt.wantVariants)
 			}
 
 			for _, v := range result.Variants {

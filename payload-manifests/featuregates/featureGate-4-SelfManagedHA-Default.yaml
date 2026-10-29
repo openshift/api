@@ -300,6 +300,9 @@
                         "name": "TLSGroupPreferences"
                     },
                     {
+                        "name": "TNFObservability"
+                    },
+                    {
                         "name": "TopologyAwareWorkloadScheduling"
                     },
                     {

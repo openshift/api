@@ -1,0 +1,937 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.22.0
+    olm.operatorframework.io/generator: experimental
+  name: clusterobjectsets.olm.operatorframework.io
+spec:
+  group: olm.operatorframework.io
+  names:
+    kind: ClusterObjectSet
+    listKind: ClusterObjectSetList
+    plural: clusterobjectsets
+    singular: clusterobjectset
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.group
+      name: Group
+      type: string
+    - jsonPath: .spec.revision
+      name: Revision
+      type: integer
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].reason
+      name: Reason
+      type: string
+    - jsonPath: .status.objectCounts.total
+      name: '#Total'
+      type: integer
+    - jsonPath: .status.objectCounts.present
+      name: '#Present'
+      type: integer
+    - jsonPath: .status.objectCounts.synced
+      name: '#Synced'
+      type: integer
+    - jsonPath: .status.objectCounts.ready
+      name: '#Ready'
+      type: integer
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ClusterObjectSet represents an immutable snapshot of Kubernetes objects to
+          apply and manage on the cluster. Each revision contains objects organized into
+          phases that roll out sequentially. The same object can only be managed by a
+          single revision at a time. Ownership of objects is transitioned from one revision
+          to the next as new revisions are rolled out. Once the latest revision has rolled
+          out successfully, previous active revisions are archived for posterity.
+          Set metadata.name explicitly to <spec.group>-<spec.revision>, using decimal
+          notation without leading zeros. This ensures revision uniqueness within a group.
+          Name generation through metadata.generateName is not supported.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: spec defines the desired state of the ClusterObjectSet.
+            properties:
+              collisionProtection:
+                description: |-
+                  collisionProtection is a required field that specifies the default collision protection
+                  strategy for all objects in this revision. Individual phases or objects can override this value.
+
+                  This value is used as the default for any phase or object that does not explicitly specify
+                  its own collisionProtection. The resolution order is: object > phase > spec.
+                enum:
+                - Prevent
+                - IfNoController
+                - None
+                type: string
+                x-kubernetes-validations:
+                - message: collisionProtection is immutable
+                  rule: self == oldSelf
+              group:
+                description: |-
+                  group is a required, immutable identifier that links related revisions together.
+                  All revisions sharing the same group form an ordered sequence, regardless of owner references.
+                  The value must be 1 to 52 characters long, start with a lowercase letter,
+                  contain only lowercase letters, digits or hyphens, and end with a letter or digit.
+                maxLength: 52
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: group must start with a lowercase letter, contain only
+                    lowercase letters, digits or hyphens, and end with a letter or
+                    digit
+                  rule: self.matches('^[a-z]([a-z0-9-]*[a-z0-9])?$')
+                - message: group is immutable
+                  rule: self == oldSelf
+              lifecycleState:
+                description: |-
+                  lifecycleState specifies the lifecycle state of the ClusterObjectSet.
+
+                  When set to "Active", the revision is actively managed and reconciled.
+                  When set to "Archived", the revision is inactive and any resources not managed by a subsequent revision are deleted.
+                  The revision is removed from the owner list of all objects previously under management.
+                  All objects that did not transition to a succeeding revision are deleted.
+
+                  Once a revision is set to "Archived", it cannot be un-archived.
+
+                  It is possible for more than one revision to be "Active" simultaneously. This will occur when
+                  moving from one revision to another. The old revision will not be set to "Archived" until the
+                  new revision has been completely rolled out.
+                enum:
+                - Active
+                - Archived
+                type: string
+                x-kubernetes-validations:
+                - message: cannot un-archive
+                  rule: oldSelf == 'Active' || oldSelf == 'Archived' && oldSelf ==
+                    self
+              phases:
+                description: |-
+                  phases is an optional, immutable list of phases that group objects to be applied together.
+
+                  Objects are organized into phases based on their Group-Kind. Common phases include:
+                    - namespaces: Namespace objects
+                    - policies: ResourceQuota, LimitRange, NetworkPolicy objects
+                    - rbac: ServiceAccount, Role, RoleBinding, ClusterRole, ClusterRoleBinding objects
+                    - crds: CustomResourceDefinition objects
+                    - storage: PersistentVolume, PersistentVolumeClaim, StorageClass objects
+                    - deploy: Deployment, StatefulSet, DaemonSet, Service, ConfigMap, Secret objects
+                    - publish: Ingress, APIService, Route, Webhook objects
+
+                  All objects in a phase are applied in no particular order.
+                  The revision progresses to the next phase only after all objects in the current phase pass their readiness probes.
+
+                  Once set, even if empty, the phases field is immutable.
+
+                  Each phase in the list must have a unique name. The maximum number of phases is 20.
+                items:
+                  description: |-
+                    ClusterObjectSetPhase represents a group of objects that are applied together. The phase is considered
+                    complete only after all objects pass their status probes.
+                  properties:
+                    collisionProtection:
+                      description: |-
+                        collisionProtection specifies the default collision protection strategy for all objects
+                        in this phase. Individual objects can override this value.
+
+                        When set, this value is used as the default for any object in this phase that does not
+                        explicitly specify its own collisionProtection.
+
+                        When omitted, we use .spec.collistionProtection as the default for any object in this phase that does not
+                        explicitly specify its own collisionProtection.
+                      enum:
+                      - Prevent
+                      - IfNoController
+                      - None
+                      type: string
+                    name:
+                      description: |-
+                        name is a required identifier for this phase.
+
+                        phase names must follow the DNS label standard as defined in [RFC 1123].
+                        They must contain only lowercase alphanumeric characters or hyphens (-),
+                        start and end with an alphanumeric character, and be no longer than 63 characters.
+
+                        Common phase names include: namespaces, policies, rbac, crds, storage, deploy, publish.
+
+                        [RFC 1123]: https://tools.ietf.org/html/rfc1123
+                      maxLength: 63
+                      minLength: 1
+                      type: string
+                      x-kubernetes-validations:
+                      - message: the value must consist of only lowercase alphanumeric
+                          characters and hyphens, and must start and end with an alphanumeric
+                          character.
+                        rule: '!format.dns1123Label().validate(self).hasValue()'
+                    objects:
+                      description: |-
+                        objects is a required list of all Kubernetes objects that belong to this phase.
+
+                        All objects in this list are applied to the cluster in no particular order. The maximum number of objects per phase is 50.
+                      items:
+                        description: |-
+                          ClusterObjectSetObject represents a Kubernetes object to be applied as part
+                          of a phase, along with its collision protection settings.
+
+                          Exactly one of object or ref must be set.
+                        properties:
+                          collisionProtection:
+                            description: |-
+                              collisionProtection controls whether the operator can adopt and modify objects
+                              that already exist on the cluster.
+
+                              Allowed values are: "Prevent", "IfNoController", and "None".
+
+                              When set to "Prevent", the operator only manages objects it created itself.
+                              This prevents ownership collisions.
+
+                              When set to "IfNoController", the operator can adopt and modify pre-existing objects
+                              that are not owned by another controller.
+                              This is useful for taking over management of manually-created resources.
+
+                              When set to "None", the operator can adopt and modify any pre-existing object, even if
+                              owned by another controller.
+                              Use this setting with extreme caution as it may cause multiple controllers to fight over
+                              the same resource, resulting in increased load on the API server and etcd.
+
+                              When omitted, the value is inherited from the phase, then spec.
+                            enum:
+                            - Prevent
+                            - IfNoController
+                            - None
+                            type: string
+                          object:
+                            description: |-
+                              object is an optional embedded Kubernetes object to be applied.
+
+                              Exactly one of object or ref must be set.
+
+                              This object must be a valid Kubernetes resource with apiVersion, kind, and metadata fields.
+                            type: object
+                            x-kubernetes-embedded-resource: true
+                            x-kubernetes-preserve-unknown-fields: true
+                          ref:
+                            description: |-
+                              ref is an optional reference to a Secret that holds the serialized
+                              object manifest.
+
+                              Exactly one of object or ref must be set.
+                            properties:
+                              key:
+                                description: |-
+                                  key is the data key within the referenced Secret containing the
+                                  object manifest content. The value at this key must be a
+                                  JSON-serialized Kubernetes object manifest.
+                                maxLength: 253
+                                minLength: 1
+                                type: string
+                              name:
+                                description: name is the name of the referenced Secret.
+                                maxLength: 253
+                                minLength: 1
+                                type: string
+                              namespace:
+                                description: |-
+                                  namespace is the namespace of the referenced Secret.
+                                  When empty, defaults to the OLM system namespace during ref resolution.
+                                maxLength: 63
+                                type: string
+                            required:
+                            - key
+                            - name
+                            type: object
+                        type: object
+                        x-kubernetes-validations:
+                        - message: exactly one of the fields in [object ref] must
+                            be set
+                          rule: (has(self.object)?1:0)+(has(self.ref)?1:0) == 1
+                      maxItems: 50
+                      type: array
+                      x-kubernetes-list-type: atomic
+                  required:
+                  - name
+                  - objects
+                  type: object
+                maxItems: 20
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
+                x-kubernetes-validations:
+                - message: phases is immutable
+                  rule: self == oldSelf || oldSelf.size() == 0
+              progressDeadlineMinutes:
+                description: |-
+                  progressDeadlineMinutes is an optional field that defines the maximum period
+                  of time in minutes after which an installation should be considered failed and
+                  require manual intervention. This functionality is disabled when no value
+                  is provided. The minimum period is 10 minutes, and the maximum is 720 minutes (12 hours).
+                format: int32
+                maximum: 720
+                minimum: 10
+                type: integer
+              progressionProbes:
+                description: |-
+                  progressionProbes is an optional field which provides the ability to define custom readiness probes
+                  for objects defined within spec.phases. As documented in that field, most kubernetes-native objects
+                  within the phases already have some kind of readiness check built-in, but this field allows for checks
+                  which are tailored to the objects being rolled out - particularly custom resources.
+
+                  Probes defined within the progressionProbes list will apply to every phase in the revision. However, the probes will only
+                  execute against phase objects which are a match for the provided selector type. For instance, a probe using a GroupKind selector
+                  for ConfigMaps will automatically be considered to have passed for any non-ConfigMap object, but will halt any phase containing
+                  a ConfigMap if that particular object does not pass the probe check.
+
+                  The maximum number of probes is 20.
+
+                  Once set, even if empty, the progressionProbes field is immutable, as it is
+                  part of the immutable content of a revision.
+                items:
+                  description: ProgressionProbe provides a custom probe definition,
+                    consisting of an object selection method and assertions.
+                  properties:
+                    assertions:
+                      description: |-
+                        assertions is a required list of checks which will run against the objects selected by the selector. If
+                        one or more assertions fail then the phase within which the object lives will be not be considered
+                        'Ready', blocking rollout of all subsequent phases.
+                      items:
+                        description: Assertion is a discriminated union which defines
+                          the probe type and definition used as an assertion.
+                        properties:
+                          conditionEqual:
+                            description: conditionEqual contains the expected condition
+                              type and status.
+                            properties:
+                              status:
+                                description: |-
+                                  status sets the expected condition status.
+
+                                  Allowed values are "True" and "False".
+                                enum:
+                                - "True"
+                                - "False"
+                                type: string
+                              type:
+                                description: type sets the expected condition type,
+                                  i.e. "Ready".
+                                maxLength: 200
+                                minLength: 1
+                                type: string
+                            required:
+                            - status
+                            - type
+                            type: object
+                          fieldValue:
+                            description: fieldValue contains the expected field path
+                              and value found within.
+                            properties:
+                              fieldPath:
+                                description: |-
+                                  fieldPath sets the field path for the field to check, i.e. "status.phase". The probe will fail
+                                  if the path does not exist.
+                                maxLength: 200
+                                minLength: 1
+                                type: string
+                                x-kubernetes-validations:
+                                - message: must contain a valid field path. valid
+                                    fields contain upper or lower-case alphanumeric
+                                    characters separated by the "." character.
+                                  rule: self.matches('^[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)*$')
+                              value:
+                                description: value sets the expected value found at
+                                  fieldPath, i.e. "Bound".
+                                maxLength: 200
+                                minLength: 1
+                                type: string
+                            required:
+                            - fieldPath
+                            - value
+                            type: object
+                          fieldsEqual:
+                            description: fieldsEqual contains the two field paths
+                              whose values are expected to match.
+                            properties:
+                              fieldA:
+                                description: |-
+                                  fieldA sets the field path for the first field, i.e. "spec.replicas". The probe will fail
+                                  if the path does not exist.
+                                maxLength: 200
+                                minLength: 1
+                                type: string
+                                x-kubernetes-validations:
+                                - message: must contain a valid field path. valid
+                                    fields contain upper or lower-case alphanumeric
+                                    characters separated by the "." character.
+                                  rule: self.matches('^[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)*$')
+                              fieldB:
+                                description: |-
+                                  fieldB sets the field path for the second field, i.e. "status.readyReplicas". The probe will fail
+                                  if the path does not exist.
+                                maxLength: 200
+                                minLength: 1
+                                type: string
+                                x-kubernetes-validations:
+                                - message: must contain a valid field path. valid
+                                    fields contain upper or lower-case alphanumeric
+                                    characters separated by the "." character.
+                                  rule: self.matches('^[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)*$')
+                            required:
+                            - fieldA
+                            - fieldB
+                            type: object
+                          type:
+                            description: |-
+                              type is a required field which specifies the type of probe to use.
+
+                              The allowed probe types are "ConditionEqual", "FieldsEqual", and "FieldValue".
+
+                              When set to "ConditionEqual", the probe checks objects that have reached a condition of specified type and status.
+                              When set to "FieldsEqual", the probe checks that the values found at two provided field paths are matching.
+                              When set to "FieldValue", the probe checks that the value found at the provided field path matches what was specified.
+                            enum:
+                            - ConditionEqual
+                            - FieldsEqual
+                            - FieldValue
+                            type: string
+                        required:
+                        - type
+                        type: object
+                        x-kubernetes-validations:
+                        - message: conditionEqual is required when type is ConditionEqual,
+                            and forbidden otherwise
+                          rule: 'self.type == ''ConditionEqual'' ?has(self.conditionEqual)
+                            : !has(self.conditionEqual)'
+                        - message: fieldsEqual is required when type is FieldsEqual,
+                            and forbidden otherwise
+                          rule: 'self.type == ''FieldsEqual'' ?has(self.fieldsEqual)
+                            : !has(self.fieldsEqual)'
+                        - message: fieldValue is required when type is FieldValue,
+                            and forbidden otherwise
+                          rule: 'self.type == ''FieldValue'' ?has(self.fieldValue)
+                            : !has(self.fieldValue)'
+                      maxItems: 20
+                      minItems: 1
+                      type: array
+                      x-kubernetes-list-type: atomic
+                    selector:
+                      description: |-
+                        selector is a required field which defines the method by which we select objects to apply the below
+                        assertions to. Any object which matches the defined selector will have all the associated assertions
+                        applied against it.
+
+                        If no objects within a phase are selected by the provided selector, then all assertions defined here
+                        are considered to have succeeded.
+                      properties:
+                        groupKind:
+                          description: |-
+                            groupKind specifies the group and kind of objects to select.
+
+                            Required when type is "GroupKind".
+
+                            Uses the Kubernetes format specified here:
+                            https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#GroupKind
+                          properties:
+                            group:
+                              type: string
+                            kind:
+                              type: string
+                          required:
+                          - group
+                          - kind
+                          type: object
+                        label:
+                          description: |-
+                            label is the label selector definition.
+
+                            Required when type is "Label".
+
+                            A probe using a Label selector will be executed against every object matching the labels or expressions; you must use care
+                            when using this type of selector. For example, if multiple Kind objects are selected via labels then the probe is
+                            likely to fail because the values of different Kind objects rarely share the same schema.
+
+                            The LabelSelector field uses the following Kubernetes format:
+                            https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#LabelSelector
+                            Requires exactly one of matchLabels or matchExpressions.
+                          properties:
+                            matchExpressions:
+                              description: matchExpressions is a list of label selector
+                                requirements. The requirements are ANDed.
+                              items:
+                                description: |-
+                                  A label selector requirement is a selector that contains values, a key, and an operator that
+                                  relates the key and values.
+                                properties:
+                                  key:
+                                    description: key is the label key that the selector
+                                      applies to.
+                                    type: string
+                                  operator:
+                                    description: |-
+                                      operator represents a key's relationship to a set of values.
+                                      Valid operators are In, NotIn, Exists and DoesNotExist.
+                                    type: string
+                                  values:
+                                    description: |-
+                                      values is an array of string values. If the operator is In or NotIn,
+                                      the values array must be non-empty. If the operator is Exists or DoesNotExist,
+                                      the values array must be empty. This array is replaced during a strategic
+                                      merge patch.
+                                    items:
+                                      type: string
+                                    type: array
+                                    x-kubernetes-list-type: atomic
+                                required:
+                                - key
+                                - operator
+                                type: object
+                              type: array
+                              x-kubernetes-list-type: atomic
+                            matchLabels:
+                              additionalProperties:
+                                type: string
+                              description: |-
+                                matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                                map is equivalent to an element of matchExpressions, whose key field is "key", the
+                                operator is "In", and the values array contains only "value". The requirements are ANDed.
+                              type: object
+                          type: object
+                          x-kubernetes-map-type: atomic
+                          x-kubernetes-validations:
+                          - message: exactly one of matchLabels or matchExpressions
+                              must be set
+                            rule: (has(self.matchExpressions) && !has(self.matchLabels))
+                              || (!has(self.matchExpressions) && has(self.matchLabels))
+                        type:
+                          description: |-
+                            type is a required field which specifies the type of selector to use.
+
+                            The allowed selector types are "GroupKind" and "Label".
+
+                            When set to "GroupKind", all objects which match the specified group and kind will be selected.
+                            When set to "Label", all objects which match the specified labels and/or expressions will be selected.
+                          enum:
+                          - GroupKind
+                          - Label
+                          type: string
+                      required:
+                      - type
+                      type: object
+                      x-kubernetes-validations:
+                      - message: groupKind is required when type is GroupKind, and
+                          forbidden otherwise
+                        rule: 'self.type == ''GroupKind'' ?has(self.groupKind) : !has(self.groupKind)'
+                      - message: label is required when type is Label, and forbidden
+                          otherwise
+                        rule: 'self.type == ''Label'' ?has(self.label) : !has(self.label)'
+                  required:
+                  - assertions
+                  - selector
+                  type: object
+                maxItems: 20
+                minItems: 1
+                type: array
+                x-kubernetes-list-type: atomic
+                x-kubernetes-validations:
+                - message: progressionProbes is immutable
+                  rule: self == oldSelf || oldSelf.size() == 0
+              revision:
+                description: |-
+                  revision is a required, immutable sequence number identifying a specific
+                  ClusterObjectSet within a sequence of related revisions.
+
+                  The revision field must be an integer from 1 to 9999999999, inclusive.
+                  Each ClusterObjectSet in the same group must have a unique revision number.
+                format: int64
+                maximum: 9999999999
+                minimum: 1
+                type: integer
+                x-kubernetes-validations:
+                - message: revision is immutable
+                  rule: self == oldSelf
+            required:
+            - collisionProtection
+            - group
+            - lifecycleState
+            - revision
+            type: object
+          status:
+            description: |-
+              status is optional and defines the observed state of the ClusterObjectSet.
+              Cannot be removed once set; this is to prevent immutable fields such as completedAt
+              from being cleared by an update which omits the status.
+            properties:
+              completedAt:
+                description: |-
+                  completedAt is the timestamp at which the revision was first observed to be
+                  ready, meaning it had successfully rolled out and all of its objects passed
+                  their probes. It is set once and is immutable thereafter.
+                format: date-time
+                type: string
+                x-kubernetes-validations:
+                - message: completedAt is immutable, once set
+                  rule: self == oldSelf || oldSelf == null
+              conditions:
+                description: |-
+                  conditions is an optional list of status conditions describing the state of the
+                  ClusterObjectSet.
+
+                  The Ready condition represents the state of the revision.
+                  True means all objects are at the desired state; False means one or more
+                  objects are not at the desired state; Unknown is the initial state, before
+                  the first reconciliation has evaluated the revision.
+                    - Unknown with reason Pending: the revision has not yet been evaluated (initial state, set when the condition is first created).
+                    - True with reason AllObjectsReady: the revision has rolled out and all objects are at the desired state.
+                    - False with reason ObjectsNotReady: one or more objects are still being applied or have not yet passed their readiness probes during rollout.
+                    - False with reason Superseded: one or more objects have been adopted by a newer revision of the object set.
+                    - False with reason ObjectCollision: one or more objects are controlled by another owner, or are unowned while collision protection prevents adoption, so this revision cannot take ownership of them.
+                    - False with reason PreconditionsNotMet: a precondition for applying the revision is not yet satisfied (a referenced Secret is mutable or has invalid or changed content, or a preflight dry-run was rejected, e.g. an immutable field, a conflicting object, or RBAC/dependency CRDs not yet propagated); the revision keeps retrying and recovers once the precondition is met.
+                    - False with reason InvalidSpecification: the revision spec is invalid (a malformed revision/phase object or progression probe) and requires a spec change to proceed.
+                    - False with reason ProgressDeadlineExceeded: the revision did not roll out within spec.progressDeadlineMinutes.
+                    - False with reason Archiving: the revision is being archived and its owned objects are still being torn down.
+                    - False with reason Archived: the revision has been archived and its objects have been torn down.
+
+                  Rollout completion is recorded separately by status.completedAt.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              objectCounts:
+                description: |-
+                  objectCounts reports aggregate object counts across all phases.
+                  Values are sums of the per-phase counts in observedPhases.
+                  It is omitted until counts have been computed; when present, all count
+                  fields are reported (including zeros).
+                properties:
+                  present:
+                    description: |-
+                      present is the number of objects in this phase that exist on the
+                      cluster and are owned by this object set, or another in the same group.
+                      During reconcile, this counts objects that the controller has found or
+                      created. During teardown, this decrements toward zero as objects are deleted.
+                    format: int64
+                    maximum: 1000
+                    minimum: 0
+                    type: integer
+                  ready:
+                    description: |-
+                      ready is the number of objects in this phase that are synced
+                      and pass their assertions.
+                    format: int64
+                    maximum: 1000
+                    minimum: 0
+                    type: integer
+                  synced:
+                    description: |-
+                      synced is the number of objects in this phase whose cluster state
+                      matches the desired state. Set to zero during teardown.
+                    format: int64
+                    maximum: 1000
+                    minimum: 0
+                    type: integer
+                  total:
+                    description: total is the number of objects in this phase.
+                    format: int64
+                    maximum: 1000
+                    minimum: 0
+                    type: integer
+                required:
+                - present
+                - ready
+                - synced
+                - total
+                type: object
+              observedPhases:
+                description: |-
+                  observedPhases records the content hashes of resolved phases
+                  at first successful reconciliation. This is used to detect if
+                  referenced object sources were deleted and recreated with
+                  different content. Each entry covers all fully-resolved object
+                  manifests within a phase, making it source-agnostic.
+                items:
+                  description: ObservedPhase records the observed content digest of
+                    a resolved phase.
+                  properties:
+                    completedAt:
+                      description: |-
+                        completedAt is the timestamp when this phase first became Ready.
+                        Set once and never modified. Nil means the phase has never been
+                        Ready.
+                      format: date-time
+                      type: string
+                      x-kubernetes-validations:
+                      - message: completedAt is immutable, once set
+                        rule: self == oldSelf || oldSelf == null
+                    digest:
+                      description: |-
+                        digest is the digest of the phase's resolved object content
+                        at first successful resolution, in the format "<algorithm>:<hex>".
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                      x-kubernetes-validations:
+                      - message: digest is immutable
+                        rule: self == oldSelf || oldSelf.size() == 0
+                      - message: digest must be in the format '<algorithm>:<hex>'
+                        rule: self.matches('^[a-z0-9]+:[a-f0-9]+$')
+                    lastTransitionTime:
+                      description: lastTransitionTime is the last time the phase transitioned
+                        from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a phase-level message providing context about the
+                        current status (e.g. a validation error for InvalidSpecification
+                        phases, or a summary for Pending phases). At most 1024 characters;
+                        longer messages are truncated by the controller.
+                      maxLength: 1024
+                      minLength: 1
+                      type: string
+                    name:
+                      description: name is the phase name matching a phase in spec.phases.
+                      maxLength: 63
+                      minLength: 1
+                      type: string
+                      x-kubernetes-validations:
+                      - message: the value must consist of only lowercase alphanumeric
+                          characters and hyphens, and must start and end with an alphanumeric
+                          character.
+                        rule: '!format.dns1123Label().validate(self).hasValue()'
+                    objectCounts:
+                      description: objectCounts reports the number of objects in this
+                        phase by state.
+                      properties:
+                        present:
+                          description: |-
+                            present is the number of objects in this phase that exist on the
+                            cluster and are owned by this object set, or another in the same group.
+                            During reconcile, this counts objects that the controller has found or
+                            created. During teardown, this decrements toward zero as objects are deleted.
+                          format: int64
+                          maximum: 1000
+                          minimum: 0
+                          type: integer
+                        ready:
+                          description: |-
+                            ready is the number of objects in this phase that are synced
+                            and pass their assertions.
+                          format: int64
+                          maximum: 1000
+                          minimum: 0
+                          type: integer
+                        synced:
+                          description: |-
+                            synced is the number of objects in this phase whose cluster state
+                            matches the desired state. Set to zero during teardown.
+                          format: int64
+                          maximum: 1000
+                          minimum: 0
+                          type: integer
+                        total:
+                          description: total is the number of objects in this phase.
+                          format: int64
+                          maximum: 1000
+                          minimum: 0
+                          type: integer
+                      required:
+                      - present
+                      - ready
+                      - synced
+                      - total
+                      type: object
+                    objectDetails:
+                      description: |-
+                        objectDetails lists objects in this phase that are not yet
+                        complete. For Reconciling, Pending, and Stabilizing phases, this
+                        includes probe failures, collisions, creation/update errors, and
+                        any other condition preventing completion. For Archiving phases,
+                        this lists objects still awaiting deletion. Each entry identifies
+                        the object and carries failure messages. Empty when status is
+                        Ready, Superseded, Archived, or Unknown. The list may contain at
+                        most 50 entries, matching the maximum number of objects per phase.
+                      items:
+                        description: ObjectStatus identifies a managed object and
+                          its failure messages.
+                        properties:
+                          group:
+                            description: |-
+                              group is the API group of the object (empty string for core
+                              resources). At most 253 characters (DNS subdomain max).
+                            maxLength: 253
+                            type: string
+                          kind:
+                            description: |-
+                              kind is the kind of the object. Must be between 1 and 63
+                              characters.
+                            maxLength: 63
+                            minLength: 1
+                            type: string
+                          messages:
+                            description: |-
+                              messages lists the failure reasons for this object. The maximum
+                              of 18 entries accounts for up to 16 assertion probe failures,
+                              one collision message, and one message to note truncation if necessary.
+                              Each message is at most 1024 characters; longer messages are truncated
+                              by the controller.
+                            items:
+                              maxLength: 1024
+                              type: string
+                            maxItems: 18
+                            type: array
+                            x-kubernetes-list-type: atomic
+                          name:
+                            description: |-
+                              name is the name of the object. Must be between 1 and 253
+                              characters (DNS subdomain max).
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          namespace:
+                            description: |-
+                              namespace is the namespace of the object. Empty for cluster-scoped
+                              resources. At most 253 characters (DNS subdomain max).
+                            maxLength: 253
+                            type: string
+                          version:
+                            description: |-
+                              version is the API version of the object. Must be between 1 and
+                              63 characters.
+                            maxLength: 63
+                            minLength: 1
+                            type: string
+                        required:
+                        - kind
+                        - name
+                        - version
+                        type: object
+                      maxItems: 50
+                      type: array
+                      x-kubernetes-list-type: atomic
+                    status:
+                      description: |-
+                        status is the current state of this phase in the rollout. Must be one of
+                        InvalidSpecification, PreconditionsNotMet, Pending, Reconciling,
+                        Stabilizing, Ready, Unknown, Superseded, Archiving, or Archived.
+                      enum:
+                      - InvalidSpecification
+                      - PreconditionsNotMet
+                      - Pending
+                      - Reconciling
+                      - Stabilizing
+                      - Ready
+                      - Unknown
+                      - Superseded
+                      - Archiving
+                      - Archived
+                      type: string
+                  required:
+                  - digest
+                  - lastTransitionTime
+                  - name
+                  - status
+                  type: object
+                  x-kubernetes-validations:
+                  - message: completedAt cannot be removed once set
+                    rule: '!has(oldSelf.completedAt) || has(self.completedAt)'
+                maxItems: 20
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
+            type: object
+            x-kubernetes-validations:
+            - message: completedAt cannot be removed once set
+              rule: '!has(oldSelf.completedAt) || has(self.completedAt)'
+        required:
+        - spec
+        type: object
+        x-kubernetes-validations:
+        - message: metadata.name must be <spec.group>-<spec.revision>
+          rule: self.metadata.name == '%s-%d'.format([self.spec.group, self.spec.revision])
+        - message: status cannot be removed once set
+          rule: '!has(oldSelf.status) || has(self.status)'
+    selectableFields:
+    - jsonPath: .spec.group
+    served: true
+    storage: true
+    subresources:
+      status: {}

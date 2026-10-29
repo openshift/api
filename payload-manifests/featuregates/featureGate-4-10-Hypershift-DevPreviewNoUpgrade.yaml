@@ -172,6 +172,9 @@
                         "name": "ClusterAPIMachineManagementGCP"
                     },
                     {
+                        "name": "ClusterAPIMachineManagementNutanix"
+                    },
+                    {
                         "name": "ClusterAPIMachineManagementOpenStack"
                     },
                     {

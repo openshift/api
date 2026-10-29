@@ -1068,13 +1068,6 @@ var (
 					enable(inClusterProfile(SelfManaged), inDevPreviewNoUpgrade()).
 					mustRegister()
 
-	FeatureGateSELinuxMountGAReadiness = newFeatureGate("SELinuxMountGAReadiness").
-						reportProblemsToJiraComponent("Storage / Operators").
-						contactPerson("jsafrane").
-						productScope(ocpSpecific).
-						enhancementPR("https://github.com/openshift/enhancements/pull/2010").
-						enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-						mustRegister()
 
 	FeatureGateKarpenterOperator = newFeatureGate("KarpenterOperator").
 					reportProblemsToJiraComponent("Karpenter").

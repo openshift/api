@@ -4365,7 +4365,7 @@ spec:
                           description: |-
                             url is the URL of the remote write endpoint.
                             Must be a valid URL with http or https scheme and a non-empty hostname.
-                            Query parameters, fragments, and user information (e.g. user:password@host) are not allowed.
+                            Query parameters are allowed. Fragments and user information (e.g. user:password@host) are not allowed.
                             Empty string is invalid. Must be between 1 and 2048 characters in length.
                           maxLength: 2048
                           minLength: 1
@@ -4379,14 +4379,11 @@ spec:
                           - message: must have a non-empty hostname
                             rule: '!isURL(self) || size(url(self).getHostname()) >
                               0'
-                          - message: query parameters are not allowed
-                            rule: '!isURL(self) || url(self).getQuery().size() ==
-                              0'
                           - message: fragments are not allowed
                             rule: '!self.matches(''.*#.*'')'
                           - message: user information (e.g. user:password@host) is
                               not allowed
-                            rule: '!self.matches(''.*@.*'')'
+                            rule: '!self.matches(''^[^:]+://[^/?#]*@'')'
                         writeRelabelConfigs:
                           description: |-
                             writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.

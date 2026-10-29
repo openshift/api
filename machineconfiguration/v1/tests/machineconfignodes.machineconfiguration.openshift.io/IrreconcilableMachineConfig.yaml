@@ -203,4 +203,4 @@ tests:
               diff: "dif content"
             - fieldPath: spec.config.storage.disks[0]
               diff: "dif content updated"
-      expectedStatusError: "status.irreconcilableChanges[1]: Duplicate value: map[string]interface {}{\"fieldPath\":\"spec.config.storage.disks[0]\"}"
+      expectedStatusError: "status.irreconcilableChanges[1]: Duplicate value: {\"fieldPath\":\"spec.config.storage.disks[0]\"}"

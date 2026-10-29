@@ -131,7 +131,7 @@ tests:
           - directive: ScriptSrc
             values:
             - https://script1.com/
-      expectedError: "spec.contentSecurityPolicy[1]: Duplicate value: map[string]interface {}{\"directive\":\"ScriptSrc\"}"
+      expectedError: "spec.contentSecurityPolicy[1]: Duplicate value: {\"directive\":\"ScriptSrc\"}"
     - name: Should throw an error for duplicate CSP directive values
       initial: |
         apiVersion: console.openshift.io/v1

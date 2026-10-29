@@ -271,7 +271,7 @@ tests:
             - name: LightspeedButton
               visibility:
                 state: Enabled
-      expectedError: "Duplicate value: map[string]interface {}{\"name\":\"LightspeedButton\""
+      expectedError: "Duplicate value: {\"name\":\"LightspeedButton\""
     - name: Should throw an error for incorrect value of name in capabilities
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -360,7 +360,7 @@ tests:
                       configMap:
                         type: custom-logos-config
                         key: masthead-dark-logo.svg
-      expectedError: "spec.customization.logos[0].themes[1]: Duplicate value: map[string]interface {}{\"mode\":\"Dark\"}"
+      expectedError: "spec.customization.logos[0].themes[1]: Duplicate value: {\"mode\":\"Dark\"}"
     - name: Should not allow duplicate custom logo types
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -384,7 +384,7 @@ tests:
                       configMap:
                         name: custom-logos-config
                         key: masthead-light-logo.svg
-      expectedError: "spec.customization.logos[1]: Duplicate value: map[string]interface {}{\"type\":\"Masthead\"}"
+      expectedError: "spec.customization.logos[1]: Duplicate value: {\"type\":\"Masthead\"}"
     - name: Should not allow both logos and customLogoFile to be set
       initial: |
         apiVersion: operator.openshift.io/v1

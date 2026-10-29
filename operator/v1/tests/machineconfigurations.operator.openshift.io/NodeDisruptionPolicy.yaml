@@ -106,7 +106,7 @@ tests:
                 - type: Reload
                   reload:
                     serviceName: my.service
-    expectedError: "spec.nodeDisruptionPolicy.files[1]: Duplicate value: map[string]interface {}{\"path\":\"/etc/my-file\"}"
+    expectedError: "spec.nodeDisruptionPolicy.files[1]: Duplicate value: {\"path\":\"/etc/my-file\"}"
   - name: Node disruption policies that specify a reload action should fail if you don't specify the reload field
     initial: |
       apiVersion: operator.openshift.io/v1

@@ -53,7 +53,7 @@ tests:
             acceptRisks:
               - name: RiskA
               - name: RiskA
-      expectedError: "Duplicate value: map[string]interface {}{\"name\":\"RiskA\""
+      expectedError: "Duplicate value: {\"name\":\"RiskA\""
   onUpdate:
     - name: The riskNames field might be unspecified
       initial: |

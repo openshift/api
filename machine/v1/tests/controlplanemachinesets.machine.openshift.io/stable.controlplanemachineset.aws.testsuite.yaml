@@ -97,7 +97,7 @@ tests:
               platform: AWS
               aws:
               - subnet: {}
-    expectedError: "spec.template.machines_v1beta1_machine_openshift_io.failureDomains.aws[0].subnet.type: Required value, <nil>: Invalid value: \"null\""
+    expectedError: "spec.template.machines_v1beta1_machine_openshift_io.failureDomains.aws[0].subnet.type: Required value, <nil>: Invalid value: null"
   - name: Should reject an AWS failure domain with the subnet type ID and no ID provided
     initial: |
       apiVersion: machine.openshift.io/v1

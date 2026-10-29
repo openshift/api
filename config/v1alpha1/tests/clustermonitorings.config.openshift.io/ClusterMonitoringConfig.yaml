@@ -264,7 +264,7 @@ tests:
                   request: "100m"
                 - name: "cpu"
                   request: "200m"
-      expectedError: 'spec.alertmanagerConfig.customConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
+      expectedError: 'spec.alertmanagerConfig.customConfig.resources[1]: Duplicate value: {"name":"cpu"}'
     - name: Should reject ContainerResource with more than 5 items
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -991,7 +991,7 @@ tests:
                 request: "100m"
               - name: "cpu"
                 request: "200m"
-      expectedError: 'spec.openShiftStateMetricsConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
+      expectedError: 'spec.openShiftStateMetricsConfig.resources[1]: Duplicate value: {"name":"cpu"}'
     - name: Should reject OpenShiftStateMetricsConfig with duplicate topologySpreadConstraints
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1473,7 +1473,7 @@ tests:
                 request: "100m"
               - name: "cpu"
                 request: "200m"
-      expectedError: 'spec.thanosQuerierConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
+      expectedError: 'spec.thanosQuerierConfig.resources[1]: Duplicate value: {"name":"cpu"}'
     - name: Should reject ThanosQuerierConfig with too many resources
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1946,7 +1946,7 @@ tests:
                 request: "100m"
               - name: "cpu"
                 request: "200m"
-      expectedError: 'spec.monitoringPluginConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
+      expectedError: 'spec.monitoringPluginConfig.resources[1]: Duplicate value: {"name":"cpu"}'
     - name: Should reject MonitoringPluginConfig with too many resources
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -2305,7 +2305,7 @@ tests:
                 request: "100m"
               - name: "cpu"
                 request: "200m"
-      expectedError: 'spec.nodeExporterConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
+      expectedError: 'spec.nodeExporterConfig.resources[1]: Duplicate value: {"name":"cpu"}'
     - name: Should reject NodeExporterConfig with limit less than request
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -2882,7 +2882,7 @@ tests:
                 request: "100m"
               - name: "cpu"
                 request: "200m"
-      expectedError: 'spec.kubeStateMetricsConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
+      expectedError: 'spec.kubeStateMetricsConfig.resources[1]: Duplicate value: {"name":"cpu"}'
     - name: Should reject KubeStateMetricsConfig with duplicate topologySpreadConstraints
       initial: |
         apiVersion: config.openshift.io/v1alpha1

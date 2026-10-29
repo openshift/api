@@ -206,6 +206,11 @@ func (in Machine) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in MachineDeletionStatus) OpenAPIModelName() string {
+	return "com.github.openshift.api.machine.v1beta1.MachineDeletionStatus"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in MachineHealthCheck) OpenAPIModelName() string {
 	return "com.github.openshift.api.machine.v1beta1.MachineHealthCheck"
 }

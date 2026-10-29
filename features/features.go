@@ -627,6 +627,14 @@ var (
 							enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 							mustRegister()
 
+	FeatureGateClusterAPIMachineManagementNutanix = newFeatureGate("ClusterAPIMachineManagementNutanix").
+							reportProblemsToJiraComponent("Cloud Compute / Cluster API Providers").
+							contactPerson("abhay-nutanix").
+							productScope(ocpSpecific).
+							enhancementPR("https://github.com/openshift/enhancements/pull/1465").
+							enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+							mustRegister()
+
 	FeatureGateClusterAPIOperator = newFeatureGate("ClusterAPIOperator").
 					reportProblemsToJiraComponent("Cloud Compute / Cluster API Providers").
 					contactPerson("mdbooth").

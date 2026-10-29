@@ -55675,7 +55675,7 @@ func schema_openshift_api_operator_v1_ClusterAPIInstallerRevision(ref common.Ref
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of a revision.",
+							Description: "name is a human-readable unique identifier for a revision. Its format is not guaranteed to be stable. The only safe operation to perform on it is an equality check. Tools should not parse it. It currently has the form <release-version>-<content-hash>-<revision-number>, where <release-version> is the OpenShift release version installed by the revision, e.g. 4.22.20 or 4.20.0-0.nightly-2026-10-28-054721, <content-hash> is an opaque string derived from the revision's contentID which does not contain '-', and <revision-number> is an integer, e.g. 3. For example: 4.22.20-0123abcd-3. The name must be between 12 and 255 characters long.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

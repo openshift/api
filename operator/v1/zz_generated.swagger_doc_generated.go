@@ -251,7 +251,7 @@ func (ClusterAPIInstallerComponentSource) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterAPIInstallerRevision = map[string]string{
-	"name":                               "name is the name of a revision.",
+	"name":                               "name is a human-readable unique identifier for a revision. Its format is not guaranteed to be stable. The only safe operation to perform on it is an equality check. Tools should not parse it. It currently has the form <release-version>-<content-hash>-<revision-number>, where <release-version> is the OpenShift release version installed by the revision, e.g. 4.22.20 or 4.20.0-0.nightly-2026-10-28-054721, <content-hash> is an opaque string derived from the revision's contentID which does not contain '-', and <revision-number> is an integer, e.g. 3. For example: 4.22.20-0123abcd-3. The name must be between 12 and 255 characters long.",
 	"revision":                           "revision is a monotonically increasing number that is assigned to a revision. It must be greater than or equal to 1, and less than 2^53.",
 	"contentID":                          "contentID uniquely identifies the content of this revision. It is exactly 64 lowercase hexadecimal characters ([0-9a-f]). It is an opaque string. The only valid operation on it is equality.",
 	"unmanagedCustomResourceDefinitions": "unmanagedCustomResourceDefinitions is a list of the names of CustomResourceDefinition (CRD) objects which are included in this revision, but which should not be installed or updated. If not set, all CRDs in the revision will be managed by the CAPI operator.",

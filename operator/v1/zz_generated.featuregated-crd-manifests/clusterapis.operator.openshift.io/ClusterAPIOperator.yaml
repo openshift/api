@@ -100,9 +100,11 @@ spec:
                 minLength: 12
                 type: string
                 x-kubernetes-validations:
-                - message: revision name must match <release-version>-<8 lowercase
-                    hexadecimal characters>-<positive revision number>
-                  rule: self.matches('^[A-Za-z0-9.+-]+-[a-f0-9]{8}-[1-9][0-9]*$')
+                - message: must be of the form <release-version>-<content-hash>-<revision-number>,
+                    where <release-version> is a semantic version and <revision-number>
+                    is an integer
+                  rule: self.matches('^.+-[^-]+-[0-9]+$') && isSemver(self.substring(0,
+                    self.lastIndexOf('-', self.lastIndexOf('-') - 1)))
               desiredRevision:
                 description: |-
                   desiredRevision is the name of the desired revision. It is written by the
@@ -112,9 +114,11 @@ spec:
                 minLength: 12
                 type: string
                 x-kubernetes-validations:
-                - message: revision name must match <release-version>-<8 lowercase
-                    hexadecimal characters>-<positive revision number>
-                  rule: self.matches('^[A-Za-z0-9.+-]+-[a-f0-9]{8}-[1-9][0-9]*$')
+                - message: must be of the form <release-version>-<content-hash>-<revision-number>,
+                    where <release-version> is a semantic version and <revision-number>
+                    is an integer
+                  rule: self.matches('^.+-[^-]+-[0-9]+$') && isSemver(self.substring(0,
+                    self.lastIndexOf('-', self.lastIndexOf('-') - 1)))
               observedRevisionGeneration:
                 description: |-
                   observedRevisionGeneration is the generation of the ClusterAPI object that was last observed by the revision controller.
@@ -291,9 +295,11 @@ spec:
                       minLength: 12
                       type: string
                       x-kubernetes-validations:
-                      - message: revision name must match <release-version>-<8 lowercase
-                          hexadecimal characters>-<positive revision number>
-                        rule: self.matches('^[A-Za-z0-9.+-]+-[a-f0-9]{8}-[1-9][0-9]*$')
+                      - message: must be of the form <release-version>-<content-hash>-<revision-number>,
+                          where <release-version> is a semantic version and <revision-number>
+                          is an integer
+                        rule: self.matches('^.+-[^-]+-[0-9]+$') && isSemver(self.substring(0,
+                          self.lastIndexOf('-', self.lastIndexOf('-') - 1)))
                     revision:
                       description: |-
                         revision is a monotonically increasing number that is assigned to a revision.

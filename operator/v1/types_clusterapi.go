@@ -70,17 +70,18 @@ type ClusterAPISpec struct {
 	UnmanagedCustomResourceDefinitions []string `json:"unmanagedCustomResourceDefinitions,omitempty"`
 }
 
-// RevisionName represents the name of a revision in the format
-// <release-version>-<content-prefix>-<revision-number>.
-// The release version must contain one or more ASCII alphanumeric characters,
-// '.', '+', or '-'. It may be truncated to keep the name within 255 characters.
-// The content prefix must contain exactly eight lowercase hexadecimal characters.
-// The operator derives this prefix from the revision's contentID.
-// The revision number must be a positive decimal
-// integer without leading zeros. The name must be between 12 and 255 characters long.
+// RevisionName is a human-readable unique identifier for a revision. Its format
+// is not guaranteed to be stable. The only safe operation to perform on it is
+// an equality check. Tools should not parse it. It currently has the form
+// <release-version>-<content-hash>-<revision-number>, where <release-version>
+// is the OpenShift release version installed by the revision, e.g. 4.22.20 or
+// 4.20.0-0.nightly-2026-10-28-054721, <content-hash> is an opaque string
+// derived from the revision's contentID which does not contain '-', and
+// <revision-number> is an integer, e.g. 3. For example: 4.22.20-0123abcd-3. The
+// name must be between 12 and 255 characters long.
 // +kubebuilder:validation:MinLength=12
 // +kubebuilder:validation:MaxLength=255
-// +kubebuilder:validation:XValidation:rule="self.matches('^[A-Za-z0-9.+-]+-[a-f0-9]{8}-[1-9][0-9]*$')",message="revision name must match <release-version>-<8 lowercase hexadecimal characters>-<positive revision number>"
+// +kubebuilder:validation:XValidation:rule="self.matches('^.+-[^-]+-[0-9]+$') && isSemver(self.substring(0, self.lastIndexOf('-', self.lastIndexOf('-') - 1)))",message="must be of the form <release-version>-<content-hash>-<revision-number>, where <release-version> is a semantic version and <revision-number> is an integer"
 type RevisionName string
 
 // ClusterAPIStatus describes the current state of the capi-operator.

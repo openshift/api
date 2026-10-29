@@ -10635,6 +10635,11 @@
             "type": "string"
           },
           "x-kubernetes-list-type": "atomic"
+        },
+        "maxAllowedAddressPairs": {
+          "description": "maxAllowedAddressPairs is the maximum number of allowed address pairs configured in Neutron. When set, the value must be between 1 and 2,147,483,647 inclusive. When omitted, it means there is no opinion and the platform will choose a reasonable default which is subject to change. Currently, the default value matches Neutron's default.",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

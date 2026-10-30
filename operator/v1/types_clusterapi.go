@@ -144,10 +144,9 @@ type ClusterAPIInstallerRevision struct {
 	// +kubebuilder:validation:Maximum=9007199254740991
 	Revision int64 `json:"revision,omitempty"`
 
-	// contentID uniquely identifies the content of this revision. It is a SHA-256
-	// digest of the component content identifiers, manifest substitutions, and
-	// unmanaged custom resource definitions, encoded as exactly 64 lowercase
-	// hexadecimal characters (0-9 and a-f), without a prefix.
+	// contentID uniquely identifies the content of this revision.
+	// It is exactly 64 lowercase hexadecimal characters ([0-9a-f]).
+	// It is an opaque string. The only valid operation on it is equality.
 	// +required
 	// +kubebuilder:validation:MinLength=64
 	// +kubebuilder:validation:MaxLength=64

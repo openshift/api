@@ -55689,7 +55689,7 @@ func schema_openshift_api_operator_v1_ClusterAPIInstallerRevision(ref common.Ref
 					},
 					"contentID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "contentID uniquely identifies the content of this revision. It is a SHA-256 digest of the component content identifiers, manifest substitutions, and unmanaged custom resource definitions, encoded as exactly 64 lowercase hexadecimal characters (0-9 and a-f), without a prefix.",
+							Description: "contentID uniquely identifies the content of this revision. It is exactly 64 lowercase hexadecimal characters ([0-9a-f]). It is an opaque string. The only valid operation on it is equality.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

@@ -547,3 +547,40 @@ tests:
                 status: Succeeded
                 configHash: AQAAAA==
       expectedStatusError: "remoteKeyID is required when status is Succeeded"
+    - name: Should accept Succeeded to Failed transition that drops remoteKeyID
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: OpenShiftAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: AQAAAA==
+              result:
+                status: Succeeded
+                configHash: AQAAAA==
+                remoteKeyID: vault-transit-key-v3
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: OpenShiftAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: AQAAAA==
+              result:
+                status: Failed
+                configHash: AQAAAA==
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: OpenShiftAPIServer
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: AQAAAA==
+              result:
+                status: Failed
+                configHash: AQAAAA==

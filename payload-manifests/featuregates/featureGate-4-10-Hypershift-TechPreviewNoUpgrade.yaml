@@ -107,9 +107,6 @@
                         "name": "NewOLMConfigAPI"
                     },
                     {
-                        "name": "NewOLMOwnSingleNamespace"
-                    },
-                    {
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {

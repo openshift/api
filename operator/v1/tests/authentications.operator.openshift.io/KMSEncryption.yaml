@@ -168,6 +168,154 @@ tests:
                 lastCheckedTime: "2026-01-01T00:00:00Z"
                 remoteKeyID: kek-1
       expectedStatusError: "nodeName must be a lowercase RFC 1123 subdomain"
+    - name: Should accept an Error health report without remoteKeyID
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              healthReports:
+              - nodeName: node-a
+                keyID: key-1
+                status: Error
+                lastCheckedTime: "2026-01-01T00:00:00Z"
+                detail: plugin unreachable
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              healthReports:
+              - nodeName: node-a
+                keyID: key-1
+                status: Error
+                lastCheckedTime: "2026-01-01T00:00:00Z"
+                detail: plugin unreachable
+    - name: Should accept an Unhealthy health report without remoteKeyID
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              healthReports:
+              - nodeName: node-a
+                keyID: key-1
+                status: Unhealthy
+                lastCheckedTime: "2026-01-01T00:00:00Z"
+                detail: degraded
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              healthReports:
+              - nodeName: node-a
+                keyID: key-1
+                status: Unhealthy
+                lastCheckedTime: "2026-01-01T00:00:00Z"
+                detail: degraded
+    - name: Should reject Healthy health report without remoteKeyID
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              healthReports:
+              - nodeName: node-a
+                keyID: key-1
+                status: Healthy
+                lastCheckedTime: "2026-01-01T00:00:00Z"
+      expectedStatusError: "remoteKeyID is required when status is Healthy"
+    - name: Should accept Healthy to Error transition that drops remoteKeyID
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              healthReports:
+              - nodeName: node-a
+                keyID: key-1
+                status: Healthy
+                lastCheckedTime: "2026-01-01T00:00:00Z"
+                remoteKeyID: kek-1
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              healthReports:
+              - nodeName: node-a
+                keyID: key-1
+                status: Error
+                lastCheckedTime: "2026-01-01T00:00:00Z"
+                detail: plugin unreachable
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              healthReports:
+              - nodeName: node-a
+                keyID: key-1
+                status: Error
+                lastCheckedTime: "2026-01-01T00:00:00Z"
+                detail: plugin unreachable
     - name: Should accept preflight with only observedConfigHash and no result
       initial: |
         apiVersion: operator.openshift.io/v1

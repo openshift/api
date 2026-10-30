@@ -1,0 +1,525 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "ClusterVersion"
+crdName: clusterversions.config.openshift.io
+featureGates:
+  - ClusterAPIOperator
+tests:
+  onCreate:
+    - name: v4.11 rejects MachineAPI without ClusterAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+      expectedError: the MachineAPI capability requires the ClusterAPI capability
+    - name: v4.12 rejects MachineAPI without ClusterAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.12
+      expectedError: the MachineAPI capability requires the ClusterAPI capability
+    - name: v4.13 rejects MachineAPI without ClusterAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.13
+      expectedError: the MachineAPI capability requires the ClusterAPI capability
+    - name: v4.14 rejects MachineAPI without ClusterAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.14
+      expectedError: the MachineAPI capability requires the ClusterAPI capability
+    - name: v4.15 rejects MachineAPI without ClusterAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.15
+      expectedError: the MachineAPI capability requires the ClusterAPI capability
+    - name: v4.16 rejects MachineAPI without ClusterAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.16
+      expectedError: the MachineAPI capability requires the ClusterAPI capability
+    - name: v4.17 rejects MachineAPI without ClusterAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.17
+      expectedError: the MachineAPI capability requires the ClusterAPI capability
+    - name: v4.18 rejects MachineAPI without ClusterAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.18
+      expectedError: the MachineAPI capability requires the ClusterAPI capability
+    - name: v4.11 accepts both prerequisites alongside the baseline MachineAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+            additionalEnabledCapabilities:
+            - ClusterAPI
+            - CompatibilityRequirements
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+            additionalEnabledCapabilities:
+            - ClusterAPI
+            - CompatibilityRequirements
+    - name: MachineAPI requires ClusterAPI whenever the operator gate is enabled
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - MachineAPI
+      expectedError: the MachineAPI capability requires the ClusterAPI capability
+    - name: None accepts a selection without MachineAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+    - name: None accepts an empty additional capability list
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities: []
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities: []
+    - name: None accepts MachineAPI with both prerequisites
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - MachineAPI
+            - ClusterAPI
+            - CompatibilityRequirements
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - MachineAPI
+            - ClusterAPI
+            - CompatibilityRequirements
+    - name: None accepts ClusterAPI without MachineAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - ClusterAPI
+            - CompatibilityRequirements
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - ClusterAPI
+            - CompatibilityRequirements
+    - name: vCurrent accepts the baseline MachineAPI and ClusterAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: vCurrent
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: vCurrent
+    - name: vCurrent accepts an empty additional capability list
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: vCurrent
+            additionalEnabledCapabilities: []
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: vCurrent
+            additionalEnabledCapabilities: []
+    - name: an omitted baseline resolves to vCurrent
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities: {}
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities: {}
+    - name: omitted capabilities are accepted
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+    - name: an explicitly empty baseline is rejected by the enum
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: ''
+            additionalEnabledCapabilities: []
+      expectedError: 'baselineCapabilitySet: Unsupported value: ""'
+  onUpdate:
+    - name: legacy selection permits a no-op update
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/capabilities/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+    - name: legacy selection permits a channel update
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/capabilities/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          channel: stable-5.1
+          capabilities:
+            baselineCapabilitySet: v4.11
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          channel: stable-5.1
+          capabilities:
+            baselineCapabilitySet: v4.11
+    - name: legacy selection permits an upgrade target update
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/capabilities/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            image: quay.io/example/release:5.1
+          capabilities:
+            baselineCapabilitySet: v4.11
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            image: quay.io/example/release:5.1
+          capabilities:
+            baselineCapabilitySet: v4.11
+    - name: legacy selection permits actual status writes
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/capabilities/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          capabilities:
+            enabledCapabilities:
+            - MachineAPI
+            - ClusterAPI
+            - CompatibilityRequirements
+            knownCapabilities:
+            - MachineAPI
+            - ClusterAPI
+            - CompatibilityRequirements
+          availableUpdates: []
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          capabilities:
+            enabledCapabilities:
+            - MachineAPI
+            - ClusterAPI
+            - CompatibilityRequirements
+            knownCapabilities:
+            - MachineAPI
+            - ClusterAPI
+            - CompatibilityRequirements
+          availableUpdates: []
+    - name: legacy selection rejects an invalid baseline edit
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/capabilities/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.12
+      expectedError: the MachineAPI capability requires the ClusterAPI capability
+    - name: legacy selection rejects an unrelated additional capability
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/capabilities/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+            additionalEnabledCapabilities:
+            - Console
+      expectedError: the MachineAPI capability requires the ClusterAPI capability
+    - name: legacy selection rejects atomic list reordering
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/capabilities/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - MachineAPI
+            - Console
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - Console
+            - MachineAPI
+      expectedError: the MachineAPI capability requires the ClusterAPI capability
+    - name: legacy selection permits remediation with both prerequisites
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/capabilities/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+            additionalEnabledCapabilities:
+            - ClusterAPI
+            - CompatibilityRequirements
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+            additionalEnabledCapabilities:
+            - ClusterAPI
+            - CompatibilityRequirements
+    - name: remediated selection rejects ClusterAPI removal
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+            additionalEnabledCapabilities:
+            - ClusterAPI
+            - CompatibilityRequirements
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+            additionalEnabledCapabilities:
+            - CompatibilityRequirements
+      expectedError: the MachineAPI capability requires the ClusterAPI capability
+    - name: current baseline rejects an invalid historical selection
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: vCurrent
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.18
+      expectedError: the MachineAPI capability requires the ClusterAPI capability

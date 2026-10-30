@@ -3462,6 +3462,200 @@ tests:
             retention:
               size: "0B"
       expectedError: 'must be "0" to disable size-based retention, or a positive byte-size string'
+    - name: Should preserve Alertmanager legacy timeoutSeconds
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutSeconds: 30
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutSeconds: 30
+    - name: Should preserve Alertmanager both timeout fields
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutSeconds: 30
+                timeoutMilliseconds: 500
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutSeconds: 30
+                timeoutMilliseconds: 500
+    - name: Should accept Alertmanager timeoutMilliseconds 1
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutMilliseconds: 1
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutMilliseconds: 1
+    - name: Should accept Alertmanager timeoutMilliseconds 500
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutMilliseconds: 500
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutMilliseconds: 500
+    - name: Should accept Alertmanager timeoutMilliseconds 30000
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutMilliseconds: 30000
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutMilliseconds: 30000
+    - name: Should accept Alertmanager timeoutMilliseconds 600000
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutMilliseconds: 600000
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutMilliseconds: 600000
+    - name: Should reject Alertmanager timeoutMilliseconds 0
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutMilliseconds: 0
+      expectedError: 'greater than or equal to 1'
+    - name: Should reject Alertmanager timeoutMilliseconds -1
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutMilliseconds: -1
+      expectedError: 'greater than or equal to 1'
+    - name: Should reject Alertmanager timeoutMilliseconds 600001
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeoutMilliseconds: 600001
+      expectedError: 'less than or equal to 600000'
   onUpdate:
     - name: Should allow updating KubeStateMetricsConfig resources
       initial: |

@@ -100,27 +100,6 @@ tests:
             version: 4.11.1
             image: bar
       expectedError: "cannot set both Architecture and Image"
-    - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities baremetal and MachineAPI
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: ClusterVersion
-        spec:
-          clusterID: foo
-          capabilities:
-            baselineCapabilitySet: None
-            additionalEnabledCapabilities:
-            - baremetal
-            - MachineAPI
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: ClusterVersion
-        spec:
-          clusterID: foo
-          capabilities:
-            baselineCapabilitySet: None
-            additionalEnabledCapabilities:
-            - baremetal
-            - MachineAPI
     - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities baremetal without MachineAPI
       initial: |
         apiVersion: config.openshift.io/v1
@@ -274,34 +253,6 @@ tests:
             image: foo
           capabilities:
             enabledCapabilities:
-            - MachineAPI
-    - name: Should be able to add the baremetal capability with a ClusterVersion with base capability None, with the Machine API capability
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: ClusterVersion
-        spec:
-          clusterID: foo
-          capabilities:
-            baselineCapabilitySet: None
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: ClusterVersion
-        spec:
-          clusterID: foo
-          capabilities:
-            baselineCapabilitySet: None
-            additionalEnabledCapabilities:
-            - baremetal
-            - MachineAPI
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: ClusterVersion
-        spec:
-          clusterID: foo
-          capabilities:
-            baselineCapabilitySet: None
-            additionalEnabledCapabilities:
-            - baremetal
             - MachineAPI
     - name: Should be able to add the baremetal capability without MachineAPI with a ClusterVersion with base capability None
       initial: |

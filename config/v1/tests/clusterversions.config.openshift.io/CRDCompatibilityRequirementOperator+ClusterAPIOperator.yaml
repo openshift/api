@@ -6,6 +6,66 @@ featureGates:
   - ClusterAPIOperator
 tests:
   onCreate:
+    - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities baremetal and MachineAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
+            - MachineAPI
+            - ClusterAPI
+            - CompatibilityRequirements
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
+            - MachineAPI
+            - ClusterAPI
+            - CompatibilityRequirements
+    - name: Should reject MachineAPI without ClusterAPI when both gates are enabled
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - MachineAPI
+            - CompatibilityRequirements
+      expectedError: the MachineAPI capability requires the ClusterAPI capability
+    - name: Should accept MachineAPI with both prerequisites when both gates are enabled
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - MachineAPI
+            - ClusterAPI
+            - CompatibilityRequirements
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - MachineAPI
+            - ClusterAPI
+            - CompatibilityRequirements
     - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities ClusterAPI and CompatibilityRequirements
       initial: |
         apiVersion: config.openshift.io/v1
@@ -58,6 +118,37 @@ tests:
             additionalEnabledCapabilities:
             - CompatibilityRequirements
   onUpdate:
+    - name: Should allow legacy MachineAPI remediation with both prerequisites
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/capabilities/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+            additionalEnabledCapabilities:
+            - ClusterAPI
+            - CompatibilityRequirements
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: v4.11
+            additionalEnabledCapabilities:
+            - ClusterAPI
+            - CompatibilityRequirements
     - name: Should be able to add the ClusterAPI capability with CompatibilityRequirements already implicitly enabled
       initial: |
         apiVersion: config.openshift.io/v1

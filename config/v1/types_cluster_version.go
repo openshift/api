@@ -304,9 +304,19 @@ const (
 	ClusterVersionArchitectureMulti ClusterVersionArchitecture = "Multi"
 )
 
+// The FeatureGateAwareEnum markers below all write the same enum field, and the
+// generator keeps same-named markers in source order and applies the last one
+// that matches, so with several gates enabled the lowest marker wins. Keep the
+// markers ordered from fewest to most capabilities, with the combined
+// requiredFeatureGate marker last, so that the enum does not silently shrink
+// when more than one of these gates is enabled.
+// This comment is deliberately detached from the doc comment below: anything in
+// that block becomes the generated schema description.
+
 // ClusterVersionCapability enumerates optional, core cluster components.
 // +openshift:validation:FeatureGateAwareEnum:featureGate="",enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning;MachineAPI;Build;DeploymentConfig;ImageRegistry;OperatorLifecycleManager;CloudCredential;Ingress;CloudControllerManager;OperatorLifecycleManagerV1
 // +openshift:validation:FeatureGateAwareEnum:featureGate=CRDCompatibilityRequirementOperator,enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning;MachineAPI;Build;DeploymentConfig;ImageRegistry;OperatorLifecycleManager;CloudCredential;Ingress;CloudControllerManager;OperatorLifecycleManagerV1;CompatibilityRequirements
+// +openshift:validation:FeatureGateAwareEnum:featureGate=ClusterAPIOperator,enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning;MachineAPI;Build;DeploymentConfig;ImageRegistry;OperatorLifecycleManager;CloudCredential;Ingress;CloudControllerManager;OperatorLifecycleManagerV1;ClusterAPI
 // +openshift:validation:FeatureGateAwareEnum:requiredFeatureGate=CRDCompatibilityRequirementOperator;ClusterAPIOperator,enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning;MachineAPI;Build;DeploymentConfig;ImageRegistry;OperatorLifecycleManager;CloudCredential;Ingress;CloudControllerManager;OperatorLifecycleManagerV1;CompatibilityRequirements;ClusterAPI
 type ClusterVersionCapability string
 
@@ -670,6 +680,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 // ClusterVersionCapabilitiesSpec selects the managed set of
 // optional, core cluster components.
 // +k8s:deepcopy-gen=true
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ClusterAPIOperator,rule="!has(self.baselineCapabilitySet) || size(self.baselineCapabilitySet) == 0 || self.baselineCapabilitySet == 'vCurrent' || (self.baselineCapabilitySet == 'None' && (!has(self.additionalEnabledCapabilities) || !('MachineAPI' in self.additionalEnabledCapabilities))) || (has(self.additionalEnabledCapabilities) && 'ClusterAPI' in self.additionalEnabledCapabilities)",message="the MachineAPI capability requires the ClusterAPI capability"
 type ClusterVersionCapabilitiesSpec struct {
 	// baselineCapabilitySet selects an initial set of
 	// optional capabilities to enable, which can be extended via

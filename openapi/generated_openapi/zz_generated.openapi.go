@@ -18904,7 +18904,7 @@ func schema_openshift_api_config_v1_NodeSpec(ref common.ReferenceCallback) commo
 					},
 					"workerLatencyProfile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "workerLatencyProfile determins the how fast the kubelet is updating the status and corresponding reaction of the cluster",
+							Description: "workerLatencyProfile determines how frequently the kubelet updates the status and how quickly the cluster reacts accordingly.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

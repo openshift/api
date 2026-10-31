@@ -41,8 +41,8 @@ type NodeSpec struct {
 	// +optional
 	CgroupMode CgroupMode `json:"cgroupMode,omitempty"`
 
-	// workerLatencyProfile determins the how fast the kubelet is updating
-	// the status and corresponding reaction of the cluster
+	// workerLatencyProfile determines how frequently the kubelet updates
+	// the status and how quickly the cluster reacts accordingly.
 	// +optional
 	WorkerLatencyProfile WorkerLatencyProfileType `json:"workerLatencyProfile,omitempty"`
 

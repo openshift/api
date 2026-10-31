@@ -9920,7 +9920,7 @@
           "default": ""
         },
         "workerLatencyProfile": {
-          "description": "workerLatencyProfile determins the how fast the kubelet is updating the status and corresponding reaction of the cluster",
+          "description": "workerLatencyProfile determines how frequently the kubelet updates the status and how quickly the cluster reacts accordingly.",
           "type": "string"
         }
       }

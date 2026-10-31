@@ -68,6 +68,29 @@ controllermanagers.config.openshift.io:
   - ControllerManagerConfig
   Version: v1alpha1
 
+globalpullcredentials.config.openshift.io:
+  Annotations: {}
+  ApprovedPRNumber: https://github.com/openshift/api/pull/3126
+  CRDName: globalpullcredentials.config.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates:
+  - MultiSecretGlobalPullConfig
+  FilenameOperatorName: config-operator
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_10"
+  GroupName: config.openshift.io
+  HasStatus: true
+  KindName: GlobalPullCredential
+  Labels: {}
+  PluralName: globalpullcredentials
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TopLevelFeatureGates:
+  - MultiSecretGlobalPullConfig
+  Version: v1alpha1
+
 insightsdatagathers.config.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/1245

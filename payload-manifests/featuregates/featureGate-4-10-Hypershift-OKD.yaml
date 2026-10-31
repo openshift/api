@@ -245,6 +245,9 @@
                         "name": "MultiDiskSetup"
                     },
                     {
+                        "name": "MultiSecretGlobalPullConfig"
+                    },
+                    {
                         "name": "MutableTopology"
                     },
                     {

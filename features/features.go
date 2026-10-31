@@ -138,6 +138,14 @@ var (
 						enable(inClusterProfile(SelfManaged), inDefault(), inOKD(), inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 						mustRegister()
 
+	FeatureGateMultiSecretGlobalPullConfig = newFeatureGate("MultiSecretGlobalPullConfig").
+						reportProblemsToJiraComponent("node").
+						contactPerson("Chandan9112").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/2116").
+						enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+						mustRegister()
+
 	FeatureGateVSphereHostVMGroupZonal = newFeatureGate("VSphereHostVMGroupZonal").
 						reportProblemsToJiraComponent("splat").
 						contactPerson("jcpowermac").

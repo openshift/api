@@ -364,6 +364,9 @@
                         "name": "MultiDiskSetup"
                     },
                     {
+                        "name": "MultiSecretGlobalPullConfig"
+                    },
+                    {
                         "name": "MutableCSINodeAllocatableCount"
                     },
                     {

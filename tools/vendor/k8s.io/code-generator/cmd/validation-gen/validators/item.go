@@ -27,7 +27,7 @@ import (
 )
 
 const (
-	itemTagName = "k8s:item"
+	itemTagName = "item"
 )
 
 func init() {
@@ -43,11 +43,13 @@ type keyValuePair struct {
 
 type itemTagValidator struct {
 	validator  TagValidationExtractor
+	prefix     string
 	listByPath map[string]*listMetadata
 }
 
 func (itv *itemTagValidator) Init(cfg Config) {
 	itv.validator = cfg.TagValidator
+	itv.prefix = cfg.TagPrefix
 }
 
 func (itemTagValidator) TagName() string {
@@ -131,6 +133,9 @@ func (itv *itemTagValidator) GetValidations(context Context, tag codetags.Tag) (
 			for _, vfn := range validations.Functions {
 				f := Function(itemTagName, vfn.Flags, validateFunc, matchArg, equivArg, WrapperFunction{Function: vfn, ObjType: elemT})
 				f.Cohort = itemKey
+				if vfn.Cohort != "" {
+					f.Cohort = itemKey + "." + vfn.Cohort
+				}
 				vfn = f
 				deferredResult.AddFunction(vfn)
 			}
@@ -175,6 +180,9 @@ func (itv *itemTagValidator) GetValidations(context Context, tag codetags.Tag) (
 				}
 				f := Function(itemTagName, fn.Flags, validateFunc, matchArg, equivArg, WrapperFunction{Function: fn, ObjType: elemT})
 				f.Cohort = itemKey
+				if fn.Cohort != "" {
+					f.Cohort = itemKey + "." + fn.Cohort
+				}
 				return f
 			}, d.Scope), nil
 		}))
@@ -229,7 +237,7 @@ func (itv *itemTagValidator) prepareArgs(context Context, criteria []keyValuePai
 	if directComparable {
 		equivArg = Identifier(validateDirectEqual)
 	} else {
-		equivArg = Identifier(validateSemanticDeepEqual)
+		equivArg = DeepEqualFunc{}
 	}
 	return matchArg, equivArg, nil
 }
@@ -288,12 +296,12 @@ func (itv itemTagValidator) Docs() TagDoc {
 		Tag:            itv.TagName(),
 		StabilityLevel: TagStabilityLevelStable,
 		Scopes:         sets.List(itv.ValidScopes()),
-		Description: "Declares a validation for an item of a slice declared as a +k8s:listType=map. " +
+		Description: "Declares a validation for an item of a slice declared as a +" + itv.prefix + listTypeTagName + "=map. " +
 			"The item to match is declared by providing field-value pair arguments. All key fields must be specified.",
-		Usage: "+k8s:item(stringKey: \"value\", intKey: 42, boolKey: true)=<validation-tag>",
+		Usage: "+" + itv.prefix + itemTagName + "(stringKey: \"value\", intKey: 42, boolKey: true)=<validation-tag>",
 		Docs: "Arguments must be named with the JSON names of the list-map key fields. " +
 			"Values can be strings, integers, or booleans. " +
-			"For example: +k8s:item(name: \"myname\", priority: 10, enabled: true)=<chained-validation-tag>",
+			"For example: +" + itv.prefix + itemTagName + "(name: \"myname\", priority: 10, enabled: true)=<chained-validation-tag>",
 		AcceptsUnknownArgs: true,
 		Payloads: []TagPayloadDoc{{
 			Description: "<validation-tag>",

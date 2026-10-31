@@ -27,6 +27,7 @@ type Rule = v1.Rule
 
 // ScopeType specifies a scope for a Rule.
 // +enum
+// +k8s:validation-gen-nolint
 type ScopeType = v1.ScopeType
 
 const (
@@ -551,6 +552,7 @@ type ParamRef struct {
 	// Allowed values are `Allow` or `Deny`
 	//
 	// Required
+	// +required
 	ParameterNotFoundAction *ParameterNotFoundActionType `json:"parameterNotFoundAction,omitempty" protobuf:"bytes,4,rep,name=parameterNotFoundAction"`
 }
 
@@ -647,6 +649,7 @@ type MatchResources struct {
 
 // ValidationAction specifies a policy enforcement action.
 // +enum
+// +k8s:validation-gen-nolint
 type ValidationAction string
 
 const (
@@ -1084,6 +1087,7 @@ type MutatingWebhook struct {
 // ReinvocationPolicyType specifies what type of policy is used when other admission plugins also perform
 // modifications.
 // +enum
+// +k8s:validation-gen-nolint
 type ReinvocationPolicyType = v1.ReinvocationPolicyType
 
 const (
@@ -1102,6 +1106,7 @@ type RuleWithOperations = v1.RuleWithOperations
 
 // OperationType specifies an operation for a request.
 // +enum
+// +k8s:validation-gen-nolint
 type OperationType = v1.OperationType
 
 // The constants should be kept in sync with those defined in k8s.io/kubernetes/pkg/admission/interface.go.
@@ -1350,6 +1355,7 @@ type Mutation struct {
 
 // PatchType specifies the type of patch operation for a mutation.
 // +enum
+// +k8s:validation-gen-nolint
 type PatchType string
 
 const (

@@ -68,8 +68,8 @@ spec:
                       For a resource to match, both scopes AND scopeSelector (if specified in spec), must be matched.
                     properties:
                       matchExpressions:
-                        description: A list of scope selector requirements by scope
-                          of the resources.
+                        description: matchExpressions is a list of scope selector
+                          requirements by scope of the resources.
                         items:
                           description: |-
                             A scoped-resource selector requirement is a selector that contains values, a scope name, and an operator
@@ -77,16 +77,16 @@ spec:
                           properties:
                             operator:
                               description: |-
-                                Represents a scope's relationship to a set of values.
+                                operator represents a scope's relationship to a set of values.
                                 Valid operators are In, NotIn, Exists, DoesNotExist.
                               type: string
                             scopeName:
-                              description: The name of the scope that the selector
-                                applies to.
+                              description: scopeName is the name of the scope that
+                                the selector applies to.
                               type: string
                             values:
                               description: |-
-                                An array of string values. If the operator is In or NotIn,
+                                values is an array of string values. If the operator is In or NotIn,
                                 the values array must be non-empty. If the operator is Exists or DoesNotExist,
                                 the values array must be empty.
                                 This array is replaced during a strategic merge patch.
@@ -104,7 +104,7 @@ spec:
                     x-kubernetes-map-type: atomic
                   scopes:
                     description: |-
-                      A collection of filters that must match each object tracked by a quota.
+                      scopes is a collection of filters that must match each object tracked by a quota.
                       If not specified, the quota matches all objects.
                     items:
                       description: A ResourceQuotaScope defines a filter that must
@@ -207,7 +207,7 @@ spec:
                             pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                             x-kubernetes-int-or-string: true
                           description: |-
-                            Hard is the set of enforced hard limits for each named resource.
+                            hard is the set of enforced hard limits for each named resource.
                             More info: https://kubernetes.io/docs/concepts/policy/resource-quotas/
                           type: object
                         used:
@@ -217,7 +217,7 @@ spec:
                             - type: string
                             pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                             x-kubernetes-int-or-string: true
-                          description: Used is the current observed total usage of
+                          description: used is the current observed total usage of
                             the resource in the namespace.
                           type: object
                       type: object
@@ -239,7 +239,7 @@ spec:
                       pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                       x-kubernetes-int-or-string: true
                     description: |-
-                      Hard is the set of enforced hard limits for each named resource.
+                      hard is the set of enforced hard limits for each named resource.
                       More info: https://kubernetes.io/docs/concepts/policy/resource-quotas/
                     type: object
                   used:
@@ -249,7 +249,7 @@ spec:
                       - type: string
                       pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                       x-kubernetes-int-or-string: true
-                    description: Used is the current observed total usage of the resource
+                    description: used is the current observed total usage of the resource
                       in the namespace.
                     type: object
                 type: object

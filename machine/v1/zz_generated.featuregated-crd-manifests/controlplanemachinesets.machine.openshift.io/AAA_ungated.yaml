@@ -793,22 +793,23 @@ spec:
                               properties:
                                 effect:
                                   description: |-
-                                    Required. The effect of the taint on pods
-                                    that do not tolerate the taint.
+                                    effect is the effect of the taint on pods
+                                    that do not tolerate the taint. Required.
                                     Valid effects are NoSchedule, PreferNoSchedule and NoExecute.
                                   type: string
                                 key:
-                                  description: Required. The taint key to be applied
-                                    to a node.
+                                  description: |-
+                                    key is the taint key to be applied to a node. Required.
+                                    The taint key to be applied to a node.
                                   type: string
                                 timeAdded:
-                                  description: TimeAdded represents the time at which
+                                  description: timeAdded represents the time at which
                                     the taint was added.
                                   format: date-time
                                   type: string
                                 value:
-                                  description: The taint value corresponding to the
-                                    taint key.
+                                  description: value is the taint value corresponding
+                                    to the taint key.
                                   type: string
                               required:
                               - effect
@@ -854,6 +855,7 @@ spec:
                       format: date-time
                       type: string
                     message:
+                      default: ""
                       description: |-
                         message is a human readable message indicating details about the transition.
                         This may be an empty string.
@@ -892,7 +894,6 @@ spec:
                       type: string
                   required:
                   - lastTransitionTime
-                  - message
                   - reason
                   - status
                   - type

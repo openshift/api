@@ -3448,14 +3448,31 @@ spec:
                       If a scraped target's body response is larger than the limit, the scrape will fail.
                       This helps protect Prometheus from targets that return excessively large responses.
                       The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB).
-                      When omitted, the Cluster Monitoring Operator automatically calculates an appropriate
-                      limit based on cluster capacity. Set an explicit value to override the automatic calculation.
+                      May be set when enforcedBodySizeLimitMode is Explicit or omitted, and is required for Explicit.
+                      Must be omitted when enforcedBodySizeLimitMode is Automatic or Disabled.
+                      When omitted, enforcedBodySizeLimitMode determines the behavior. If both fields are
+                      omitted, the existing ConfigMap setting is preserved, or no limit is configured if absent.
                       Minimum value is 10240 (10kB).
                       Maximum value is 1073741824 (1GB).
                     format: int64
                     maximum: 1073741824
                     minimum: 10240
                     type: integer
+                  enforcedBodySizeLimitMode:
+                    description: |-
+                      enforcedBodySizeLimitMode optionally selects how the scrape response size limit is determined.
+                      Valid values are Automatic, Explicit and Disabled.
+                      Automatic calculates a limit based on cluster pod capacity and forbids enforcedBodySizeLimitBytes.
+                      Explicit requires enforcedBodySizeLimitBytes and uses that fixed limit.
+                      Disabled configures no limit and forbids enforcedBodySizeLimitBytes.
+                      An existing prometheusK8s section in the ConfigMap takes precedence over these CRD settings.
+                      When omitted, enforcedBodySizeLimitBytes is used if set; otherwise the existing
+                      ConfigMap setting is preserved, or no limit is configured if absent.
+                    enum:
+                    - Automatic
+                    - Explicit
+                    - Disabled
+                    type: string
                   externalLabels:
                     description: |-
                       externalLabels defines labels to be attached to time series and alerts
@@ -5505,6 +5522,15 @@ spec:
                         type: object
                     type: object
                 type: object
+                x-kubernetes-validations:
+                - message: enforcedBodySizeLimitBytes is required when enforcedBodySizeLimitMode
+                    is Explicit
+                  rule: '!has(self.enforcedBodySizeLimitMode) || self.enforcedBodySizeLimitMode
+                    != ''Explicit'' || has(self.enforcedBodySizeLimitBytes)'
+                - message: enforcedBodySizeLimitBytes is forbidden when enforcedBodySizeLimitMode
+                    is Automatic or Disabled
+                  rule: '!has(self.enforcedBodySizeLimitMode) || self.enforcedBodySizeLimitMode
+                    == ''Explicit'' || !has(self.enforcedBodySizeLimitBytes)'
               prometheusOperatorAdmissionWebhookConfig:
                 description: |-
                   prometheusOperatorAdmissionWebhookConfig is an optional field that can be used to configure the

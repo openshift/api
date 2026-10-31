@@ -131,7 +131,7 @@
                         "name": "UnifiedClusterManagedDNSAndLB"
                     },
                     {
-                        "name": "VSpherePerComponentScopedCreds"
+                        "name": "VSpherePerComponentScopedCredsInstall"
                     }
                 ],
                 "enabled": [

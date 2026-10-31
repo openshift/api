@@ -1125,14 +1125,6 @@ var (
 					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
-	FeatureGatePodGroupPreemptionPolicy = newFeatureGate("PodGroupPreemptionPolicy").
-						reportProblemsToJiraComponent("node").
-						contactPerson("sairameshv").
-						productScope(kubernetes).
-						enhancementPR("https://github.com/kubernetes/enhancements/issues/5710").
-						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-						mustRegister()
-
 	FeatureGateCompositePodGroup = newFeatureGate("CompositePodGroup").
 					reportProblemsToJiraComponent("node").
 					contactPerson("sairameshv").

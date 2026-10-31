@@ -307,7 +307,7 @@ const (
 // ClusterVersionCapability enumerates optional, core cluster components.
 // +openshift:validation:FeatureGateAwareEnum:featureGate="",enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning;MachineAPI;Build;DeploymentConfig;ImageRegistry;OperatorLifecycleManager;CloudCredential;Ingress;CloudControllerManager;OperatorLifecycleManagerV1
 // +openshift:validation:FeatureGateAwareEnum:featureGate=CRDCompatibilityRequirementOperator,enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning;MachineAPI;Build;DeploymentConfig;ImageRegistry;OperatorLifecycleManager;CloudCredential;Ingress;CloudControllerManager;OperatorLifecycleManagerV1;CompatibilityRequirements
-// +openshift:validation:FeatureGateAwareEnum:requiredFeatureGate=CRDCompatibilityRequirementOperator;ClusterAPIOperator,enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning;MachineAPI;Build;DeploymentConfig;ImageRegistry;OperatorLifecycleManager;CloudCredential;Ingress;CloudControllerManager;OperatorLifecycleManagerV1;CompatibilityRequirements;ClusterAPI
+// +openshift:validation:FeatureGateAwareEnum:featureGate=ClusterAPIOperator,enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning;MachineAPI;Build;DeploymentConfig;ImageRegistry;OperatorLifecycleManager;CloudCredential;Ingress;CloudControllerManager;OperatorLifecycleManagerV1;CompatibilityRequirements;ClusterAPI
 type ClusterVersionCapability string
 
 const (
@@ -670,6 +670,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 // ClusterVersionCapabilitiesSpec selects the managed set of
 // optional, core cluster components.
 // +k8s:deepcopy-gen=true
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ClusterAPIOperator,rule="!has(self.baselineCapabilitySet) || size(self.baselineCapabilitySet) == 0 || self.baselineCapabilitySet == 'vCurrent' || (self.baselineCapabilitySet == 'None' && (!has(self.additionalEnabledCapabilities) || !('MachineAPI' in self.additionalEnabledCapabilities))) || (has(self.additionalEnabledCapabilities) && 'ClusterAPI' in self.additionalEnabledCapabilities)",message="the MachineAPI capability requires the ClusterAPI capability"
 type ClusterVersionCapabilitiesSpec struct {
 	// baselineCapabilitySet selects an initial set of
 	// optional capabilities to enable, which can be extended via

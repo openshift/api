@@ -120,6 +120,13 @@ spec:
                     - vCurrent
                     type: string
                 type: object
+                x-kubernetes-validations:
+                - message: the MachineAPI capability requires the ClusterAPI capability
+                  rule: '!has(self.baselineCapabilitySet) || size(self.baselineCapabilitySet)
+                    == 0 || self.baselineCapabilitySet == ''vCurrent'' || (self.baselineCapabilitySet
+                    == ''None'' && (!has(self.additionalEnabledCapabilities) || !(''MachineAPI''
+                    in self.additionalEnabledCapabilities))) || (has(self.additionalEnabledCapabilities)
+                    && ''ClusterAPI'' in self.additionalEnabledCapabilities)'
               channel:
                 description: |-
                   channel is an identifier for explicitly requesting a non-default set

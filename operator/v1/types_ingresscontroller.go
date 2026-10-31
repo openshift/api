@@ -52,6 +52,18 @@ type IngressController struct {
 // IngressControllerSpec is the specification of the desired behavior of the
 // IngressController.
 type IngressControllerSpec struct {
+	// resources optionally configures the router regular container and the haproxy
+	// restartable init container in the ingress pod, independently. When omitted,
+	// the operator's resource configuration is unchanged. No baseline allocations
+	// or default limits are stored in this field.
+	// Resource configuration requires corresponding operator support. Resource
+	// claims are not supported for ingress containers and are not part of this
+	// API. Disabling the feature gate after configuration may prune this field
+	// and reset resource overrides; preservation is not guaranteed.
+	// +optional
+	// +openshift:enable:FeatureGate=IngressControllerResourceConfiguration
+	Resources *IngressControllerResources `json:"resources,omitempty"`
+
 	// domain is a DNS name serviced by the ingress controller and is used to
 	// configure multiple features:
 	//
@@ -414,6 +426,77 @@ type IngressControllerSpec struct {
 	// +optional
 	// +openshift:enable:FeatureGate=IngressControllerMultipleHAProxyVersions
 	HAProxyVersion HAProxyVersion `json:"haproxyVersion,omitempty"`
+}
+
+// IngressControllerResources configures resources for the two ingress containers.
+// Omitted components and empty or omitted resource maps provide no resource-map
+// overrides. Partial maps override only specified keys; removing a key restores
+// the operator baseline during reconciliation. Limits without explicit requests
+// are resolved by the operator, not defaulted into this API.
+// For each resource present in both maps, the request must not exceed the limit.
+// Extended resources (domain-qualified names, such as qat.intel.com/cy) must be
+// whole numbers, must appear in both requests and limits with equal values, and
+// cannot be requested without a matching limit. Hugepage page-size alignment and
+// validation against resolved operator baselines are not enforced by this API;
+// the consumer must validate workload configuration before changing workloads,
+// report invalid or unsupported configuration through existing conditions, and
+// retain the last valid workload rather than silently round quantities.
+// If no valid workload exists, the consumer must not create an invalid one.
+// Corrected supported configuration must allow normal reconciliation to resume.
+// Resource claims are not supported for ingress containers and are not part of
+// this API. An empty object specifies no resource configuration for either
+// container.
+// +kubebuilder:validation:MinProperties=0
+type IngressControllerResources struct {
+	// router optionally configures resources for containers[name=router]. When
+	// omitted, no resource-map overrides are specified for router.
+	// +optional
+	// +kubebuilder:validation:XValidation:rule="(!has(self.requests) || self.requests.size() <= 8) && (!has(self.limits) || self.limits.size() <= 8)",message="requests and limits may each contain at most eight entries"
+	// +kubebuilder:validation:XValidation:rule="[has(self.requests) ? self.requests : {}].all(m, m.all(k, string(m[k]).size() <= 64 && isQuantity(string(m[k])) && quantity(string(m[k])).compareTo(quantity('0')) >= 0 && (!has(self.limits) || !(k in self.limits) || quantity(string(m[k])).compareTo(quantity(string(self.limits[k]))) <= 0) && (!k.contains('/') || (has(self.limits) && (k in self.limits) && quantity(string(m[k])).isInteger() && quantity(string(m[k])).compareTo(quantity(string(self.limits[k]))) == 0))))",message="requests must be valid nonnegative quantities of at most 64 characters, must not exceed limits, and extended resources (domain-qualified names) must be whole numbers with equal values in both requests and limits"
+	// +kubebuilder:validation:XValidation:rule="[has(self.limits) ? self.limits : {}].all(m, m.all(k, string(m[k]).size() <= 64 && isQuantity(string(m[k])) && quantity(string(m[k])).compareTo(quantity('0')) >= 0 && (!k.contains('/') || quantity(string(m[k])).isInteger())))",message="limits must be valid nonnegative quantities of at most 64 characters, and extended resource limits (domain-qualified names) must be whole numbers"
+	// + ---
+	// + Note: The rules wrap the maps in list literals so the CEL cost estimator
+	// + does not treat the unbounded resource maps as unbounded.
+	Router *IngressControllerResourceRequirements `json:"router,omitempty"`
+
+	// haproxy optionally configures resources for initContainers[name=haproxy],
+	// a restartable init sidecar in the same pod as router. When omitted, no
+	// resource-map overrides are specified for haproxy.
+	// +optional
+	// +kubebuilder:validation:XValidation:rule="(!has(self.requests) || self.requests.size() <= 8) && (!has(self.limits) || self.limits.size() <= 8)",message="requests and limits may each contain at most eight entries"
+	// +kubebuilder:validation:XValidation:rule="[has(self.requests) ? self.requests : {}].all(m, m.all(k, string(m[k]).size() <= 64 && isQuantity(string(m[k])) && quantity(string(m[k])).compareTo(quantity('0')) >= 0 && (!has(self.limits) || !(k in self.limits) || quantity(string(m[k])).compareTo(quantity(string(self.limits[k]))) <= 0) && (!k.contains('/') || (has(self.limits) && (k in self.limits) && quantity(string(m[k])).isInteger() && quantity(string(m[k])).compareTo(quantity(string(self.limits[k]))) == 0))))",message="requests must be valid nonnegative quantities of at most 64 characters, must not exceed limits, and extended resources (domain-qualified names) must be whole numbers with equal values in both requests and limits"
+	// +kubebuilder:validation:XValidation:rule="[has(self.limits) ? self.limits : {}].all(m, m.all(k, string(m[k]).size() <= 64 && isQuantity(string(m[k])) && quantity(string(m[k])).compareTo(quantity('0')) >= 0 && (!k.contains('/') || quantity(string(m[k])).isInteger())))",message="limits must be valid nonnegative quantities of at most 64 characters, and extended resource limits (domain-qualified names) must be whole numbers"
+	// + ---
+	// + Note: The rules wrap the maps in list literals so the CEL cost estimator
+	// + does not treat the unbounded resource maps as unbounded.
+	HAProxy *IngressControllerResourceRequirements `json:"haproxy,omitempty"`
+}
+
+// IngressControllerResourceRequirements configures the resources of one ingress
+// container. Each map may contain at most eight entries. Quantity
+// representations must parse, be nonnegative, and contain at most 64
+// characters.
+// +kubebuilder:validation:MinProperties=0
+type IngressControllerResourceRequirements struct {
+	// requests optionally overrides the operator baseline requests for the
+	// container. Each key is a resource name, such as cpu, memory, or a
+	// domain-qualified extended resource name, and each value is a quantity.
+	// Each map may contain at most eight entries. Requests must not exceed the
+	// corresponding limits.
+	// Extended resources must be whole numbers appearing with equal values in
+	// both requests and limits; an extended resource without a matching limit
+	// is rejected. Omitted keys keep the operator baseline request.
+	// +optional
+	Requests corev1.ResourceList `json:"requests,omitempty"`
+
+	// limits optionally overrides the operator baseline limits for the
+	// container. Each map may contain at most eight entries. Omitted keys have
+	// no limit unless an
+	// admission policy adds one; the operator resolves a limit without an
+	// explicit request by using the limit as the effective request.
+	// Extended-resource limits must be whole numbers.
+	// +optional
+	Limits corev1.ResourceList `json:"limits,omitempty"`
 }
 
 // httpCompressionPolicy turns on compression for the specified MIME types.

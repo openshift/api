@@ -1,0 +1,251 @@
+apiVersion: apiextensions.k8s.io/v1
+name: IngressController
+crdName: ingresscontrollers.operator.openshift.io
+featureGates:
+- IngressControllerResourceConfiguration
+tests:
+  onCreate:
+  - name: NE2926 stores independent resources
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          haproxy:
+            requests:
+              cpu: "1"
+              memory: "1Gi"
+              qat.intel.com/cy: "1"
+            limits:
+              cpu: "2"
+              memory: "2Gi"
+              qat.intel.com/cy: "1"
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          haproxy:
+            requests:
+              cpu: "1"
+              memory: "1Gi"
+              qat.intel.com/cy: "1"
+            limits:
+              cpu: "2"
+              memory: "2Gi"
+              qat.intel.com/cy: "1"
+  - name: NE2926 accepts a limit-only extended resource
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          haproxy:
+            limits:
+              qat.intel.com/cy: "1"
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          haproxy:
+            limits:
+              qat.intel.com/cy: "1"
+  - name: NE2926 rejects a request exceeding its limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            requests:
+              cpu: "2"
+            limits:
+              cpu: "1"
+    expectedError: "must not exceed limits"
+  - name: NE2926 rejects a fractional extended-resource request
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          haproxy:
+            requests:
+              qat.intel.com/cy: "0.5"
+            limits:
+              qat.intel.com/cy: "1"
+    expectedError: "extended resources (domain-qualified names) must be whole numbers with equal values in both requests and limits"
+  - name: NE2926 rejects an unequal extended-resource pair
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          haproxy:
+            requests:
+              qat.intel.com/cy: "1"
+            limits:
+              qat.intel.com/cy: "2"
+    expectedError: "extended resources (domain-qualified names) must be whole numbers with equal values in both requests and limits"
+  - name: NE2926 rejects a request-only extended resource
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            requests:
+              example.com/device: "1"
+    expectedError: "extended resources (domain-qualified names) must be whole numbers with equal values in both requests and limits"
+  - name: NE2926 rejects a fractional limit-only extended resource
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            limits:
+              example.com/device: "0.5"
+    expectedError: "extended resource limits (domain-qualified names) must be whole numbers"
+  onUpdate:
+  - name: NE2926 stores resources added to an existing IngressController
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec: {}
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            requests:
+              cpu: "100m"
+            limits:
+              cpu: "500m"
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            requests:
+              cpu: "100m"
+            limits:
+              cpu: "500m"
+  - name: NE2926 rejects updating to a request exceeding its limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            requests:
+              cpu: "100m"
+            limits:
+              cpu: "500m"
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            requests:
+              cpu: "2"
+            limits:
+              cpu: "1"
+    expectedError: "must not exceed limits"
+  - name: NE2926 removes overrides and resets to no configuration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          haproxy:
+            requests:
+              memory: "1Gi"
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec: {}
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue

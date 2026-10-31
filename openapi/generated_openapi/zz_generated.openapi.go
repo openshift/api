@@ -1238,6 +1238,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1.IngressControllerHTTPUniqueIdHeaderPolicy{}.OpenAPIModelName():              schema_openshift_api_operator_v1_IngressControllerHTTPUniqueIdHeaderPolicy(ref),
 		operatorv1.IngressControllerList{}.OpenAPIModelName():                                  schema_openshift_api_operator_v1_IngressControllerList(ref),
 		operatorv1.IngressControllerLogging{}.OpenAPIModelName():                               schema_openshift_api_operator_v1_IngressControllerLogging(ref),
+		operatorv1.IngressControllerResourceRequirements{}.OpenAPIModelName():                  schema_openshift_api_operator_v1_IngressControllerResourceRequirements(ref),
+		operatorv1.IngressControllerResources{}.OpenAPIModelName():                             schema_openshift_api_operator_v1_IngressControllerResources(ref),
 		operatorv1.IngressControllerSetHTTPHeader{}.OpenAPIModelName():                         schema_openshift_api_operator_v1_IngressControllerSetHTTPHeader(ref),
 		operatorv1.IngressControllerSpec{}.OpenAPIModelName():                                  schema_openshift_api_operator_v1_IngressControllerSpec(ref),
 		operatorv1.IngressControllerStatus{}.OpenAPIModelName():                                schema_openshift_api_operator_v1_IngressControllerStatus(ref),
@@ -59221,6 +59223,76 @@ func schema_openshift_api_operator_v1_IngressControllerLogging(ref common.Refere
 	}
 }
 
+func schema_openshift_api_operator_v1_IngressControllerResourceRequirements(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressControllerResourceRequirements configures the resources of one ingress container. Each map may contain at most eight entries. Quantity representations must parse, be nonnegative, and contain at most 64 characters.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"requests": {
+						SchemaProps: spec.SchemaProps{
+							Description: "requests optionally overrides the operator baseline requests for the container. Each key is a resource name, such as cpu, memory, or a domain-qualified extended resource name, and each value is a quantity. Each map may contain at most eight entries. Requests must not exceed the corresponding limits. Extended resources must be whole numbers appearing with equal values in both requests and limits; an extended resource without a matching limit is rejected. Omitted keys keep the operator baseline request.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"limits": {
+						SchemaProps: spec.SchemaProps{
+							Description: "limits optionally overrides the operator baseline limits for the container. Each map may contain at most eight entries. Omitted keys have no limit unless an admission policy adds one; the operator resolves a limit without an explicit request by using the limit as the effective request. Extended-resource limits must be whole numbers.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			resource.Quantity{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1_IngressControllerResources(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressControllerResources configures resources for the two ingress containers. Omitted components and empty or omitted resource maps provide no resource-map overrides. Partial maps override only specified keys; removing a key restores the operator baseline during reconciliation. Limits without explicit requests are resolved by the operator, not defaulted into this API. For each resource present in both maps, the request must not exceed the limit. Extended resources (domain-qualified names, such as qat.intel.com/cy) must be whole numbers, must appear in both requests and limits with equal values, and cannot be requested without a matching limit. Hugepage page-size alignment and validation against resolved operator baselines are not enforced by this API; the consumer must validate workload configuration before changing workloads, report invalid or unsupported configuration through existing conditions, and retain the last valid workload rather than silently round quantities. If no valid workload exists, the consumer must not create an invalid one. Corrected supported configuration must allow normal reconciliation to resume. Resource claims are not supported for ingress containers and are not part of this API. An empty object specifies no resource configuration for either container.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"router": {
+						SchemaProps: spec.SchemaProps{
+							Description: "router optionally configures resources for containers[name=router]. When omitted, no resource-map overrides are specified for router.",
+							Ref:         ref(operatorv1.IngressControllerResourceRequirements{}.OpenAPIModelName()),
+						},
+					},
+					"haproxy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "haproxy optionally configures resources for initContainers[name=haproxy], a restartable init sidecar in the same pod as router. When omitted, no resource-map overrides are specified for haproxy.",
+							Ref:         ref(operatorv1.IngressControllerResourceRequirements{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.IngressControllerResourceRequirements{}.OpenAPIModelName()},
+	}
+}
+
 func schema_openshift_api_operator_v1_IngressControllerSetHTTPHeader(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -59250,6 +59322,12 @@ func schema_openshift_api_operator_v1_IngressControllerSpec(ref common.Reference
 				Description: "IngressControllerSpec is the specification of the desired behavior of the IngressController.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resources optionally configures the router regular container and the haproxy restartable init container in the ingress pod, independently. When omitted, the operator's resource configuration is unchanged. No baseline allocations or default limits are stored in this field. Resource configuration requires corresponding operator support. Resource claims are not supported for ingress containers and are not part of this API. Disabling the feature gate after configuration may prune this field and reset resource overrides; preservation is not guaranteed.",
+							Ref:         ref(operatorv1.IngressControllerResources{}.OpenAPIModelName()),
+						},
+					},
 					"domain": {
 						SchemaProps: spec.SchemaProps{
 							Description: "domain is a DNS name serviced by the ingress controller and is used to configure multiple features:\n\n* For the LoadBalancerService endpoint publishing strategy, domain is\n  used to configure DNS records. See endpointPublishingStrategy.\n\n* When using a generated default certificate, the certificate will be valid\n  for domain and its subdomains. See defaultCertificate.\n\n* The value is published to individual Route statuses so that end-users\n  know where to target external DNS records.\n\ndomain must be unique among all IngressControllers, and cannot be updated.\n\nIf empty, defaults to ingress.config.openshift.io/cluster .spec.domain.\n\nThe domain value must be a valid DNS name. It must consist of lowercase alphanumeric characters, '-' or '.', and each label must start and end with an alphanumeric character and not exceed 63 characters. Maximum length of a valid DNS domain is 253 characters.\n\nThe implementation may add a prefix such as \"router-default.\" to the domain when constructing the router canonical hostname. To ensure the resulting hostname does not exceed the DNS maximum length of 253 characters, the domain length is additionally validated at the IngressController object level. For the maximum length of the domain value itself, the shortest possible variant of the prefix and the ingress controller name was considered for example \"router-a.\"",
@@ -59386,7 +59464,7 @@ func schema_openshift_api_operator_v1_IngressControllerSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			configv1.ConfigMapNameReference{}.OpenAPIModelName(), configv1.TLSSecurityProfile{}.OpenAPIModelName(), operatorv1.ClientTLS{}.OpenAPIModelName(), operatorv1.EndpointPublishingStrategy{}.OpenAPIModelName(), operatorv1.HTTPCompressionPolicy{}.OpenAPIModelName(), operatorv1.IngressControllerHTTPHeaders{}.OpenAPIModelName(), operatorv1.IngressControllerLogging{}.OpenAPIModelName(), operatorv1.IngressControllerTuningOptions{}.OpenAPIModelName(), operatorv1.NodePlacement{}.OpenAPIModelName(), operatorv1.RouteAdmissionPolicy{}.OpenAPIModelName(), corev1.LocalObjectReference{}.OpenAPIModelName(), metav1.LabelSelector{}.OpenAPIModelName(), runtime.RawExtension{}.OpenAPIModelName()},
+			configv1.ConfigMapNameReference{}.OpenAPIModelName(), configv1.TLSSecurityProfile{}.OpenAPIModelName(), operatorv1.ClientTLS{}.OpenAPIModelName(), operatorv1.EndpointPublishingStrategy{}.OpenAPIModelName(), operatorv1.HTTPCompressionPolicy{}.OpenAPIModelName(), operatorv1.IngressControllerHTTPHeaders{}.OpenAPIModelName(), operatorv1.IngressControllerLogging{}.OpenAPIModelName(), operatorv1.IngressControllerResources{}.OpenAPIModelName(), operatorv1.IngressControllerTuningOptions{}.OpenAPIModelName(), operatorv1.NodePlacement{}.OpenAPIModelName(), operatorv1.RouteAdmissionPolicy{}.OpenAPIModelName(), corev1.LocalObjectReference{}.OpenAPIModelName(), metav1.LabelSelector{}.OpenAPIModelName(), runtime.RawExtension{}.OpenAPIModelName()},
 	}
 }
 

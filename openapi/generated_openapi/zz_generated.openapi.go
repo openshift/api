@@ -60101,7 +60101,7 @@ func schema_openshift_api_operator_v1_KMSPluginHealthReport(ref common.Reference
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "status contains a health indicator for the respective KMS plugin The field can have three states: healthy, unhealthy, error. With error and unhealthy containing additional information in Detail.",
+							Description: "status contains a health indicator for the respective KMS plugin. status is required and must be one of Healthy, Unhealthy or Error. When set to Healthy, the plugin responded successfully to the KMS v2 Status call and remoteKeyID is set. When set to Unhealthy, the plugin responded but reported that it is not healthy. When set to Error, the Status call failed or returned no response, for example because the plugin was unreachable. Unhealthy and Error may include additional information in detail.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -60114,7 +60114,7 @@ func schema_openshift_api_operator_v1_KMSPluginHealthReport(ref common.Reference
 					},
 					"remoteKeyID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "remoteKeyID refers to the remote key identifier from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the KEK. The value must be between 1 and 1024 characters.",
+							Description: "remoteKeyID refers to the remote key identifier from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the KEK. When omitted, no remote key identifier is available. This is expected when status is Unhealthy or Error, for example when the KMS provider could not be reached. When status is Healthy, remoteKeyID is required. When set, the value must be between 1 and 1024 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -60127,7 +60127,7 @@ func schema_openshift_api_operator_v1_KMSPluginHealthReport(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"nodeName", "keyID", "status", "lastCheckedTime", "remoteKeyID"},
+				Required: []string{"nodeName", "keyID", "status", "lastCheckedTime"},
 			},
 		},
 		Dependencies: []string{

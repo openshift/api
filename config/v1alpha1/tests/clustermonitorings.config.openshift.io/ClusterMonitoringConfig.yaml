@@ -317,7 +317,7 @@ tests:
                 - name: "cpu"
                   request: ""
       expectedError: 'spec.alertmanagerConfig.customConfig.resources[0].request: Invalid value: "": spec.alertmanagerConfig.customConfig.resources[0].request in body should be at least 1 chars long'
-    - name: Should reject ContainerResource request with non-positive quantity
+    - name: Should reject ContainerResource request with negative quantity
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -329,8 +329,8 @@ tests:
             customConfig:
               resources:
                 - name: "cpu"
-                  request: "0"
-      expectedError: 'spec.alertmanagerConfig.customConfig.resources[0].request: Invalid value: "": request must be a positive, non-zero quantity'
+                  request: "-1"
+      expectedError: 'request and limit must be non-negative quantities'
     - name: Should reject ContainerResource limit with MaxLength violation
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -359,7 +359,7 @@ tests:
                 - name: "cpu"
                   limit: ""
       expectedError: 'spec.alertmanagerConfig.customConfig.resources[0].limit: Invalid value: "": spec.alertmanagerConfig.customConfig.resources[0].limit in body should be at least 1 chars long'
-    - name: Should reject ContainerResource limit with non-positive quantity
+    - name: Should reject ContainerResource limit with negative quantity
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -371,8 +371,8 @@ tests:
             customConfig:
               resources:
                 - name: "cpu"
-                  limit: "0"
-      expectedError: 'spec.alertmanagerConfig.customConfig.resources[0].limit: Invalid value: "": limit must be a positive, non-zero quantity'
+                  limit: "-1"
+      expectedError: 'request and limit must be non-negative quantities'
     - name: Should reject ContainerResource name with MaxLength violation
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -428,7 +428,7 @@ tests:
                 - name: "cpu"
                   request: "500m"
                   limit: "200m"
-      expectedError: 'spec.alertmanagerConfig.customConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+      expectedError: 'request and limit must be non-negative quantities'
     - name: Should be able to create a minimal MetricsServerConfig
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -539,7 +539,7 @@ tests:
               - name: "cpu"
                 request: "500m"
                 limit: "200m"
-      expectedError: 'spec.metricsServerConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+      expectedError: 'request and limit must be non-negative quantities'
     - name: Should reject MetricsServerConfig with more than 5 resource items
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -720,7 +720,7 @@ tests:
               - name: "cpu"
                 request: "500m"
                 limit: "200m"
-      expectedError: 'spec.prometheusOperatorAdmissionWebhookConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+      expectedError: 'request and limit must be non-negative quantities'
     - name: Should reject PrometheusOperatorAdmissionWebhookConfig with too many topologySpreadConstraints
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -922,7 +922,7 @@ tests:
               - name: "cpu"
                 request: "500m"
                 limit: "200m"
-      expectedError: 'spec.openShiftStateMetricsConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+      expectedError: 'request and limit must be non-negative quantities'
     - name: Should reject OpenShiftStateMetricsConfig with too many topologySpreadConstraints
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1191,7 +1191,7 @@ tests:
               - name: "cpu"
                 request: "500m"
                 limit: "200m"
-      expectedError: 'spec.telemeterClientConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+      expectedError: 'request and limit must be non-negative quantities'
     - name: Should reject TelemeterClientConfig with too many topologySpreadConstraints
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1504,8 +1504,8 @@ tests:
               - name: "cpu"
                 request: "500m"
                 limit: "200m"
-      expectedError: 'spec.thanosQuerierConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
-    - name: Should reject ThanosQuerierConfig with zero request
+      expectedError: 'request and limit must be non-negative quantities'
+    - name: Should reject ThanosQuerierConfig with negative request
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1513,9 +1513,9 @@ tests:
           thanosQuerierConfig:
             resources:
               - name: "cpu"
-                request: "0"
-      expectedError: 'spec.thanosQuerierConfig.resources[0].request: Invalid value: "": request must be a positive, non-zero quantity'
-    - name: Should reject ThanosQuerierConfig with zero limit
+                request: "-1"
+      expectedError: 'request and limit must be non-negative quantities'
+    - name: Should reject ThanosQuerierConfig with negative limit
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1524,8 +1524,8 @@ tests:
             resources:
               - name: "cpu"
                 request: "100m"
-                limit: "0"
-      expectedError: 'spec.thanosQuerierConfig.resources[0].limit: Invalid value: "": limit must be a positive, non-zero quantity'
+                limit: "-1"
+      expectedError: 'request and limit must be non-negative quantities'
     - name: Should reject ThanosQuerierConfig with too many topologySpreadConstraints
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1977,8 +1977,8 @@ tests:
               - name: "cpu"
                 request: "500m"
                 limit: "200m"
-      expectedError: 'spec.monitoringPluginConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
-    - name: Should reject MonitoringPluginConfig with zero request
+      expectedError: 'request and limit must be non-negative quantities'
+    - name: Should reject MonitoringPluginConfig with negative request
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1986,9 +1986,9 @@ tests:
           monitoringPluginConfig:
             resources:
               - name: "cpu"
-                request: "0"
-      expectedError: 'spec.monitoringPluginConfig.resources[0].request: Invalid value: "": request must be a positive, non-zero quantity'
-    - name: Should reject MonitoringPluginConfig with zero limit
+                request: "-1"
+      expectedError: 'request and limit must be non-negative quantities'
+    - name: Should reject MonitoringPluginConfig with negative limit
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1997,8 +1997,8 @@ tests:
             resources:
               - name: "cpu"
                 request: "100m"
-                limit: "0"
-      expectedError: 'spec.monitoringPluginConfig.resources[0].limit: Invalid value: "": limit must be a positive, non-zero quantity'
+                limit: "-1"
+      expectedError: 'request and limit must be non-negative quantities'
     - name: Should reject MonitoringPluginConfig with too many topologySpreadConstraints
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -2316,7 +2316,7 @@ tests:
               - name: "cpu"
                 request: "500m"
                 limit: "200m"
-      expectedError: 'spec.nodeExporterConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+      expectedError: 'request and limit must be non-negative quantities'
     - name: Should reject NodeExporterConfig with empty resources array
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -2627,7 +2627,7 @@ tests:
                   include:
                     - "LOC\ttab"
       expectedError: 'must contain only printable ASCII characters (no control characters)'
-    - name: Should reject NodeExporterConfig with zero request
+    - name: Should reject NodeExporterConfig with negative request
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -2635,9 +2635,9 @@ tests:
           nodeExporterConfig:
             resources:
               - name: "cpu"
-                request: "0"
-      expectedError: 'spec.nodeExporterConfig.resources[0].request: Invalid value: "": request must be a positive, non-zero quantity'
-    - name: Should reject NodeExporterConfig with zero limit
+                request: "-1"
+      expectedError: 'request and limit must be non-negative quantities'
+    - name: Should reject NodeExporterConfig with negative limit
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -2646,8 +2646,8 @@ tests:
             resources:
               - name: "cpu"
                 request: "100m"
-                limit: "0"
-      expectedError: 'spec.nodeExporterConfig.resources[0].limit: Invalid value: "": limit must be a positive, non-zero quantity'
+                limit: "-1"
+      expectedError: 'request and limit must be non-negative quantities'
     - name: Should be able to create KubeStateMetricsConfig with valid resources
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -2792,8 +2792,8 @@ tests:
               - name: "cpu"
                 request: "500m"
                 limit: "200m"
-      expectedError: 'spec.kubeStateMetricsConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
-    - name: Should reject KubeStateMetricsConfig with zero request
+      expectedError: 'request and limit must be non-negative quantities'
+    - name: Should reject KubeStateMetricsConfig with negative request
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -2801,9 +2801,9 @@ tests:
           kubeStateMetricsConfig:
             resources:
               - name: "cpu"
-                request: "0"
-      expectedError: 'spec.kubeStateMetricsConfig.resources[0].request: Invalid value: "": request must be a positive, non-zero quantity'
-    - name: Should reject KubeStateMetricsConfig with zero limit
+                request: "-1"
+      expectedError: 'request and limit must be non-negative quantities'
+    - name: Should reject KubeStateMetricsConfig with negative limit
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -2812,8 +2812,8 @@ tests:
             resources:
               - name: "cpu"
                 request: "100m"
-                limit: "0"
-      expectedError: 'spec.kubeStateMetricsConfig.resources[0].limit: Invalid value: "": limit must be a positive, non-zero quantity'
+                limit: "-1"
+      expectedError: 'request and limit must be non-negative quantities'
     - name: Should reject KubeStateMetricsConfig with too many topologySpreadConstraints
       initial: |
         apiVersion: config.openshift.io/v1alpha1

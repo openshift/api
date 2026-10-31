@@ -25122,13 +25122,13 @@ func schema_openshift_api_config_v1alpha1_ContainerResource(ref common.Reference
 					},
 					"request": {
 						SchemaProps: spec.SchemaProps{
-							Description: "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional. When limit is specified, request cannot be greater than limit. The value must be greater than 0 when specified.",
+							Description: "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional. When limit is specified, request cannot be greater than limit. The value must be greater than or equal to 0 when specified.",
 							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
 						},
 					},
 					"limit": {
 						SchemaProps: spec.SchemaProps{
-							Description: "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional. When request is specified, limit cannot be less than request. The value must be greater than 0 when specified.",
+							Description: "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional. When request is specified, limit cannot be less than request. The value must be greater than or equal to 0 when specified.",
 							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
 						},
 					},

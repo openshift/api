@@ -202,8 +202,8 @@ func (ClusterMonitoringStatus) SwaggerDoc() map[string]string {
 var map_ContainerResource = map[string]string{
 	"":        "ContainerResource defines a single resource requirement for a container.",
 	"name":    "name of the resource (e.g. \"cpu\", \"memory\", \"hugepages-2Mi\"). This field is required. name must consist only of alphanumeric characters, `-`, `_` and `.` and must start and end with an alphanumeric character.",
-	"request": "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional. When limit is specified, request cannot be greater than limit. The value must be greater than 0 when specified.",
-	"limit":   "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional. When request is specified, limit cannot be less than request. The value must be greater than 0 when specified.",
+	"request": "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional. When limit is specified, request cannot be greater than limit. The value must be greater than or equal to 0 when specified.",
+	"limit":   "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional. When request is specified, limit cannot be less than request. The value must be greater than or equal to 0 when specified.",
 }
 
 func (ContainerResource) SwaggerDoc() map[string]string {

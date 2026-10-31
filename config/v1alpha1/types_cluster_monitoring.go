@@ -1120,12 +1120,14 @@ const (
 // Kubernetes CRD CEL validation cost budget (StaticEstimatedCRDCostLimit).
 // The quantity() CEL function has a high fixed estimated cost per invocation,
 // and the limit-vs-request comparison rule is costed per maxItems per location.
-// With multiple structs in ClusterMonitoringSpec embedding []ContainerResource,
-// maxItems > 5 causes the total estimated rule cost to exceed the budget.
+// Multiple structs in ClusterMonitoringSpec embed []ContainerResource, so the
+// existing maxItems bound is retained when allowing explicit zero quantities.
+// Resource validation uses singleton list comprehensions to bind each parsed
+// quantity once, retaining exact comparisons within the CEL cost budget.
 
 // ContainerResource defines a single resource requirement for a container.
 // +kubebuilder:validation:XValidation:rule="has(self.request) || has(self.limit)",message="at least one of request or limit must be set"
-// +kubebuilder:validation:XValidation:rule="!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request)) >= 0",message="limit must be greater than or equal to request"
+// +kubebuilder:validation:XValidation:rule="[has(self.request) ? (type(self.request) == int ? quantity('0').add(int(self.request)) : quantity(self.request)) : quantity('0')].all(r, [has(self.limit) ? (type(self.limit) == int ? quantity('0').add(int(self.limit)) : quantity(self.limit)) : r].all(l, sign(r) >= 0 && sign(l) >= 0 && l.compareTo(r) >= 0))",message="request and limit must be non-negative quantities, with limit greater than or equal to request when both are set"
 type ContainerResource struct {
 	// name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
 	// This field is required.
@@ -1139,24 +1141,22 @@ type ContainerResource struct {
 	// request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// When limit is specified, request cannot be greater than limit.
-	// The value must be greater than 0 when specified.
+	// The value must be greater than or equal to 0 when specified.
 	// +optional
 	// +kubebuilder:validation:XIntOrString
 	// +kubebuilder:validation:MaxLength=20
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="quantity(self).isGreaterThan(quantity('0'))",message="request must be a positive, non-zero quantity"
-	Request resource.Quantity `json:"request,omitempty"`
+	Request *resource.Quantity `json:"request,omitempty"`
 
 	// limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// When request is specified, limit cannot be less than request.
-	// The value must be greater than 0 when specified.
+	// The value must be greater than or equal to 0 when specified.
 	// +optional
 	// +kubebuilder:validation:XIntOrString
 	// +kubebuilder:validation:MaxLength=20
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="quantity(self).isGreaterThan(quantity('0'))",message="limit must be a positive, non-zero quantity"
-	Limit resource.Quantity `json:"limit,omitempty"`
+	Limit *resource.Quantity `json:"limit,omitempty"`
 }
 
 // SecretName is a type that represents the name of a Secret in the same namespace.

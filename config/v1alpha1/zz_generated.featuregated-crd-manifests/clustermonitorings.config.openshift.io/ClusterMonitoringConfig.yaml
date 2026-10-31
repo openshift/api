@@ -125,14 +125,11 @@ spec:
                                 limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
                                 This field is optional.
                                 When request is specified, limit cannot be less than request.
-                                The value must be greater than 0 when specified.
+                                The value must be greater than or equal to 0 when specified.
                               maxLength: 20
                               minLength: 1
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
-                              x-kubernetes-validations:
-                              - message: limit must be a positive, non-zero quantity
-                                rule: quantity(self).isGreaterThan(quantity('0'))
                             name:
                               description: |-
                                 name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
@@ -154,23 +151,26 @@ spec:
                                 request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
                                 This field is optional.
                                 When limit is specified, request cannot be greater than limit.
-                                The value must be greater than 0 when specified.
+                                The value must be greater than or equal to 0 when specified.
                               maxLength: 20
                               minLength: 1
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
-                              x-kubernetes-validations:
-                              - message: request must be a positive, non-zero quantity
-                                rule: quantity(self).isGreaterThan(quantity('0'))
                           required:
                           - name
                           type: object
                           x-kubernetes-validations:
                           - message: at least one of request or limit must be set
                             rule: has(self.request) || has(self.limit)
-                          - message: limit must be greater than or equal to request
-                            rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
-                              >= 0'
+                          - message: request and limit must be non-negative quantities,
+                              with limit greater than or equal to request when both
+                              are set
+                            rule: '[has(self.request) ? (type(self.request) == int
+                              ? quantity(''0'').add(int(self.request)) : quantity(self.request))
+                              : quantity(''0'')].all(r, [has(self.limit) ? (type(self.limit)
+                              == int ? quantity(''0'').add(int(self.limit)) : quantity(self.limit))
+                              : r].all(l, sign(r) >= 0 && sign(l) >= 0 && l.compareTo(r)
+                              >= 0))'
                         maxItems: 5
                         minItems: 1
                         type: array
@@ -1095,14 +1095,11 @@ spec:
                             limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When request is specified, limit cannot be less than request.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: limit must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                         name:
                           description: |-
                             name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
@@ -1124,23 +1121,25 @@ spec:
                             request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When limit is specified, request cannot be greater than limit.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: request must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                       required:
                       - name
                       type: object
                       x-kubernetes-validations:
                       - message: at least one of request or limit must be set
                         rule: has(self.request) || has(self.limit)
-                      - message: limit must be greater than or equal to request
-                        rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
-                          >= 0'
+                      - message: request and limit must be non-negative quantities,
+                          with limit greater than or equal to request when both are
+                          set
+                        rule: '[has(self.request) ? (type(self.request) == int ? quantity(''0'').add(int(self.request))
+                          : quantity(self.request)) : quantity(''0'')].all(r, [has(self.limit)
+                          ? (type(self.limit) == int ? quantity(''0'').add(int(self.limit))
+                          : quantity(self.limit)) : r].all(l, sign(r) >= 0 && sign(l)
+                          >= 0 && l.compareTo(r) >= 0))'
                     maxItems: 5
                     minItems: 1
                     type: array
@@ -1491,14 +1490,11 @@ spec:
                             limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When request is specified, limit cannot be less than request.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: limit must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                         name:
                           description: |-
                             name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
@@ -1520,23 +1516,25 @@ spec:
                             request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When limit is specified, request cannot be greater than limit.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: request must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                       required:
                       - name
                       type: object
                       x-kubernetes-validations:
                       - message: at least one of request or limit must be set
                         rule: has(self.request) || has(self.limit)
-                      - message: limit must be greater than or equal to request
-                        rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
-                          >= 0'
+                      - message: request and limit must be non-negative quantities,
+                          with limit greater than or equal to request when both are
+                          set
+                        rule: '[has(self.request) ? (type(self.request) == int ? quantity(''0'').add(int(self.request))
+                          : quantity(self.request)) : quantity(''0'')].all(r, [has(self.limit)
+                          ? (type(self.limit) == int ? quantity(''0'').add(int(self.limit))
+                          : quantity(self.limit)) : r].all(l, sign(r) >= 0 && sign(l)
+                          >= 0 && l.compareTo(r) >= 0))'
                     maxItems: 5
                     minItems: 1
                     type: array
@@ -1857,14 +1855,11 @@ spec:
                             limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When request is specified, limit cannot be less than request.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: limit must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                         name:
                           description: |-
                             name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
@@ -1886,23 +1881,25 @@ spec:
                             request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When limit is specified, request cannot be greater than limit.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: request must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                       required:
                       - name
                       type: object
                       x-kubernetes-validations:
                       - message: at least one of request or limit must be set
                         rule: has(self.request) || has(self.limit)
-                      - message: limit must be greater than or equal to request
-                        rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
-                          >= 0'
+                      - message: request and limit must be non-negative quantities,
+                          with limit greater than or equal to request when both are
+                          set
+                        rule: '[has(self.request) ? (type(self.request) == int ? quantity(''0'').add(int(self.request))
+                          : quantity(self.request)) : quantity(''0'')].all(r, [has(self.limit)
+                          ? (type(self.limit) == int ? quantity(''0'').add(int(self.limit))
+                          : quantity(self.limit)) : r].all(l, sign(r) >= 0 && sign(l)
+                          >= 0 && l.compareTo(r) >= 0))'
                     maxItems: 5
                     minItems: 1
                     type: array
@@ -2704,14 +2701,11 @@ spec:
                             limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When request is specified, limit cannot be less than request.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: limit must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                         name:
                           description: |-
                             name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
@@ -2733,23 +2727,25 @@ spec:
                             request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When limit is specified, request cannot be greater than limit.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: request must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                       required:
                       - name
                       type: object
                       x-kubernetes-validations:
                       - message: at least one of request or limit must be set
                         rule: has(self.request) || has(self.limit)
-                      - message: limit must be greater than or equal to request
-                        rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
-                          >= 0'
+                      - message: request and limit must be non-negative quantities,
+                          with limit greater than or equal to request when both are
+                          set
+                        rule: '[has(self.request) ? (type(self.request) == int ? quantity(''0'').add(int(self.request))
+                          : quantity(self.request)) : quantity(''0'')].all(r, [has(self.limit)
+                          ? (type(self.limit) == int ? quantity(''0'').add(int(self.limit))
+                          : quantity(self.limit)) : r].all(l, sign(r) >= 0 && sign(l)
+                          >= 0 && l.compareTo(r) >= 0))'
                     maxItems: 5
                     minItems: 1
                     type: array
@@ -2810,14 +2806,11 @@ spec:
                             limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When request is specified, limit cannot be less than request.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: limit must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                         name:
                           description: |-
                             name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
@@ -2839,23 +2832,25 @@ spec:
                             request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When limit is specified, request cannot be greater than limit.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: request must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                       required:
                       - name
                       type: object
                       x-kubernetes-validations:
                       - message: at least one of request or limit must be set
                         rule: has(self.request) || has(self.limit)
-                      - message: limit must be greater than or equal to request
-                        rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
-                          >= 0'
+                      - message: request and limit must be non-negative quantities,
+                          with limit greater than or equal to request when both are
+                          set
+                        rule: '[has(self.request) ? (type(self.request) == int ? quantity(''0'').add(int(self.request))
+                          : quantity(self.request)) : quantity(''0'')].all(r, [has(self.limit)
+                          ? (type(self.limit) == int ? quantity(''0'').add(int(self.limit))
+                          : quantity(self.limit)) : r].all(l, sign(r) >= 0 && sign(l)
+                          >= 0 && l.compareTo(r) >= 0))'
                     maxItems: 5
                     minItems: 1
                     type: array
@@ -4707,14 +4702,11 @@ spec:
                             limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When request is specified, limit cannot be less than request.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: limit must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                         name:
                           description: |-
                             name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
@@ -4736,23 +4728,25 @@ spec:
                             request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When limit is specified, request cannot be greater than limit.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: request must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                       required:
                       - name
                       type: object
                       x-kubernetes-validations:
                       - message: at least one of request or limit must be set
                         rule: has(self.request) || has(self.limit)
-                      - message: limit must be greater than or equal to request
-                        rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
-                          >= 0'
+                      - message: request and limit must be non-negative quantities,
+                          with limit greater than or equal to request when both are
+                          set
+                        rule: '[has(self.request) ? (type(self.request) == int ? quantity(''0'').add(int(self.request))
+                          : quantity(self.request)) : quantity(''0'')].all(r, [has(self.limit)
+                          ? (type(self.limit) == int ? quantity(''0'').add(int(self.limit))
+                          : quantity(self.limit)) : r].all(l, sign(r) >= 0 && sign(l)
+                          >= 0 && l.compareTo(r) >= 0))'
                     maxItems: 5
                     minItems: 1
                     type: array
@@ -5547,14 +5541,11 @@ spec:
                             limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When request is specified, limit cannot be less than request.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: limit must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                         name:
                           description: |-
                             name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
@@ -5576,23 +5567,25 @@ spec:
                             request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When limit is specified, request cannot be greater than limit.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: request must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                       required:
                       - name
                       type: object
                       x-kubernetes-validations:
                       - message: at least one of request or limit must be set
                         rule: has(self.request) || has(self.limit)
-                      - message: limit must be greater than or equal to request
-                        rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
-                          >= 0'
+                      - message: request and limit must be non-negative quantities,
+                          with limit greater than or equal to request when both are
+                          set
+                        rule: '[has(self.request) ? (type(self.request) == int ? quantity(''0'').add(int(self.request))
+                          : quantity(self.request)) : quantity(''0'')].all(r, [has(self.limit)
+                          ? (type(self.limit) == int ? quantity(''0'').add(int(self.limit))
+                          : quantity(self.limit)) : r].all(l, sign(r) >= 0 && sign(l)
+                          >= 0 && l.compareTo(r) >= 0))'
                     maxItems: 5
                     minItems: 1
                     type: array
@@ -5862,14 +5855,11 @@ spec:
                             limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When request is specified, limit cannot be less than request.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: limit must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                         name:
                           description: |-
                             name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
@@ -5891,23 +5881,25 @@ spec:
                             request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When limit is specified, request cannot be greater than limit.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: request must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                       required:
                       - name
                       type: object
                       x-kubernetes-validations:
                       - message: at least one of request or limit must be set
                         rule: has(self.request) || has(self.limit)
-                      - message: limit must be greater than or equal to request
-                        rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
-                          >= 0'
+                      - message: request and limit must be non-negative quantities,
+                          with limit greater than or equal to request when both are
+                          set
+                        rule: '[has(self.request) ? (type(self.request) == int ? quantity(''0'').add(int(self.request))
+                          : quantity(self.request)) : quantity(''0'')].all(r, [has(self.limit)
+                          ? (type(self.limit) == int ? quantity(''0'').add(int(self.limit))
+                          : quantity(self.limit)) : r].all(l, sign(r) >= 0 && sign(l)
+                          >= 0 && l.compareTo(r) >= 0))'
                     maxItems: 5
                     minItems: 1
                     type: array
@@ -6212,14 +6204,11 @@ spec:
                             limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When request is specified, limit cannot be less than request.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: limit must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                         name:
                           description: |-
                             name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
@@ -6241,23 +6230,25 @@ spec:
                             request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When limit is specified, request cannot be greater than limit.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: request must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                       required:
                       - name
                       type: object
                       x-kubernetes-validations:
                       - message: at least one of request or limit must be set
                         rule: has(self.request) || has(self.limit)
-                      - message: limit must be greater than or equal to request
-                        rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
-                          >= 0'
+                      - message: request and limit must be non-negative quantities,
+                          with limit greater than or equal to request when both are
+                          set
+                        rule: '[has(self.request) ? (type(self.request) == int ? quantity(''0'').add(int(self.request))
+                          : quantity(self.request)) : quantity(''0'')].all(r, [has(self.limit)
+                          ? (type(self.limit) == int ? quantity(''0'').add(int(self.limit))
+                          : quantity(self.limit)) : r].all(l, sign(r) >= 0 && sign(l)
+                          >= 0 && l.compareTo(r) >= 0))'
                     maxItems: 5
                     minItems: 1
                     type: array
@@ -6617,14 +6608,11 @@ spec:
                             limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When request is specified, limit cannot be less than request.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: limit must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                         name:
                           description: |-
                             name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
@@ -6646,23 +6634,25 @@ spec:
                             request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
                             This field is optional.
                             When limit is specified, request cannot be greater than limit.
-                            The value must be greater than 0 when specified.
+                            The value must be greater than or equal to 0 when specified.
                           maxLength: 20
                           minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                          x-kubernetes-validations:
-                          - message: request must be a positive, non-zero quantity
-                            rule: quantity(self).isGreaterThan(quantity('0'))
                       required:
                       - name
                       type: object
                       x-kubernetes-validations:
                       - message: at least one of request or limit must be set
                         rule: has(self.request) || has(self.limit)
-                      - message: limit must be greater than or equal to request
-                        rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
-                          >= 0'
+                      - message: request and limit must be non-negative quantities,
+                          with limit greater than or equal to request when both are
+                          set
+                        rule: '[has(self.request) ? (type(self.request) == int ? quantity(''0'').add(int(self.request))
+                          : quantity(self.request)) : quantity(''0'')].all(r, [has(self.limit)
+                          ? (type(self.limit) == int ? quantity(''0'').add(int(self.limit))
+                          : quantity(self.limit)) : r].all(l, sign(r) >= 0 && sign(l)
+                          >= 0 && l.compareTo(r) >= 0))'
                     maxItems: 5
                     minItems: 1
                     type: array

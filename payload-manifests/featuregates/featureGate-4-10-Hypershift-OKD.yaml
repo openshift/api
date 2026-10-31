@@ -41,9 +41,6 @@
                         "name": "AzureDualStackInstall"
                     },
                     {
-                        "name": "AzureMultiDisk"
-                    },
-                    {
                         "name": "BGPBasedVIPManagement"
                     },
                     {
@@ -341,6 +338,9 @@
                     },
                     {
                         "name": "AdditionalStorageConfig"
+                    },
+                    {
+                        "name": "AzureMultiDisk"
                     },
                     {
                         "name": "BuildCSIVolumes"

@@ -60100,7 +60100,7 @@ func schema_openshift_api_operator_v1_KMSPluginHealthReport(ref common.Reference
 					},
 					"remoteKeyID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "remoteKeyID refers to the remote key identifier from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the KEK. When omitted, no remote key identifier is available. This is expected when status is Unhealthy or Error, for example when the KMS provider could not be reached. When status is Healthy, remoteKeyID is required. When set, the value must be between 1 and 1024 characters.",
+							Description: "remoteKeyID refers to the remote key identifier from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the KEK. When omitted, no remote key identifier is available. This is expected when status is Unhealthy or Error, for example when the plugin reports that it is not healthy or could not be reached. When status is Healthy, remoteKeyID is required. When set, the value must be between 1 and 1024 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

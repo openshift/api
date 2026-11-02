@@ -92,6 +92,9 @@
                         "name": "ShortCertRotation"
                     },
                     {
+                        "name": "TNFObservability"
+                    },
+                    {
                         "name": "UnifiedClusterManagedDNSAndLB"
                     }
                 ],

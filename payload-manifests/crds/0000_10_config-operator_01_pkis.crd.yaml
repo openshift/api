@@ -46,12 +46,420 @@ spec:
           spec:
             description: spec holds user settable values for configuration
             properties:
+              certificateManagement:
+                description: |-
+                  certificateManagement is the former shape of certificates, a mode union
+                  (Unmanaged/Default/Custom). It is retained only so that clients written against
+                  it keep compiling and so that objects using it keep roundtripping; it is mutually
+                  exclusive with certificates and exactly one of the two must be set.
+                  Note that key validation is tighter than it was when this field was current:
+                  RSA key sizes above 4096 bits, which were previously accepted, are now rejected.
+
+                  Deprecated: use certificates instead.
+                properties:
+                  custom:
+                    description: |-
+                      custom contains administrator-specified cryptographic configuration.
+                      Use the defaults and category override fields of the embedded PKIProfile
+                      to specify certificate generation parameters.
+                      Required when mode is Custom, and forbidden otherwise.
+                      When omitted, mode governs behavior on its own.
+
+                      Deprecated: use the fields of PKICertificatePolicy instead.
+                    minProperties: 1
+                    properties:
+                      clientCertificates:
+                        description: |-
+                          clientCertificates optionally overrides certificate parameters for
+                          client authentication certificates used to authenticate to servers.
+                          When set, these parameters take precedence over defaults for all client certificates.
+                          When omitted, the defaults are used for client certificates.
+                          The key field within it is now marked required (previously enforced
+                          via minProperties: 1).
+
+                          Deprecated: use PKICertificatePolicy.ClientCertificates instead.
+                        properties:
+                          key:
+                            description: key specifies the cryptographic parameters
+                              for the certificate's key pair.
+                            properties:
+                              algorithm:
+                                description: |-
+                                  algorithm specifies the key generation algorithm.
+                                  Valid values are "RSA" and "ECDSA".
+
+                                  When set to RSA, the rsa field must be specified and the generated key
+                                  will be an RSA key with the configured key size.
+
+                                  When set to ECDSA, the ecdsa field must be specified and the generated key
+                                  will be an ECDSA key using the configured elliptic curve.
+                                enum:
+                                - RSA
+                                - ECDSA
+                                type: string
+                              ecdsa:
+                                description: |-
+                                  ecdsa specifies ECDSA key parameters.
+                                  Required when algorithm is ECDSA, and forbidden otherwise.
+                                properties:
+                                  curve:
+                                    description: |-
+                                      curve specifies the NIST elliptic curve for ECDSA keys.
+                                      Valid values are "P256", "P384", and "P521".
+
+                                      When set to P256, the NIST P-256 curve (also known as secp256r1) is used,
+                                      providing 128-bit security.
+
+                                      When set to P384, the NIST P-384 curve (also known as secp384r1) is used,
+                                      providing 192-bit security.
+
+                                      When set to P521, the NIST P-521 curve (also known as secp521r1) is used,
+                                      providing 256-bit security.
+                                    enum:
+                                    - P256
+                                    - P384
+                                    - P521
+                                    type: string
+                                required:
+                                - curve
+                                type: object
+                              rsa:
+                                description: |-
+                                  rsa specifies RSA key parameters.
+                                  Required when algorithm is RSA, and forbidden otherwise.
+                                properties:
+                                  keySize:
+                                    description: |-
+                                      keySize specifies the size of RSA keys in bits.
+                                      Valid values are multiples of 1024 from 2048 to 4096.
+                                    format: int32
+                                    maximum: 4096
+                                    minimum: 2048
+                                    multipleOf: 1024
+                                    type: integer
+                                required:
+                                - keySize
+                                type: object
+                            required:
+                            - algorithm
+                            type: object
+                            x-kubernetes-validations:
+                            - message: rsa is required when algorithm is RSA, and
+                                forbidden otherwise
+                              rule: 'has(self.algorithm) && self.algorithm == ''RSA''
+                                ?  has(self.rsa) : !has(self.rsa)'
+                            - message: ecdsa is required when algorithm is ECDSA,
+                                and forbidden otherwise
+                              rule: 'has(self.algorithm) && self.algorithm == ''ECDSA''
+                                ?  has(self.ecdsa) : !has(self.ecdsa)'
+                        required:
+                        - key
+                        type: object
+                      defaults:
+                        description: |-
+                          defaults specifies the default certificate configuration that applies
+                          to all certificates unless overridden by a category override.
+                          This field is required so that every certificate has a well-defined configuration.
+
+                          Deprecated: use PKICertificatePolicy.Defaults instead.
+                        properties:
+                          key:
+                            description: |-
+                              key specifies the cryptographic parameters for the certificate's key pair.
+                              This field is required in defaults to ensure all certificates have a
+                              well-defined key configuration.
+                            properties:
+                              algorithm:
+                                description: |-
+                                  algorithm specifies the key generation algorithm.
+                                  Valid values are "RSA" and "ECDSA".
+
+                                  When set to RSA, the rsa field must be specified and the generated key
+                                  will be an RSA key with the configured key size.
+
+                                  When set to ECDSA, the ecdsa field must be specified and the generated key
+                                  will be an ECDSA key using the configured elliptic curve.
+                                enum:
+                                - RSA
+                                - ECDSA
+                                type: string
+                              ecdsa:
+                                description: |-
+                                  ecdsa specifies ECDSA key parameters.
+                                  Required when algorithm is ECDSA, and forbidden otherwise.
+                                properties:
+                                  curve:
+                                    description: |-
+                                      curve specifies the NIST elliptic curve for ECDSA keys.
+                                      Valid values are "P256", "P384", and "P521".
+
+                                      When set to P256, the NIST P-256 curve (also known as secp256r1) is used,
+                                      providing 128-bit security.
+
+                                      When set to P384, the NIST P-384 curve (also known as secp384r1) is used,
+                                      providing 192-bit security.
+
+                                      When set to P521, the NIST P-521 curve (also known as secp521r1) is used,
+                                      providing 256-bit security.
+                                    enum:
+                                    - P256
+                                    - P384
+                                    - P521
+                                    type: string
+                                required:
+                                - curve
+                                type: object
+                              rsa:
+                                description: |-
+                                  rsa specifies RSA key parameters.
+                                  Required when algorithm is RSA, and forbidden otherwise.
+                                properties:
+                                  keySize:
+                                    description: |-
+                                      keySize specifies the size of RSA keys in bits.
+                                      Valid values are multiples of 1024 from 2048 to 4096.
+                                    format: int32
+                                    maximum: 4096
+                                    minimum: 2048
+                                    multipleOf: 1024
+                                    type: integer
+                                required:
+                                - keySize
+                                type: object
+                            required:
+                            - algorithm
+                            type: object
+                            x-kubernetes-validations:
+                            - message: rsa is required when algorithm is RSA, and
+                                forbidden otherwise
+                              rule: 'has(self.algorithm) && self.algorithm == ''RSA''
+                                ?  has(self.rsa) : !has(self.rsa)'
+                            - message: ecdsa is required when algorithm is ECDSA,
+                                and forbidden otherwise
+                              rule: 'has(self.algorithm) && self.algorithm == ''ECDSA''
+                                ?  has(self.ecdsa) : !has(self.ecdsa)'
+                        required:
+                        - key
+                        type: object
+                      servingCertificates:
+                        description: |-
+                          servingCertificates optionally overrides certificate parameters for
+                          TLS server certificates used to serve HTTPS endpoints.
+                          When set, these parameters take precedence over defaults for all serving certificates.
+                          When omitted, the defaults are used for serving certificates.
+                          The key field within it is now marked required (previously enforced
+                          via minProperties: 1).
+
+                          Deprecated: use PKICertificatePolicy.ServerCertificates instead.
+                        properties:
+                          key:
+                            description: key specifies the cryptographic parameters
+                              for the certificate's key pair.
+                            properties:
+                              algorithm:
+                                description: |-
+                                  algorithm specifies the key generation algorithm.
+                                  Valid values are "RSA" and "ECDSA".
+
+                                  When set to RSA, the rsa field must be specified and the generated key
+                                  will be an RSA key with the configured key size.
+
+                                  When set to ECDSA, the ecdsa field must be specified and the generated key
+                                  will be an ECDSA key using the configured elliptic curve.
+                                enum:
+                                - RSA
+                                - ECDSA
+                                type: string
+                              ecdsa:
+                                description: |-
+                                  ecdsa specifies ECDSA key parameters.
+                                  Required when algorithm is ECDSA, and forbidden otherwise.
+                                properties:
+                                  curve:
+                                    description: |-
+                                      curve specifies the NIST elliptic curve for ECDSA keys.
+                                      Valid values are "P256", "P384", and "P521".
+
+                                      When set to P256, the NIST P-256 curve (also known as secp256r1) is used,
+                                      providing 128-bit security.
+
+                                      When set to P384, the NIST P-384 curve (also known as secp384r1) is used,
+                                      providing 192-bit security.
+
+                                      When set to P521, the NIST P-521 curve (also known as secp521r1) is used,
+                                      providing 256-bit security.
+                                    enum:
+                                    - P256
+                                    - P384
+                                    - P521
+                                    type: string
+                                required:
+                                - curve
+                                type: object
+                              rsa:
+                                description: |-
+                                  rsa specifies RSA key parameters.
+                                  Required when algorithm is RSA, and forbidden otherwise.
+                                properties:
+                                  keySize:
+                                    description: |-
+                                      keySize specifies the size of RSA keys in bits.
+                                      Valid values are multiples of 1024 from 2048 to 4096.
+                                    format: int32
+                                    maximum: 4096
+                                    minimum: 2048
+                                    multipleOf: 1024
+                                    type: integer
+                                required:
+                                - keySize
+                                type: object
+                            required:
+                            - algorithm
+                            type: object
+                            x-kubernetes-validations:
+                            - message: rsa is required when algorithm is RSA, and
+                                forbidden otherwise
+                              rule: 'has(self.algorithm) && self.algorithm == ''RSA''
+                                ?  has(self.rsa) : !has(self.rsa)'
+                            - message: ecdsa is required when algorithm is ECDSA,
+                                and forbidden otherwise
+                              rule: 'has(self.algorithm) && self.algorithm == ''ECDSA''
+                                ?  has(self.ecdsa) : !has(self.ecdsa)'
+                        required:
+                        - key
+                        type: object
+                      signerCertificates:
+                        description: |-
+                          signerCertificates optionally overrides certificate parameters for
+                          certificate authority (CA) certificates that sign other certificates.
+                          When set, these parameters take precedence over defaults for all signer certificates.
+                          When omitted, the defaults are used for signer certificates.
+                          The key field within it is now marked required (previously enforced
+                          via minProperties: 1).
+
+                          Deprecated: use PKICertificatePolicy.CACertificates instead.
+                        properties:
+                          key:
+                            description: key specifies the cryptographic parameters
+                              for the certificate's key pair.
+                            properties:
+                              algorithm:
+                                description: |-
+                                  algorithm specifies the key generation algorithm.
+                                  Valid values are "RSA" and "ECDSA".
+
+                                  When set to RSA, the rsa field must be specified and the generated key
+                                  will be an RSA key with the configured key size.
+
+                                  When set to ECDSA, the ecdsa field must be specified and the generated key
+                                  will be an ECDSA key using the configured elliptic curve.
+                                enum:
+                                - RSA
+                                - ECDSA
+                                type: string
+                              ecdsa:
+                                description: |-
+                                  ecdsa specifies ECDSA key parameters.
+                                  Required when algorithm is ECDSA, and forbidden otherwise.
+                                properties:
+                                  curve:
+                                    description: |-
+                                      curve specifies the NIST elliptic curve for ECDSA keys.
+                                      Valid values are "P256", "P384", and "P521".
+
+                                      When set to P256, the NIST P-256 curve (also known as secp256r1) is used,
+                                      providing 128-bit security.
+
+                                      When set to P384, the NIST P-384 curve (also known as secp384r1) is used,
+                                      providing 192-bit security.
+
+                                      When set to P521, the NIST P-521 curve (also known as secp521r1) is used,
+                                      providing 256-bit security.
+                                    enum:
+                                    - P256
+                                    - P384
+                                    - P521
+                                    type: string
+                                required:
+                                - curve
+                                type: object
+                              rsa:
+                                description: |-
+                                  rsa specifies RSA key parameters.
+                                  Required when algorithm is RSA, and forbidden otherwise.
+                                properties:
+                                  keySize:
+                                    description: |-
+                                      keySize specifies the size of RSA keys in bits.
+                                      Valid values are multiples of 1024 from 2048 to 4096.
+                                    format: int32
+                                    maximum: 4096
+                                    minimum: 2048
+                                    multipleOf: 1024
+                                    type: integer
+                                required:
+                                - keySize
+                                type: object
+                            required:
+                            - algorithm
+                            type: object
+                            x-kubernetes-validations:
+                            - message: rsa is required when algorithm is RSA, and
+                                forbidden otherwise
+                              rule: 'has(self.algorithm) && self.algorithm == ''RSA''
+                                ?  has(self.rsa) : !has(self.rsa)'
+                            - message: ecdsa is required when algorithm is ECDSA,
+                                and forbidden otherwise
+                              rule: 'has(self.algorithm) && self.algorithm == ''ECDSA''
+                                ?  has(self.ecdsa) : !has(self.ecdsa)'
+                        required:
+                        - key
+                        type: object
+                    required:
+                    - defaults
+                    type: object
+                  mode:
+                    description: |-
+                      mode determines how PKI configuration is managed.
+                      Valid values are "Unmanaged", "Default", and "Custom".
+
+                      When set to Unmanaged, components use their existing hardcoded certificate
+                      generation behavior, exactly as if this feature did not exist. Each component
+                      generates certificates using whatever parameters it was using before this
+                      feature. While most components use RSA 2048, some may use different
+                      parameters. Use of this mode might prevent upgrading to the next major
+                      OpenShift release.
+
+                      When set to Default, OpenShift-recommended best practices for certificate
+                      generation are applied. The specific parameters may evolve across OpenShift
+                      releases to adopt improved cryptographic standards. In the initial release,
+                      this matches Unmanaged behavior for each component. In future releases, this
+                      may adopt ECDSA or larger RSA keys based on industry best practices.
+                      Recommended for most customers who want to benefit from security improvements
+                      automatically.
+
+                      When set to Custom, the certificate management parameters can be set
+                      explicitly. Use the custom field to specify certificate generation parameters.
+
+                      Deprecated: configure PKICertificatePolicy via the certificates field instead.
+                    enum:
+                    - Unmanaged
+                    - Default
+                    - Custom
+                    type: string
+                required:
+                - mode
+                type: object
+                x-kubernetes-validations:
+                - message: custom is required when mode is Custom, and forbidden otherwise
+                  rule: 'self.mode == ''Custom'' ? has(self.custom) : !has(self.custom)'
               certificates:
                 description: |-
                   certificates specifies the cluster's certificate policy for internally-generated
                   certificates, resolved most-specific-wins: a named certificate override, then a
                   category override (CA, server, client), then the required defaults.
-                  This field is required so that every PKI resource specifies a certificate policy.
+                  This field is optional and mutually exclusive with the deprecated
+                  certificateManagement field; exactly one of the two must be set.
                   This field names a configuration policy; it is unrelated to the X.509
                   certificate-policies extension.
                 properties:
@@ -631,9 +1039,12 @@ spec:
                 required:
                 - namedKeys
                 type: object
-            required:
-            - certificates
             type: object
+            x-kubernetes-validations:
+            - message: exactly one of the fields in [certificates certificateManagement]
+                must be set
+              rule: (has(self.certificates)?1:0)+(has(self.certificateManagement)?1:0)
+                == 1
         required:
         - spec
         type: object

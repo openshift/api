@@ -565,6 +565,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.ControllerManager{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_ControllerManager(ref),
 		configv1alpha1.ControllerManagerList{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ControllerManagerList(ref),
 		configv1alpha1.ControllerManagerSpec{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ControllerManagerSpec(ref),
+		configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName():                                    schema_openshift_api_config_v1alpha1_CustomPKIPolicy(ref),
 		configv1alpha1.DropEqualActionConfig{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_DropEqualActionConfig(ref),
 		configv1alpha1.EtcdBackupSpec{}.OpenAPIModelName():                                     schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref),
 		configv1alpha1.GatherConfig{}.OpenAPIModelName():                                       schema_openshift_api_config_v1alpha1_GatherConfig(ref),
@@ -608,6 +609,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.OpenShiftStateMetricsConfig{}.OpenAPIModelName():                        schema_openshift_api_config_v1alpha1_OpenShiftStateMetricsConfig(ref),
 		configv1alpha1.PKI{}.OpenAPIModelName():                                                schema_openshift_api_config_v1alpha1_PKI(ref),
 		configv1alpha1.PKICertificateConfig{}.OpenAPIModelName():                               schema_openshift_api_config_v1alpha1_PKICertificateConfig(ref),
+		configv1alpha1.PKICertificateManagement{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_PKICertificateManagement(ref),
 		configv1alpha1.PKICertificatePolicy{}.OpenAPIModelName():                               schema_openshift_api_config_v1alpha1_PKICertificatePolicy(ref),
 		configv1alpha1.PKIDefaultCertificateConfig{}.OpenAPIModelName():                        schema_openshift_api_config_v1alpha1_PKIDefaultCertificateConfig(ref),
 		configv1alpha1.PKIECDSAKeyConfig{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_PKIECDSAKeyConfig(ref),
@@ -616,6 +618,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.PKIList{}.OpenAPIModelName():                                            schema_openshift_api_config_v1alpha1_PKIList(ref),
 		configv1alpha1.PKINamedCertificateConfig{}.OpenAPIModelName():                          schema_openshift_api_config_v1alpha1_PKINamedCertificateConfig(ref),
 		configv1alpha1.PKINamedKeyConfig{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_PKINamedKeyConfig(ref),
+		configv1alpha1.PKIProfile{}.OpenAPIModelName():                                         schema_openshift_api_config_v1alpha1_PKIProfile(ref),
 		configv1alpha1.PKIRSAKeyConfig{}.OpenAPIModelName():                                    schema_openshift_api_config_v1alpha1_PKIRSAKeyConfig(ref),
 		configv1alpha1.PKISpec{}.OpenAPIModelName():                                            schema_openshift_api_config_v1alpha1_PKISpec(ref),
 		configv1alpha1.PersistentVolumeClaimReference{}.OpenAPIModelName():                     schema_openshift_api_config_v1alpha1_PersistentVolumeClaimReference(ref),
@@ -25234,6 +25237,50 @@ func schema_openshift_api_config_v1alpha1_ControllerManagerSpec(ref common.Refer
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_CustomPKIPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CustomPKIPolicy contains administrator-specified cryptographic configuration, wrapping a PKIProfile. When set, at least one property must be specified.\n\nDeprecated: the wrapped fields were flattened into PKICertificatePolicy.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"defaults": {
+						SchemaProps: spec.SchemaProps{
+							Description: "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override. This field is required so that every certificate has a well-defined configuration.\n\nDeprecated: use PKICertificatePolicy.Defaults instead.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIDefaultCertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"signerCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.CACertificates instead.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"servingCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.ServerCertificates instead.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"clientCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.ClientCertificates instead.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"defaults"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.PKICertificateConfig{}.OpenAPIModelName(), configv1alpha1.PKIDefaultCertificateConfig{}.OpenAPIModelName()},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_DropEqualActionConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -26927,6 +26974,48 @@ func schema_openshift_api_config_v1alpha1_PKICertificateConfig(ref common.Refere
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_PKICertificateManagement(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKICertificateManagement is the former container for certificate configuration, a mode union determining whether components use hardcoded defaults (Unmanaged), follow OpenShift best practices (Default), or use administrator-specified cryptographic parameters (Custom).\n\nDeprecated: use PKICertificatePolicy instead.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode determines how PKI configuration is managed. Valid values are \"Unmanaged\", \"Default\", and \"Custom\".\n\nWhen set to Unmanaged, components use their existing hardcoded certificate generation behavior, exactly as if this feature did not exist. Each component generates certificates using whatever parameters it was using before this feature. While most components use RSA 2048, some may use different parameters. Use of this mode might prevent upgrading to the next major OpenShift release.\n\nWhen set to Default, OpenShift-recommended best practices for certificate generation are applied. The specific parameters may evolve across OpenShift releases to adopt improved cryptographic standards. In the initial release, this matches Unmanaged behavior for each component. In future releases, this may adopt ECDSA or larger RSA keys based on industry best practices. Recommended for most customers who want to benefit from security improvements automatically.\n\nWhen set to Custom, the certificate management parameters can be set explicitly. Use the custom field to specify certificate generation parameters.\n\nDeprecated: configure PKICertificatePolicy via the certificates field instead.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"custom": {
+						SchemaProps: spec.SchemaProps{
+							Description: "custom contains administrator-specified cryptographic configuration. Use the defaults and category override fields of the embedded PKIProfile to specify certificate generation parameters. Required when mode is Custom, and forbidden otherwise. When omitted, mode governs behavior on its own.\n\nDeprecated: use the fields of PKICertificatePolicy instead.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "mode",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"custom": "Custom",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName()},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_PKICertificatePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27233,6 +27322,50 @@ func schema_openshift_api_config_v1alpha1_PKINamedKeyConfig(ref common.Reference
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_PKIProfile(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKIProfile defines the certificate generation parameters that OpenShift components use to create certificates. Category overrides take precedence over defaults.\n\nDeprecated: use PKICertificatePolicy instead.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"defaults": {
+						SchemaProps: spec.SchemaProps{
+							Description: "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override. This field is required so that every certificate has a well-defined configuration.\n\nDeprecated: use PKICertificatePolicy.Defaults instead.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIDefaultCertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"signerCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.CACertificates instead.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"servingCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.ServerCertificates instead.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"clientCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.ClientCertificates instead.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"defaults"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.PKICertificateConfig{}.OpenAPIModelName(), configv1alpha1.PKIDefaultCertificateConfig{}.OpenAPIModelName()},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_PKIRSAKeyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27258,12 +27391,12 @@ func schema_openshift_api_config_v1alpha1_PKISpec(ref common.ReferenceCallback) 
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PKISpec holds the specification for PKI configuration.",
+				Description: "PKISpec holds the specification for PKI configuration. Exactly one of certificates or certificateManagement must be set.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"certificates": {
 						SchemaProps: spec.SchemaProps{
-							Description: "certificates specifies the cluster's certificate policy for internally-generated certificates, resolved most-specific-wins: a named certificate override, then a category override (CA, server, client), then the required defaults. This field is required so that every PKI resource specifies a certificate policy. This field names a configuration policy; it is unrelated to the X.509 certificate-policies extension.",
+							Description: "certificates specifies the cluster's certificate policy for internally-generated certificates, resolved most-specific-wins: a named certificate override, then a category override (CA, server, client), then the required defaults. This field is optional and mutually exclusive with the deprecated certificateManagement field; exactly one of the two must be set. This field names a configuration policy; it is unrelated to the X.509 certificate-policies extension.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1alpha1.PKICertificatePolicy{}.OpenAPIModelName()),
 						},
@@ -27275,12 +27408,18 @@ func schema_openshift_api_config_v1alpha1_PKISpec(ref common.ReferenceCallback) 
 							Ref:         ref(configv1alpha1.PKIKeyPolicy{}.OpenAPIModelName()),
 						},
 					},
+					"certificateManagement": {
+						SchemaProps: spec.SchemaProps{
+							Description: "certificateManagement is the former shape of certificates, a mode union (Unmanaged/Default/Custom). It is retained only so that clients written against it keep compiling and so that objects using it keep roundtripping; it is mutually exclusive with certificates and exactly one of the two must be set. Note that key validation is tighter than it was when this field was current: RSA key sizes above 4096 bits, which were previously accepted, are now rejected.\n\nDeprecated: use certificates instead.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKICertificateManagement{}.OpenAPIModelName()),
+						},
+					},
 				},
-				Required: []string{"certificates"},
 			},
 		},
 		Dependencies: []string{
-			configv1alpha1.PKICertificatePolicy{}.OpenAPIModelName(), configv1alpha1.PKIKeyPolicy{}.OpenAPIModelName()},
+			configv1alpha1.PKICertificateManagement{}.OpenAPIModelName(), configv1alpha1.PKICertificatePolicy{}.OpenAPIModelName(), configv1alpha1.PKIKeyPolicy{}.OpenAPIModelName()},
 	}
 }
 

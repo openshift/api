@@ -96,6 +96,11 @@ func (in ControllerManagerSpec) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in CustomPKIPolicy) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1alpha1.CustomPKIPolicy"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in DropEqualActionConfig) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1alpha1.DropEqualActionConfig"
 }
@@ -311,6 +316,11 @@ func (in PKICertificateConfig) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in PKICertificateManagement) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1alpha1.PKICertificateManagement"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in PKICertificatePolicy) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1alpha1.PKICertificatePolicy"
 }
@@ -348,6 +358,11 @@ func (in PKINamedCertificateConfig) OpenAPIModelName() string {
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in PKINamedKeyConfig) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1alpha1.PKINamedKeyConfig"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in PKIProfile) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1alpha1.PKIProfile"
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.

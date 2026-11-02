@@ -99,14 +99,175 @@ tests:
                 algorithm: ECDSA
                 ecdsa:
                   curve: P256
-    - name: Should reject a PKI without certificates
+    - name: Should reject a PKI with neither certificates nor certificateManagement
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
         metadata:
           name: cluster
         spec: {}
-      expectedError: "spec.certificates: Required value"
+      expectedError: "exactly one of the fields in [certificates certificateManagement] must be set"
+    - name: Should reject a PKI with both certificates and certificateManagement
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: RSA
+                rsa:
+                  keySize: 2048
+          certificateManagement:
+            mode: Default
+      expectedError: "exactly one of the fields in [certificates certificateManagement] must be set"
+    - name: Should accept the deprecated certificateManagement shape (mode Default)
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Default
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Default
+    - name: Should accept the deprecated certificateManagement shape (mode Unmanaged)
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Unmanaged
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Unmanaged
+    - name: Should accept the deprecated certificateManagement shape (mode Custom) and roundtrip it
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+              signerCertificates:
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P384
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+              signerCertificates:
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P384
+    - name: Should reject mode Custom without custom
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+      expectedError: "custom is required when mode is Custom, and forbidden otherwise"
+    - name: Should reject mode Default with custom
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Default
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+      expectedError: "custom is required when mode is Custom, and forbidden otherwise"
+    - name: Should reject an empty custom object
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom: {}
+      expectedError: "should have at least 1 properties"
+    - name: Should reject the deprecated shape with RSA keySize 8192 (above the 4096 cap)
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 8192
+      expectedError: "spec.certificateManagement.custom.defaults.key.rsa.keySize in body should be less than or equal to 4096"
+    - name: Should reject the deprecated shape with an invalid mode
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Automatic
+      expectedError: "spec.certificateManagement.mode: Unsupported value: \"Automatic\": supported values: \"Unmanaged\", \"Default\", \"Custom\""
+    - name: Should reject the deprecated shape without a mode
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement: {}
+      expectedError: "spec.certificateManagement.mode: Required value"
     - name: Should reject certificates without defaults
       initial: |
         apiVersion: config.openshift.io/v1alpha1

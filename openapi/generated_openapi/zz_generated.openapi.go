@@ -11786,7 +11786,7 @@ func schema_openshift_api_config_v1_CustomTLSProfile(ref common.ReferenceCallbac
 					},
 					"minTLSVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11\n\nNOTE: currently the highest minTLSVersion allowed is VersionTLS12",
+							Description: "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19887,7 +19887,7 @@ func schema_openshift_api_config_v1_TLSProfileSpec(ref common.ReferenceCallback)
 					},
 					"minTLSVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11\n\nNOTE: currently the highest minTLSVersion allowed is VersionTLS12",
+							Description: "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19909,7 +19909,7 @@ func schema_openshift_api_config_v1_TLSSecurityProfile(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "type is one of Old, Intermediate, Modern or Custom. Custom provides the ability to specify individual TLS security profile parameters. Old, Intermediate and Modern are TLS security profiles based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_configurations\n\nThe profiles are intent based, so they may change over time as new ciphers are developed and existing ciphers are found to be insecure.  Depending on precisely which ciphers are available to a process, the list may be reduced.\n\nNote that the Modern profile is currently not supported because it is not yet well adopted by common software libraries.",
+							Description: "type is one of Old, Intermediate, Modern or Custom. Custom provides the ability to specify individual TLS security profile parameters. Old, Intermediate and Modern are TLS security profiles based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_configurations\n\nThe profiles are intent based, so they may change over time as new ciphers are developed and existing ciphers are found to be insecure.  Depending on precisely which ciphers are available to a process, the list may be reduced.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

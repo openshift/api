@@ -66,6 +66,63 @@ tests:
             - MachineAPI
             - ClusterAPI
             - CompatibilityRequirements
+    - name: Should be able to create a ClusterVersion with the vCurrent baseline supplying CompatibilityRequirements for an explicitly added ClusterAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: vCurrent
+            additionalEnabledCapabilities:
+            - ClusterAPI
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: vCurrent
+            additionalEnabledCapabilities:
+            - ClusterAPI
+    - name: Should be able to create a ClusterVersion with the vCurrent baseline and both MachineAPI and ClusterAPI explicitly added
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: vCurrent
+            additionalEnabledCapabilities:
+            - MachineAPI
+            - ClusterAPI
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: vCurrent
+            additionalEnabledCapabilities:
+            - MachineAPI
+            - ClusterAPI
+    - name: Should be able to create a ClusterVersion with an omitted baseline supplying CompatibilityRequirements for an explicitly added ClusterAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            additionalEnabledCapabilities:
+            - ClusterAPI
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            additionalEnabledCapabilities:
+            - ClusterAPI
     - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities ClusterAPI and CompatibilityRequirements
       initial: |
         apiVersion: config.openshift.io/v1

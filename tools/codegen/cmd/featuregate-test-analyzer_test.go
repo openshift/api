@@ -1255,3 +1255,36 @@ func Test_buildHTMLFeatureGateData(t *testing.T) {
 		})
 	}
 }
+
+func Test_buildHTMLFeatureGateData_candidateTierIsWarning(t *testing.T) {
+	variant := JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "external"}
+	testingResults := map[JobVariant]*TestingResults{
+		variant: {
+			TestResults: []TestResults{
+				{TestName: "test1", TotalRuns: 14, SuccessfulRuns: 14},
+				{TestName: "test2", TotalRuns: 14, SuccessfulRuns: 14},
+				{TestName: "test3", TotalRuns: 14, SuccessfulRuns: 14},
+				{TestName: "test4", TotalRuns: 14, SuccessfulRuns: 14},
+				{TestName: "test5", TotalRuns: 14, SuccessfulRuns: 14},
+			},
+			HasCandidateTierResults: true,
+		},
+	}
+
+	summaries := buildVariantRequirementSummaries(testingResults)
+	result := buildHTMLFeatureGateData("AWSFeature", testingResults, nil, summaries, "4.18")
+
+	if len(result.Requirements) != 1 {
+		t.Fatalf("got %d requirement rows, want 1", len(result.Requirements))
+	}
+	req := result.Requirements[0]
+	if req.Passed || !req.Warning {
+		t.Errorf("candidate-tier requirement row = passed=%v, warning=%v; want passed=false, warning=true", req.Passed, req.Warning)
+	}
+	if req.Status != "⚠" {
+		t.Errorf("Status = %q, want ⚠", req.Status)
+	}
+	if !req.HasCandidateTier {
+		t.Errorf("HasCandidateTier = false, want true")
+	}
+}

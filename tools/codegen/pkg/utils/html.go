@@ -109,6 +109,12 @@ const HTMLTemplateSrc = `<!DOCTYPE html>
     {{else}}
     <div class="alert alert-danger">
         <strong>INSUFFICIENT</strong> CI testing for &quot;{{$fg.Name}}&quot;.
+        <ul>
+            <li>At least five tests are expected for a feature</li>
+            <li>Tests must be run on every TechPreview platform (ask for an exception if your feature doesn&#39;t support a variant)</li>
+            <li>All tests must run at least 14 times on every platform</li>
+            <li>All tests must pass at least 95% of the time</li>
+        </ul>
     </div>
     {{end}}
     {{if $fg.Requirements}}
@@ -139,7 +145,8 @@ const HTMLTemplateSrc = `<!DOCTYPE html>
     {{end}}
     {{if $fg.Tests}}
     <h3>Per-test detail</h3>
-    <table id="table-{{$fgIdx}}">        <thead>
+    <table id="table-{{$fgIdx}}">
+        <thead>
             <tr>
                 <th class="sortable sort-indicator" data-table="{{$fgIdx}}" data-col="0" data-sort="text">Test Name</th>
                 {{range $v := $fg.Variants}}

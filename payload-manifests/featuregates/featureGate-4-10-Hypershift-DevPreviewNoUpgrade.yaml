@@ -41,9 +41,6 @@
                         "name": "EventedPLEG"
                     },
                     {
-                        "name": "IngressCanaryNodePlacement"
-                    },
-                    {
                         "name": "KarpenterOperator"
                     },
                     {
@@ -287,6 +284,9 @@
                     },
                     {
                         "name": "ImageStreamImportMode"
+                    },
+                    {
+                        "name": "IngressCanaryNodePlacement"
                     },
                     {
                         "name": "IngressComponentRouteLabels"

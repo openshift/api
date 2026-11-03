@@ -32,9 +32,6 @@
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
-                        "name": "IngressCanaryNodePlacement"
-                    },
-                    {
                         "name": "MachineAPIMigrationAzure"
                     },
                     {
@@ -251,6 +248,9 @@
                     },
                     {
                         "name": "ImageStreamImportMode"
+                    },
+                    {
+                        "name": "IngressCanaryNodePlacement"
                     },
                     {
                         "name": "IngressComponentRouteLabels"

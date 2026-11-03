@@ -92,6 +92,56 @@ tests:
               effect: NoSchedule
               value: value-1
     expectedError: tolerations must not contain duplicates with the same key, operator, value, and effect
+  - name: Should not be able to create an Ingress with duplicate tolerations without a value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+    expectedError: tolerations must not contain duplicates with the same key, operator, value, and effect
+  - name: Should be able to create an Ingress with tolerations differing only in whether value is set
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: NoSchedule
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: NoSchedule
   - name: Should not be able to create an Ingress with tolerations differing only in tolerationSeconds
     initial: |
       apiVersion: operator.openshift.io/v1

@@ -198,8 +198,10 @@ type CanaryNodePlacement struct {
 	//
 	// List order is preserved, but duplicate tolerations are rejected: two
 	// tolerations must not have the same key, operator, value, and effect,
-	// regardless of their tolerationSeconds. Overlapping tolerations (for
-	// example, the same key with a different effect) are allowed.
+	// regardless of their tolerationSeconds. Two tolerations are duplicates
+	// only when they also agree on whether value is set; if both set value,
+	// the values must be equal. Overlapping tolerations (for example, the same
+	// key with a different effect) are allowed.
 	// For NoExecute, omitted tolerationSeconds means tolerating indefinitely;
 	// finite values are preserved, including zero and negative values.
 	//
@@ -209,7 +211,7 @@ type CanaryNodePlacement struct {
 	// +listType=atomic
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=32
-	// +kubebuilder:validation:XValidation:rule=`self.all(x, self.filter(y, y.key == x.key && y.operator == x.operator && y.effect == x.effect && (!has(y.value) || !has(x.value) || y.value == x.value)).size() <= 1)`,message="tolerations must not contain duplicates with the same key, operator, value, and effect"
+	// +kubebuilder:validation:XValidation:rule=`self.all(x, self.filter(y, y.key == x.key && y.operator == x.operator && y.effect == x.effect && has(y.value) == has(x.value) && (!has(x.value) || y.value == x.value)).size() <= 1)`,message="tolerations must not contain duplicates with the same key, operator, value, and effect"
 	Tolerations []CanaryToleration `json:"tolerations,omitempty"`
 }
 

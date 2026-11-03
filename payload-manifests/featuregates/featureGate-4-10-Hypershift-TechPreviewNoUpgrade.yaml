@@ -397,9 +397,6 @@
                         "name": "OpenStackMaxAllowedAddressPairs"
                     },
                     {
-                        "name": "PodGroupPreemptionPolicy"
-                    },
-                    {
                         "name": "SELinuxMount"
                     },
                     {

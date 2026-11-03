@@ -391,9 +391,6 @@
                         "name": "OpenStackMaxAllowedAddressPairs"
                     },
                     {
-                        "name": "PodGroupPreemptionPolicy"
-                    },
-                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {

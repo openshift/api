@@ -27,6 +27,7 @@ type HTMLRequirementRow struct {
 	MinPassActual     int
 	MinPassExpected   int
 	MinPassPassed     bool
+	HasPassRateSample bool
 	HasCandidateTier  bool
 }
 
@@ -91,6 +92,7 @@ const HTMLTemplateSrc = `<!DOCTYPE html>
         .req-warn { color: #856404; font-weight: bold; }
         .num-pass { background-color: #d4edda; }
         .num-fail { background-color: #f8d7da; }
+        .num-na { background-color: #e9ecef; color: #6c757d; }
         h1 { margin-bottom: 24px; }
         h2 { margin-top: 32px; margin-bottom: 12px; }
         h3 { margin-top: 20px; margin-bottom: 8px; font-size: 1.1rem; }
@@ -134,10 +136,14 @@ const HTMLTemplateSrc = `<!DOCTYPE html>
             {{range $req := $fg.Requirements}}
             <tr>
                 <td class="{{if $req.Passed}}req-pass{{else if $req.Warning}}req-warn{{else}}req-fail{{end}}">{{$req.Status}}</td>
-                <td style="text-align:left">{{$req.Variant}}{{if $req.HasCandidateTier}} <em>(candidate-tier data)</em>{{end}}</td>
+                <td style="text-align:left">{{$req.Variant}}{{if $req.HasCandidateTier}} <em class="req-warn">(⚠ candidate-tier data — not covered by Component Readiness)</em>{{end}}</td>
                 <td class="{{if $req.TestCountPassed}}num-pass{{else}}num-fail{{end}}">{{$req.TestCountActual}} / ≥{{$req.TestCountExpected}}</td>
                 <td class="{{if $req.MinRunsPassed}}num-pass{{else}}num-fail{{end}}">{{$req.MinRunsActual}} / ≥{{$req.MinRunsExpected}}</td>
+                {{if $req.HasPassRateSample}}
                 <td class="{{if $req.MinPassPassed}}num-pass{{else}}num-fail{{end}}">{{$req.MinPassActual}}% / ≥{{$req.MinPassExpected}}%</td>
+                {{else}}
+                <td class="num-na">N/A</td>
+                {{end}}
             </tr>
             {{end}}
         </tbody>

@@ -492,24 +492,26 @@ func Test_evaluateVariantRequirements(t *testing.T) {
 	}
 
 	tests := []struct {
-		name              string
-		variant           JobVariant
-		results           *TestingResults
-		wantOverallPassed bool
-		wantTestCount     int
-		wantMinRuns       int
-		wantMinPass       int
-		wantFailures      int
+		name                  string
+		variant               JobVariant
+		results               *TestingResults
+		wantOverallPassed     bool
+		wantTestCount         int
+		wantMinRuns           int
+		wantMinPass           int
+		wantHasPassRateSample bool
+		wantFailures          int
 	}{
 		{
-			name:              "all requirements met",
-			variant:           JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha"},
-			results:           &TestingResults{TestResults: sufficientTests},
-			wantOverallPassed: true,
-			wantTestCount:     5,
-			wantMinRuns:       14,
-			wantMinPass:       100,
-			wantFailures:      0,
+			name:                  "all requirements met",
+			variant:               JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha"},
+			results:               &TestingResults{TestResults: sufficientTests},
+			wantOverallPassed:     true,
+			wantTestCount:         5,
+			wantMinRuns:           14,
+			wantMinPass:           100,
+			wantHasPassRateSample: true,
+			wantFailures:          0,
 		},
 		{
 			name:    "insufficient tests and low pass rate",
@@ -518,21 +520,37 @@ func Test_evaluateVariantRequirements(t *testing.T) {
 				{TestName: "test1", TotalRuns: 20, SuccessfulRuns: 18}, // 90%
 				{TestName: "test2", TotalRuns: 10, SuccessfulRuns: 10}, // too few runs
 			}},
-			wantOverallPassed: false,
-			wantTestCount:     2,
-			wantMinRuns:       10,
-			wantMinPass:       90,
-			wantFailures:      2,
+			wantOverallPassed:     false,
+			wantTestCount:         2,
+			wantMinRuns:           10,
+			wantMinPass:           90,
+			wantHasPassRateSample: true,
+			wantFailures:          2,
 		},
 		{
-			name:              "no tests",
-			variant:           JobVariant{Cloud: "gcp", Architecture: "amd64", Topology: "ha"},
-			results:           &TestingResults{},
-			wantOverallPassed: false,
-			wantTestCount:     0,
-			wantMinRuns:       0,
-			wantMinPass:       0,
-			wantFailures:      0,
+			name:                  "no tests",
+			variant:               JobVariant{Cloud: "gcp", Architecture: "amd64", Topology: "ha"},
+			results:               &TestingResults{},
+			wantOverallPassed:     false,
+			wantTestCount:         0,
+			wantMinRuns:           0,
+			wantMinPass:           0,
+			wantHasPassRateSample: false,
+			wantFailures:          0,
+		},
+		{
+			name:    "tests with zero runs have no pass-rate sample",
+			variant: JobVariant{Cloud: "metal", Architecture: "amd64", Topology: "ha"},
+			results: &TestingResults{TestResults: []TestResults{
+				{TestName: "test1", TotalRuns: 0, SuccessfulRuns: 0},
+				{TestName: "test2", TotalRuns: 0, SuccessfulRuns: 0},
+			}},
+			wantOverallPassed:     false,
+			wantTestCount:         2,
+			wantMinRuns:           0,
+			wantMinPass:           0,
+			wantHasPassRateSample: false,
+			wantFailures:          2,
 		},
 	}
 
@@ -550,6 +568,9 @@ func Test_evaluateVariantRequirements(t *testing.T) {
 			}
 			if got.MinPassRateActual != tt.wantMinPass {
 				t.Errorf("MinPassRateActual = %d, want %d", got.MinPassRateActual, tt.wantMinPass)
+			}
+			if got.HasPassRateSample != tt.wantHasPassRateSample {
+				t.Errorf("HasPassRateSample = %v, want %v", got.HasPassRateSample, tt.wantHasPassRateSample)
 			}
 			if len(got.TestFailures) != tt.wantFailures {
 				t.Errorf("got %d test failures, want %d", len(got.TestFailures), tt.wantFailures)
@@ -572,6 +593,22 @@ func Test_writeRequirementsOverview(t *testing.T) {
 			MinPassRateActual:   100,
 			MinPassRateExpected: 95,
 			MinPassRatePassed:   true,
+			HasPassRateSample:   true,
+		},
+		{
+			Variant:             JobVariant{Cloud: "gcp", Architecture: "amd64", Topology: "ha"},
+			OverallPassed:       true,
+			HasCandidateTier:    true,
+			TestCountActual:     5,
+			TestCountExpected:   5,
+			TestCountPassed:     true,
+			MinRunsActual:       14,
+			MinRunsExpected:     14,
+			MinRunsPassed:       true,
+			MinPassRateActual:   100,
+			MinPassRateExpected: 95,
+			MinPassRatePassed:   true,
+			HasPassRateSample:   true,
 		},
 		{
 			Variant:             JobVariant{Cloud: "azure", Architecture: "amd64", Topology: "ha"},
@@ -585,9 +622,22 @@ func Test_writeRequirementsOverview(t *testing.T) {
 			MinPassRateActual:   90,
 			MinPassRateExpected: 95,
 			MinPassRatePassed:   false,
+			HasPassRateSample:   true,
 			TestFailures: []TestRequirementFailure{
 				{TestName: "flaky-test", RunsActual: 10, RunsExpected: 14, RunsPassed: false, PassRateActual: 90, PassRateExpected: 95, PassRatePassed: false},
 			},
+		},
+		{
+			Variant:           JobVariant{Cloud: "vsphere", Architecture: "amd64", Topology: "ha"},
+			OverallPassed:     false,
+			TestCountActual:   1,
+			TestCountExpected: 5,
+			TestCountPassed:   false,
+			MinRunsActual:     0,
+			MinRunsExpected:   14,
+			MinRunsPassed:     false,
+			MinPassRatePassed: true,
+			HasPassRateSample: false,
 		},
 	}
 
@@ -599,11 +649,14 @@ func Test_writeRequirementsOverview(t *testing.T) {
 	for _, want := range []string{
 		"INSUFFICIENT CI testing for \"TestFeature\"",
 		"✓ ha / aws / amd64",
+		"⚠ ha / gcp / amd64",
 		"✗ ha / azure / amd64",
 		"tests:     ✗ 2 / ≥5",
 		"min runs:  ✗ 10 / ≥14",
 		"min pass:  ✗ 90% / ≥95%",
+		"min pass:  N/A",
 		"flaky-test: runs 10 / ≥14, pass 90% / ≥95%",
+		"candidate-tier job data",
 	} {
 		if !strings.Contains(output, want) {
 			t.Errorf("stdout missing %q\nfull output:\n%s", want, output)
@@ -614,15 +667,59 @@ func Test_writeRequirementsOverview(t *testing.T) {
 	for _, want := range []string{
 		"Requirements checklist",
 		"✓ ",
+		"⚠ ",
 		"✗ ",
 		"ha / aws / amd64",
 		"ha / azure / amd64",
 		"Failing tests",
 		"flaky-test",
+		"N/A",
 	} {
 		if !strings.Contains(mdOut, want) {
 			t.Errorf("markdown missing %q\nfull markdown:\n%s", want, mdOut)
 		}
+	}
+}
+
+func Test_requirementRowStatus(t *testing.T) {
+	tests := []struct {
+		name        string
+		summary     VariantRequirementSummary
+		wantPassed  bool
+		wantWarning bool
+	}{
+		{
+			name:        "fully passed",
+			summary:     VariantRequirementSummary{OverallPassed: true},
+			wantPassed:  true,
+			wantWarning: false,
+		},
+		{
+			name:        "passed with candidate tier is warning",
+			summary:     VariantRequirementSummary{OverallPassed: true, HasCandidateTier: true},
+			wantPassed:  false,
+			wantWarning: true,
+		},
+		{
+			name:        "optional failure is warning",
+			summary:     VariantRequirementSummary{OverallPassed: false, IsWarning: true},
+			wantPassed:  false,
+			wantWarning: true,
+		},
+		{
+			name:        "blocking failure",
+			summary:     VariantRequirementSummary{OverallPassed: false},
+			wantPassed:  false,
+			wantWarning: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotPassed, gotWarning := requirementRowStatus(tt.summary)
+			if gotPassed != tt.wantPassed || gotWarning != tt.wantWarning {
+				t.Errorf("requirementRowStatus() = (%v, %v), want (%v, %v)", gotPassed, gotWarning, tt.wantPassed, tt.wantWarning)
+			}
+		})
 	}
 }
 

@@ -251,11 +251,39 @@ type VariantRequirementSummary struct {
 	MinPassRateActual   int
 	MinPassRateExpected int
 	MinPassRatePassed   bool
+	// HasPassRateSample is true when at least one test had TotalRuns > 0 so a pass rate exists.
+	HasPassRateSample bool
 
 	HasCandidateTier bool
 
 	// TestFailures lists only tests that miss run-count or pass-rate requirements.
 	TestFailures []TestRequirementFailure
+}
+
+// requirementRowStatus returns overall Passed/Warning for a variant summary row.
+// Candidate-tier-only issues are warnings even when numeric requirements pass.
+func requirementRowStatus(s VariantRequirementSummary) (passed, warning bool) {
+	passed = s.OverallPassed && !s.HasCandidateTier
+	warning = (s.OverallPassed && s.HasCandidateTier) || (!s.OverallPassed && s.IsWarning)
+	return passed, warning
+}
+
+func formatPassRateCell(s VariantRequirementSummary) string {
+	if !s.HasPassRateSample {
+		return "N/A"
+	}
+	return fmt.Sprintf("%s %d%% / ≥%d%%", statusMark(s.MinPassRatePassed, s.IsWarning && !s.MinPassRatePassed), s.MinPassRateActual, s.MinPassRateExpected)
+}
+
+func formatTestFailure(f TestRequirementFailure) string {
+	parts := []string{}
+	if !f.RunsPassed {
+		parts = append(parts, fmt.Sprintf("runs %d / ≥%d", f.RunsActual, f.RunsExpected))
+	}
+	if !f.PassRatePassed {
+		parts = append(parts, fmt.Sprintf("pass %d%% / ≥%d%%", f.PassRateActual, f.PassRateExpected))
+	}
+	return strings.Join(parts, ", ")
 }
 
 // TestRequirementFailure describes a single test that missed a numeric requirement.
@@ -313,6 +341,7 @@ func evaluateVariantRequirements(jobVariant JobVariant, testedVariant *TestingRe
 		summary.TestCountPassed = false
 		summary.MinRunsPassed = false
 		summary.MinPassRatePassed = false
+		summary.HasPassRateSample = false
 		summary.OverallPassed = false
 		return summary
 	}
@@ -326,6 +355,7 @@ func evaluateVariantRequirements(jobVariant JobVariant, testedVariant *TestingRe
 	for _, testResults := range testedVariant.TestResults {
 		runsPassed := testResults.TotalRuns >= requiredNumberOfTestRunsPerVariant
 		passRateActual := 0
+		// Pass rate is only evaluated when the test has runs (matches checkIfTestingIsSufficient).
 		passRatePassed := true
 		if testResults.TotalRuns > 0 {
 			passPercent := float32(testResults.SuccessfulRuns) / float32(testResults.TotalRuns)
@@ -337,7 +367,6 @@ func evaluateVariantRequirements(jobVariant JobVariant, testedVariant *TestingRe
 			summary.MinRunsActual = testResults.TotalRuns
 			seenRuns = true
 		}
-		// Pass rate is only meaningful when the test has runs (matches checkIfTestingIsSufficient).
 		if testResults.TotalRuns > 0 && (!seenPassRate || passRateActual < summary.MinPassRateActual) {
 			summary.MinPassRateActual = passRateActual
 			seenPassRate = true
@@ -363,6 +392,7 @@ func evaluateVariantRequirements(jobVariant JobVariant, testedVariant *TestingRe
 		}
 	}
 
+	summary.HasPassRateSample = seenPassRate
 	if len(testedVariant.TestResults) == 0 {
 		summary.MinRunsPassed = false
 		summary.MinPassRatePassed = false
@@ -445,12 +475,13 @@ func writeRequirementsOverview(featureGate string, summaries []VariantRequiremen
 	md.EndTableRow()
 
 	for _, s := range summaries {
-		mark := statusMark(s.OverallPassed, s.IsWarning && !s.OverallPassed)
+		rowPassed, rowWarning := requirementRowStatus(s)
+		mark := statusMark(rowPassed, rowWarning)
 		label := jobVariantLabel(s.Variant)
 
 		testsCell := fmt.Sprintf("%s %d / ≥%d", statusMark(s.TestCountPassed, s.IsWarning && !s.TestCountPassed), s.TestCountActual, s.TestCountExpected)
 		runsCell := fmt.Sprintf("%s %d / ≥%d", statusMark(s.MinRunsPassed, s.IsWarning && !s.MinRunsPassed), s.MinRunsActual, s.MinRunsExpected)
-		passCell := fmt.Sprintf("%s %d%% / ≥%d%%", statusMark(s.MinPassRatePassed, s.IsWarning && !s.MinPassRatePassed), s.MinPassRateActual, s.MinPassRateExpected)
+		passCell := formatPassRateCell(s)
 
 		md.NextTableColumn()
 		md.Exact(mark + " ")
@@ -473,14 +504,7 @@ func writeRequirementsOverview(featureGate string, summaries []VariantRequiremen
 			fmt.Fprintf(out, "    ⚠ includes candidate-tier job data (not covered by Component Readiness)\n")
 		}
 		for _, failure := range s.TestFailures {
-			detailParts := []string{}
-			if !failure.RunsPassed {
-				detailParts = append(detailParts, fmt.Sprintf("runs %d / ≥%d", failure.RunsActual, failure.RunsExpected))
-			}
-			if !failure.PassRatePassed {
-				detailParts = append(detailParts, fmt.Sprintf("pass %d%% / ≥%d%%", failure.PassRateActual, failure.PassRateExpected))
-			}
-			fmt.Fprintf(out, "    └─ %s: %s\n", failure.TestName, strings.Join(detailParts, ", "))
+			fmt.Fprintf(out, "    └─ %s: %s\n", failure.TestName, formatTestFailure(failure))
 		}
 		fmt.Fprintln(out)
 	}
@@ -494,14 +518,7 @@ func writeRequirementsOverview(featureGate string, summaries []VariantRequiremen
 			}
 			md.Textf("- %s\n", jobVariantLabel(s.Variant))
 			for _, failure := range s.TestFailures {
-				detailParts := []string{}
-				if !failure.RunsPassed {
-					detailParts = append(detailParts, fmt.Sprintf("runs %d / ≥%d", failure.RunsActual, failure.RunsExpected))
-				}
-				if !failure.PassRatePassed {
-					detailParts = append(detailParts, fmt.Sprintf("pass %d%% / ≥%d%%", failure.PassRateActual, failure.PassRateExpected))
-				}
-				md.Textf("  - `%s`: %s\n", failure.TestName, strings.Join(detailParts, ", "))
+				md.Textf("  - `%s`: %s\n", failure.TestName, formatTestFailure(failure))
 			}
 		}
 	}
@@ -595,10 +612,11 @@ func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*Testin
 
 	htmlRequirements := make([]utils.HTMLRequirementRow, 0, len(requirementSummaries))
 	for _, s := range requirementSummaries {
+		requirementPassed, requirementWarning := requirementRowStatus(s)
 		htmlRequirements = append(htmlRequirements, utils.HTMLRequirementRow{
-			Status:            statusMark(s.OverallPassed, s.IsWarning && !s.OverallPassed),
-			Passed:            s.OverallPassed,
-			Warning:           s.IsWarning && !s.OverallPassed,
+			Status:            statusMark(requirementPassed, requirementWarning),
+			Passed:            requirementPassed,
+			Warning:           requirementWarning,
 			Variant:           jobVariantLabel(s.Variant),
 			TestCountActual:   s.TestCountActual,
 			TestCountExpected: s.TestCountExpected,
@@ -609,6 +627,7 @@ func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*Testin
 			MinPassActual:     s.MinPassRateActual,
 			MinPassExpected:   s.MinPassRateExpected,
 			MinPassPassed:     s.MinPassRatePassed,
+			HasPassRateSample: s.HasPassRateSample,
 			HasCandidateTier:  s.HasCandidateTier,
 		})
 	}

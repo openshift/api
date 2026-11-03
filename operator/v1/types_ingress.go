@@ -165,6 +165,11 @@ type CanaryNodePlacement struct {
 	// has by default. The default toleration for the
 	// node-role.kubernetes.io/infra taint is always preserved.
 	//
+	// Each toleration is plumbed directly to the Pod specification of the
+	// canary daemonset pods: it is applied unmodified to the pods' tolerations
+	// and has the same semantics as the corresponding fields of the Kubernetes
+	// core/v1 Toleration type.
+	//
 	// If unset, the canary daemonset has only its default tolerations. When
 	// specified, the list must contain at least 1 toleration; to remove all
 	// additional tolerations, omit the entire spec.canary field rather than
@@ -191,7 +196,10 @@ type CanaryNodePlacement struct {
 	//
 	// At least 1 and no more than 32 tolerations may be specified.
 	//
-	// List order, duplicate tolerations, and overlapping tolerations are preserved.
+	// List order is preserved, but duplicate tolerations are rejected: two
+	// tolerations must not have the same key, operator, value, and effect,
+	// regardless of their tolerationSeconds. Overlapping tolerations (for
+	// example, the same key with a different effect) are allowed.
 	// For NoExecute, omitted tolerationSeconds means tolerating indefinitely;
 	// finite values are preserved, including zero and negative values.
 	//
@@ -201,12 +209,18 @@ type CanaryNodePlacement struct {
 	// +listType=atomic
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=32
+	// +kubebuilder:validation:XValidation:rule=`self.all(x, self.filter(y, y.key == x.key && y.operator == x.operator && y.effect == x.effect && (!has(y.value) || !has(x.value) || y.value == x.value)).size() <= 1)`,message="tolerations must not contain duplicates with the same key, operator, value, and effect"
 	Tolerations []CanaryToleration `json:"tolerations,omitempty"`
 }
 
 // CanaryToleration describes a toleration added to the ingress canary daemonset.
 //
-// +kubebuilder:validation:XValidation:rule=`!has(self.operator) || self.operator != 'Exists' || !has(self.value) || self.value == ""`,message="tolerations value must be empty when operator is 'Exists'"
+// A CanaryToleration is plumbed directly to the Pod specification of the
+// canary daemonset pods and corresponds to a Kubernetes core/v1 Toleration.
+// Its fields have the same semantics as their core/v1 Toleration counterparts,
+// with the validation constraints documented on each field.
+//
+// +kubebuilder:validation:XValidation:rule=`!has(self.operator) || self.operator != 'Exists' || !has(self.value)`,message="tolerations value must not be set when operator is 'Exists'"
 // +kubebuilder:validation:XValidation:rule=`!has(self.operator) || self.operator != 'Equal' || !has(self.value) || !format.labelValue().validate(self.value).hasValue()`,message="tolerations Equal value must be a valid label value of at most 63 characters"
 // +kubebuilder:validation:XValidation:rule=`!has(self.tolerationSeconds) || (has(self.effect) && self.effect == 'NoExecute')`,message="tolerations effect must be 'NoExecute' when tolerationSeconds is set"
 type CanaryToleration struct {
@@ -227,15 +241,15 @@ type CanaryToleration struct {
 	// +required
 	Operator CanaryTolerationOperator `json:"operator,omitempty"`
 
-	// value is optional and there is no semantic difference between omitting it and
-	// setting it to the empty string; both mean no value is matched. For Equal, it
-	// must be empty or a label value of at most 63 characters, consisting of
+	// value is optional; when omitted, no value is matched. For Equal, it must be
+	// a non-empty label value of at most 63 characters, consisting of
 	// alphanumerics, '-', '_', or '.', beginning and ending with an alphanumeric
-	// character. For Exists, it must be empty or omitted.
+	// character. The empty string is not allowed: omit value instead, as there is
+	// no semantic difference between the two. For Exists, it must be omitted.
 	// +optional
-	// +kubebuilder:validation:MinLength=0
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=63
-	Value *string `json:"value,omitempty"`
+	Value string `json:"value,omitempty"`
 
 	// effect is required and specifies the taint effect to match. Only NoSchedule,
 	// PreferNoSchedule, and NoExecute are allowed; omitted or empty effects are

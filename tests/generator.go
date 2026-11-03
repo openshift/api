@@ -155,12 +155,10 @@ func GenerateTestSuite(suiteSpec SuiteSpec) {
 // within the test suite test spec.
 func generateOnCreateTable(onCreateTests []OnCreateTestSpec) {
 	type onCreateTableInput struct {
-		expectedWarnings []string
-		fieldValidation  string
-		featureGate      string
-		initial          []byte
-		expected         []byte
-		expectedError    string
+		featureGate   string
+		initial       []byte
+		expected      []byte
+		expectedError string
 	}
 
 	// assertOnCreate runs the actual test for each table entry
@@ -168,10 +166,7 @@ func generateOnCreateTable(onCreateTests []OnCreateTestSpec) {
 		initialObj, err := newUnstructuredFrom(in.initial)
 		Expect(err).ToNot(HaveOccurred(), "initial data should be a valid Kubernetes YAML resource")
 
-		requestClient, warnings, err := clientForWarnings(cfg, k8sClient, in.expectedWarnings)
-		Expect(err).ToNot(HaveOccurred())
-		err = requestClient.Create(ctx, initialObj, &client.CreateOptions{FieldValidation: in.fieldValidation})
-		Expect(warnings.check(in.expectedWarnings)).To(Succeed())
+		err = k8sClient.Create(ctx, initialObj)
 		if in.expectedError != "" {
 			Expect(err).To(MatchError(ContainSubstring(in.expectedError)))
 			return
@@ -199,11 +194,9 @@ func generateOnCreateTable(onCreateTests []OnCreateTestSpec) {
 	// Convert the test specs into table entries
 	for _, testEntry := range onCreateTests {
 		tableEntries = append(tableEntries, Entry(testEntry.Name, onCreateTableInput{
-			expectedWarnings: testEntry.ExpectedWarnings,
-			fieldValidation:  testEntry.FieldValidation,
-			initial:          []byte(testEntry.Initial),
-			expected:         []byte(testEntry.Expected),
-			expectedError:    testEntry.ExpectedError,
+			initial:       []byte(testEntry.Initial),
+			expected:      []byte(testEntry.Expected),
+			expectedError: testEntry.ExpectedError,
 		}))
 	}
 
@@ -216,8 +209,6 @@ func generateOnCreateTable(onCreateTests []OnCreateTestSpec) {
 // within the test suite test spec.
 func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string) {
 	type onUpdateTableInput struct {
-		expectedWarnings    []string
-		fieldValidation     string
 		featureGate         string
 		crdPatches          []Patch
 		initial             []byte
@@ -320,10 +311,7 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string)
 		updatedObj.SetNamespace(gotObj.GetNamespace())
 		updatedObj.SetResourceVersion(gotObj.GetResourceVersion())
 
-		requestClient, warnings, err := clientForWarnings(cfg, k8sClient, in.expectedWarnings)
-		Expect(err).ToNot(HaveOccurred())
-		err = requestClient.Update(ctx, updatedObj, &client.UpdateOptions{FieldValidation: in.fieldValidation})
-		Expect(warnings.check(in.expectedWarnings)).To(Succeed())
+		err = k8sClient.Update(ctx, updatedObj)
 		if in.expectedError != "" {
 			Expect(err).To(MatchError(ContainSubstring(in.expectedError)))
 			return
@@ -360,8 +348,6 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string)
 	// Convert the test specs into table entries
 	for _, testEntry := range onUpdateTests {
 		tableEntries = append(tableEntries, Entry(testEntry.Name, onUpdateTableInput{
-			expectedWarnings:    testEntry.ExpectedWarnings,
-			fieldValidation:     testEntry.FieldValidation,
 			crdPatches:          testEntry.InitialCRDPatches,
 			initial:             []byte(testEntry.Initial),
 			updated:             []byte(testEntry.Updated),

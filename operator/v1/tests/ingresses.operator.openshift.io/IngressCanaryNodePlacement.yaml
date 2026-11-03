@@ -73,7 +73,7 @@ tests:
               operator: Exists
               effect: NoExecute
               tolerationSeconds: 60
-  - name: Should be able to create an Ingress with duplicate tolerations
+  - name: Should not be able to create an Ingress with duplicate tolerations
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress
@@ -91,6 +91,46 @@ tests:
               operator: Equal
               effect: NoSchedule
               value: value-1
+    expectedError: tolerations must not contain duplicates with the same key, operator, value, and effect
+  - name: Should not be able to create an Ingress with tolerations differing only in tolerationSeconds
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoExecute
+              value: value-1
+              tolerationSeconds: 60
+            - key: example.com/taint
+              operator: Equal
+              effect: NoExecute
+              value: value-1
+              tolerationSeconds: 120
+    expectedError: tolerations must not contain duplicates with the same key, operator, value, and effect
+  - name: Should be able to create an Ingress with overlapping tolerations
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              effect: NoSchedule
+              value: value-1
+            - key: example.com/taint
+              operator: Equal
+              effect: NoExecute
+              value: value-1
     expected: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress
@@ -106,7 +146,7 @@ tests:
               value: value-1
             - key: example.com/taint
               operator: Equal
-              effect: NoSchedule
+              effect: NoExecute
               value: value-1
   - name: Should be able to create an Ingress with both canary and gatewayAPI configuration
     initial: |
@@ -181,7 +221,7 @@ tests:
               operator: Exists
               effect: NoSchedule
               value: value-1
-    expectedError: tolerations value must be empty when operator is 'Exists'
+    expectedError: tolerations value must not be set when operator is 'Exists'
   - name: Should not be able to create an Ingress with an empty toleration key
     initial: |
       apiVersion: operator.openshift.io/v1
@@ -222,106 +262,106 @@ tests:
         canary:
           nodePlacement:
             tolerations:
-            - key: example.com/taint
+            - key: example.com/taint-1
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-2
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-3
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-4
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-5
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-6
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-7
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-8
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-9
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-10
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-11
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-12
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-13
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-14
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-15
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-16
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-17
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-18
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-19
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-20
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-21
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-22
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-23
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-24
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-25
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-26
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-27
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-28
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-29
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-30
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-31
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-32
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-33
               operator: Exists
               effect: NoSchedule
-    expectedError: must have at most 32 items
+    expectedError: spec.canary.nodePlacement.tolerations
   - name: Should not be able to create an Ingress with an empty tolerations list
     initial: |
       apiVersion: operator.openshift.io/v1
@@ -395,7 +435,7 @@ tests:
               value: value-1
               effect: ""
     expectedError: spec.canary.nodePlacement.tolerations[0].effect
-  - name: Should be able to create an Ingress with an Exists toleration with an empty value
+  - name: Should not be able to create an Ingress with a toleration with an empty value
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress
@@ -409,19 +449,7 @@ tests:
               operator: Exists
               effect: NoSchedule
               value: ""
-    expected: |
-      apiVersion: operator.openshift.io/v1
-      kind: Ingress
-      metadata:
-        name: cluster
-      spec:
-        canary:
-          nodePlacement:
-            tolerations:
-            - key: example.com/taint
-              operator: Exists
-              effect: NoSchedule
-              value: ""
+    expectedError: spec.canary.nodePlacement.tolerations[0].value
   - name: Should be able to create an Ingress with a PreferNoSchedule toleration
     initial: |
       apiVersion: operator.openshift.io/v1
@@ -459,100 +487,100 @@ tests:
         canary:
           nodePlacement:
             tolerations:
-            - key: example.com/taint
+            - key: example.com/taint-1
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-2
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-3
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-4
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-5
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-6
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-7
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-8
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-9
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-10
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-11
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-12
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-13
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-14
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-15
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-16
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-17
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-18
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-19
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-20
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-21
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-22
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-23
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-24
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-25
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-26
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-27
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-28
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-29
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-30
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-31
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-32
               operator: Exists
               effect: NoSchedule
     expected: |
@@ -564,100 +592,100 @@ tests:
         canary:
           nodePlacement:
             tolerations:
-            - key: example.com/taint
+            - key: example.com/taint-1
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-2
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-3
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-4
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-5
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-6
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-7
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-8
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-9
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-10
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-11
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-12
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-13
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-14
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-15
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-16
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-17
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-18
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-19
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-20
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-21
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-22
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-23
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-24
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-25
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-26
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-27
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-28
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-29
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-30
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-31
               operator: Exists
               effect: NoSchedule
-            - key: example.com/taint
+            - key: example.com/taint-32
               operator: Exists
               effect: NoSchedule
   - name: Should not be able to create an Ingress with the unsupported Lt toleration operator
@@ -1109,7 +1137,7 @@ tests:
               effect: NoSchedule
               value: value-1
     expectedError: tolerations key must be a qualified label key
-  - name: valid Equal value 0
+  - name: invalid Equal value 0
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress
@@ -1123,19 +1151,7 @@ tests:
               operator: Equal
               effect: NoSchedule
               value: ''
-    expected: |
-      apiVersion: operator.openshift.io/v1
-      kind: Ingress
-      metadata:
-        name: cluster
-      spec:
-        canary:
-          nodePlacement:
-            tolerations:
-            - key: example.com/taint
-              operator: Equal
-              effect: NoSchedule
-              value: ''
+    expectedError: spec.canary.nodePlacement.tolerations[0].value
   - name: valid Equal value 63
     initial: |
       apiVersion: operator.openshift.io/v1
@@ -1397,7 +1413,7 @@ tests:
               operator: Exists
               effect: NoSchedule
     expectedError: spec.canary.nodePlacement.tolerations[0].key
-  - name: Preserves ordered duplicates overlaps and indefinite finite zero negative durations
+  - name: Preserves ordered overlapping tolerations and indefinite finite zero negative durations
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress
@@ -1407,31 +1423,30 @@ tests:
         canary:
           nodePlacement:
             tolerations:
-            - key: example.com/taint
+            - key: example.com/taint-a
               operator: Exists
               effect: NoExecute
-            - key: example.com/taint
+            - key: example.com/taint-a
               operator: Exists
-              effect: NoExecute
-              tolerationSeconds: 30
-            - key: example.com/taint
+              effect: NoSchedule
+            - key: example.com/taint-a
               operator: Equal
-              effect: NoExecute
               value: value-1
+              effect: NoExecute
               tolerationSeconds: 90
-            - key: example.com/taint
+            - key: example.com/taint-b
               operator: Exists
               effect: NoExecute
               tolerationSeconds: 0
-            - key: example.com/taint
+            - key: example.com/taint-c
               operator: Exists
               effect: NoExecute
               tolerationSeconds: -1
-            - key: example.com/taint
+            - key: example.com/taint-d
               operator: Exists
               effect: NoExecute
               tolerationSeconds: 30
-            - key: example.com/taint
+            - key: example.com/taint-e
               operator: Exists
               effect: NoExecute
     expected: |
@@ -1443,31 +1458,30 @@ tests:
         canary:
           nodePlacement:
             tolerations:
-            - key: example.com/taint
+            - key: example.com/taint-a
               operator: Exists
               effect: NoExecute
-            - key: example.com/taint
+            - key: example.com/taint-a
               operator: Exists
-              effect: NoExecute
-              tolerationSeconds: 30
-            - key: example.com/taint
+              effect: NoSchedule
+            - key: example.com/taint-a
               operator: Equal
-              effect: NoExecute
               value: value-1
+              effect: NoExecute
               tolerationSeconds: 90
-            - key: example.com/taint
+            - key: example.com/taint-b
               operator: Exists
               effect: NoExecute
               tolerationSeconds: 0
-            - key: example.com/taint
+            - key: example.com/taint-c
               operator: Exists
               effect: NoExecute
               tolerationSeconds: -1
-            - key: example.com/taint
+            - key: example.com/taint-d
               operator: Exists
               effect: NoExecute
               tolerationSeconds: 30
-            - key: example.com/taint
+            - key: example.com/taint-e
               operator: Exists
               effect: NoExecute
   - name: Accepts 64 character single-label prefix
@@ -1594,7 +1608,7 @@ tests:
             - key: example.com/taint
               operator: Equal
               effect: NoSchedule
-  - name: Accepts Exists with explicit empty value
+  - name: Rejects Exists with explicit empty value
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress
@@ -1608,19 +1622,7 @@ tests:
               operator: Exists
               effect: NoSchedule
               value: ''
-    expected: |
-      apiVersion: operator.openshift.io/v1
-      kind: Ingress
-      metadata:
-        name: cluster
-      spec:
-        canary:
-          nodePlacement:
-            tolerations:
-            - key: example.com/taint
-              operator: Exists
-              effect: NoSchedule
-              value: ''
+    expectedError: spec.canary.nodePlacement.tolerations[0].value
   onUpdate:
   - name: Should be able to update the canary tolerations of an Ingress
     initial: |
@@ -2475,7 +2477,7 @@ tests:
               effect: NoSchedule
               value: value-1
     expectedError: tolerations key must be a qualified label key
-  - name: valid Equal value 0
+  - name: invalid Equal value 0
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress
@@ -2502,19 +2504,7 @@ tests:
               operator: Equal
               effect: NoSchedule
               value: ''
-    expected: |
-      apiVersion: operator.openshift.io/v1
-      kind: Ingress
-      metadata:
-        name: cluster
-      spec:
-        canary:
-          nodePlacement:
-            tolerations:
-            - key: example.com/taint
-              operator: Equal
-              effect: NoSchedule
-              value: ''
+    expectedError: spec.canary.nodePlacement.tolerations[0].value
   - name: valid Equal value 63
     initial: |
       apiVersion: operator.openshift.io/v1
@@ -2984,7 +2974,7 @@ tests:
               operator: Exists
               effect: NoSchedule
     expectedError: spec.canary.nodePlacement.tolerations[0].key
-  - name: Preserves ordered duplicates overlaps and indefinite finite zero negative durations
+  - name: Preserves ordered overlapping tolerations and indefinite finite zero negative durations
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress
@@ -2994,10 +2984,10 @@ tests:
         canary:
           nodePlacement:
             tolerations:
-            - key: example.com/taint
+            - key: example.com/taint-z
               operator: Equal
-              effect: NoSchedule
               value: value-1
+              effect: NoSchedule
     expected: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress
@@ -3007,31 +2997,30 @@ tests:
         canary:
           nodePlacement:
             tolerations:
-            - key: example.com/taint
+            - key: example.com/taint-a
               operator: Exists
               effect: NoExecute
-            - key: example.com/taint
+            - key: example.com/taint-a
               operator: Exists
-              effect: NoExecute
-              tolerationSeconds: 30
-            - key: example.com/taint
+              effect: NoSchedule
+            - key: example.com/taint-a
               operator: Equal
-              effect: NoExecute
               value: value-1
+              effect: NoExecute
               tolerationSeconds: 90
-            - key: example.com/taint
+            - key: example.com/taint-b
               operator: Exists
               effect: NoExecute
               tolerationSeconds: 0
-            - key: example.com/taint
+            - key: example.com/taint-c
               operator: Exists
               effect: NoExecute
               tolerationSeconds: -1
-            - key: example.com/taint
+            - key: example.com/taint-d
               operator: Exists
               effect: NoExecute
               tolerationSeconds: 30
-            - key: example.com/taint
+            - key: example.com/taint-e
               operator: Exists
               effect: NoExecute
     updated: |
@@ -3043,31 +3032,30 @@ tests:
         canary:
           nodePlacement:
             tolerations:
-            - key: example.com/taint
+            - key: example.com/taint-a
               operator: Exists
               effect: NoExecute
-            - key: example.com/taint
+            - key: example.com/taint-a
               operator: Exists
-              effect: NoExecute
-              tolerationSeconds: 30
-            - key: example.com/taint
+              effect: NoSchedule
+            - key: example.com/taint-a
               operator: Equal
-              effect: NoExecute
               value: value-1
+              effect: NoExecute
               tolerationSeconds: 90
-            - key: example.com/taint
+            - key: example.com/taint-b
               operator: Exists
               effect: NoExecute
               tolerationSeconds: 0
-            - key: example.com/taint
+            - key: example.com/taint-c
               operator: Exists
               effect: NoExecute
               tolerationSeconds: -1
-            - key: example.com/taint
+            - key: example.com/taint-d
               operator: Exists
               effect: NoExecute
               tolerationSeconds: 30
-            - key: example.com/taint
+            - key: example.com/taint-e
               operator: Exists
               effect: NoExecute
   - name: Accepts 64 character single-label prefix
@@ -3272,7 +3260,7 @@ tests:
             - key: example.com/taint
               operator: Equal
               effect: NoSchedule
-  - name: Accepts Exists with explicit empty value
+  - name: Rejects updating to Exists with explicit empty value
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Ingress
@@ -3299,16 +3287,4 @@ tests:
               operator: Exists
               effect: NoSchedule
               value: ''
-    expected: |
-      apiVersion: operator.openshift.io/v1
-      kind: Ingress
-      metadata:
-        name: cluster
-      spec:
-        canary:
-          nodePlacement:
-            tolerations:
-            - key: example.com/taint
-              operator: Exists
-              effect: NoSchedule
-              value: ''
+    expectedError: spec.canary.nodePlacement.tolerations[0].value

@@ -397,6 +397,9 @@
                         "name": "OpenStackMaxAllowedAddressPairs"
                     },
                     {
+                        "name": "RouteAdvertisementNodeSelector"
+                    },
+                    {
                         "name": "SELinuxMount"
                     },
                     {

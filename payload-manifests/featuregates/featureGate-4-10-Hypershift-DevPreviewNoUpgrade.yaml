@@ -394,6 +394,9 @@
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
+                        "name": "RouteAdvertisementNodeSelector"
+                    },
+                    {
                         "name": "SELinuxMount"
                     },
                     {

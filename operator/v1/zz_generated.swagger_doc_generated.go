@@ -807,6 +807,65 @@ func (DNSOverTLSConfig) SwaggerDoc() map[string]string {
 	return map_DNSOverTLSConfig
 }
 
+var map_DNSResponseAction = map[string]string{
+	"":         "DNSResponseAction specifies how CoreDNS answers a query matching a DNSResponseRule's query. Exactly one of a, cname, or nxdomain is set, as indicated by type.",
+	"type":     "type specifies which kind of response this rule synthesizes. Valid values are \"A\", \"CNAME\", and \"NXDOMAIN\".",
+	"a":        "a configures a synthesized A response. Required when type is A, forbidden otherwise.",
+	"cname":    "cname configures a synthesized CNAME response. Required when type is CNAME, forbidden otherwise.",
+	"nxdomain": "nxdomain configures a synthesized NXDOMAIN response. Required when type is NXDOMAIN, forbidden otherwise. nxdomain is only valid when the rule's query.name is an exact name, not a wildcard.",
+}
+
+func (DNSResponseAction) SwaggerDoc() map[string]string {
+	return map_DNSResponseAction
+}
+
+var map_DNSResponseActionA = map[string]string{
+	"":          "DNSResponseActionA configures a synthesized A response.",
+	"addresses": "addresses is the list of IPv4 addresses returned in the synthesized answer. At least 1 and at most 8 addresses may be specified, so that the answer fits in a 512-byte UDP response.",
+}
+
+func (DNSResponseActionA) SwaggerDoc() map[string]string {
+	return map_DNSResponseActionA
+}
+
+var map_DNSResponseActionCNAME = map[string]string{
+	"":       "DNSResponseActionCNAME configures a synthesized CNAME response.",
+	"target": "target is the lowercase DNS name the CNAME response points to. It must have at least two labels, at most 253 characters overall, and at most 63 characters per label. It must not include a trailing dot.",
+}
+
+func (DNSResponseActionCNAME) SwaggerDoc() map[string]string {
+	return map_DNSResponseActionCNAME
+}
+
+var map_DNSResponseActionNXDOMAIN = map[string]string{
+	"": "DNSResponseActionNXDOMAIN configures a synthesized NXDOMAIN response.",
+}
+
+func (DNSResponseActionNXDOMAIN) SwaggerDoc() map[string]string {
+	return map_DNSResponseActionNXDOMAIN
+}
+
+var map_DNSResponseQuery = map[string]string{
+	"":     "DNSResponseQuery selects the DNS name a DNSResponseRule answers.",
+	"name": "name is the DNS name this rule matches: either an exact name, or a name with exactly one leading wildcard label replacing the first name segment (e.g. \"*.example.com\"). It must be a lowercase DNS name with at least two labels, at most 253 characters overall, and at most 63 characters per label. It must not include a trailing dot. Rules cannot cover cluster.local, in-addr.arpa, or ip6.arpa, including a wildcard that matches one of those zones.",
+}
+
+func (DNSResponseQuery) SwaggerDoc() map[string]string {
+	return map_DNSResponseQuery
+}
+
+var map_DNSResponseRule = map[string]string{
+	"":           "DNSResponseRule configures CoreDNS to return a custom A, CNAME, or NXDOMAIN response for queries matching query.name. An exact-name CNAME cannot target itself because CoreDNS would repeatedly resolve the same name.",
+	"name":       "name uniquely identifies this rule within spec.responseRules.",
+	"query":      "query selects the DNS name this rule answers: an exact name, or a name with exactly one leading wildcard label (e.g. \"*.example.com\").",
+	"ttlSeconds": "ttlSeconds is the TTL, in seconds, included in synthesized answers.\n\nWhen omitted, this means no opinion and the platform chooses a reasonable default, which is subject to change over time. The current default is 60. Valid values are 30-3600.",
+	"action":     "action specifies how matching queries are answered. Exactly one of a, cname, or nxdomain is set, as indicated by action.type.",
+}
+
+func (DNSResponseRule) SwaggerDoc() map[string]string {
+	return map_DNSResponseRule
+}
+
 var map_DNSSpec = map[string]string{
 	"":                  "DNSSpec is the specification of the desired behavior of the DNS.",
 	"servers":           "servers is a list of DNS resolvers that provide name query delegation for one or more subdomains outside the scope of the cluster domain. If servers consists of more than one Server, longest suffix match will be used to determine the Server.\n\nFor example, if there are two Servers, one for \"foo.com\" and another for \"a.foo.com\", and the name query is for \"www.a.foo.com\", it will be routed to the Server with Zone \"a.foo.com\".\n\nIf this field is nil, no servers are created.",
@@ -816,6 +875,8 @@ var map_DNSSpec = map[string]string{
 	"operatorLogLevel":  "operatorLogLevel controls the logging level of the DNS Operator. Valid values are: \"Normal\", \"Debug\", \"Trace\". Defaults to \"Normal\". setting operatorLogLevel: Trace will produce extremely verbose logs.",
 	"logLevel":          "logLevel describes the desired logging verbosity for CoreDNS. Any one of the following values may be specified: * Normal logs errors from upstream resolvers. * Debug logs errors, NXDOMAIN responses, and NODATA responses. * Trace logs errors and all responses.\n Setting logLevel: Trace will produce extremely verbose logs.\nValid values are: \"Normal\", \"Debug\", \"Trace\". Defaults to \"Normal\".",
 	"cache":             "cache describes the caching configuration that applies to all server blocks listed in the Corefile. This field allows a cluster admin to optionally configure: * positiveTTL which is a duration for which positive responses should be cached. * negativeTTL which is a duration for which negative responses should be cached. If this is not configured, OpenShift will configure positive and negative caching with a default value that is subject to change. At the time of writing, the default positiveTTL is 900 seconds and the default negativeTTL is 30 seconds or as noted in the respective Corefile for your version of OpenShift.",
+	"template":          "template is an optional configuration for custom DNS query handling via the CoreDNS template plugin. The template defines how to handle queries matching specific zones and query types.\n\nThe template applies to all domains (custom domains from spec.servers and the cluster domain) to ensure consistent DNS resolution across all paths.\n\nWhen this field is not set, no template plugin configuration is added to CoreDNS.",
+	"responseRules":     "responseRules is an optional list of rules that configure CoreDNS to return custom A, CNAME, or NXDOMAIN responses for specific DNS names.\n\nEach rule answers every query type for the names it matches: an A rule returns its addresses for A queries and an empty NOERROR response for other types, a CNAME rule returns the CNAME for every type, and an NXDOMAIN rule returns NXDOMAIN for every type.\n\nAn exact-name rule always takes precedence over a wildcard rule for the same query. A wildcard replaces exactly one leading label, so distinct wildcard patterns never match the same name. Queries that do not match any rule continue through normal CoreDNS resolution.\n\nresponseRules apply only to the default server block; they do not affect spec.servers or spec.template.\n\nWhen this field is not set, no response rule configuration is added to CoreDNS. At most 100 rules may be configured. Each query name may appear only once, regardless of action.",
 }
 
 func (DNSSpec) SwaggerDoc() map[string]string {
@@ -831,6 +892,27 @@ var map_DNSStatus = map[string]string{
 
 func (DNSStatus) SwaggerDoc() map[string]string {
 	return map_DNSStatus
+}
+
+var map_DNSTemplate = map[string]string{
+	"":           "DNSTemplate defines a template for custom DNS query handling via the CoreDNS template plugin. DNSTemplate enables filtering or custom responses for DNS queries matching specific zones and query types.",
+	"zones":      "zones specifies the DNS zones this template applies to. Each zone must be a valid DNS name as defined in RFC 1123. The special zone \".\" matches all domains (catch-all). Multiple zones can be specified to apply the same template actions to multiple domains. At least 1 and at most 15 zones may be specified.\n\nNote: root zone (\".\") includes cluster domain (cluster.local); use specific zones to avoid impacting IPv6 queries in IPv6 or dual-stack clusters.\n\nExamples: - [\".\"] matches all domains (catch-all for global AAAA filtering) - [\"example.com\"] matches only example.com and its subdomains - [\"example.com\", \"test.com\"] matches both domains and their subdomains",
+	"queryType":  "queryType specifies the DNS query type to match. Valid values are \"AAAA\".",
+	"queryClass": "queryClass specifies the DNS query class to match. Valid values are \"IN\".",
+	"action":     "action defines how to handle queries matching this template's zones and query type. The action builds a single DNS response by specifying the response code and may be extended by additional fields in the future.",
+}
+
+func (DNSTemplate) SwaggerDoc() map[string]string {
+	return map_DNSTemplate
+}
+
+var map_DNSTemplateAction = map[string]string{
+	"":      "DNSTemplateAction defines how to construct a DNS response for queries matching the template.",
+	"rcode": "rcode is the DNS response code to return. Valid values are \"NOERROR\".\n\nThe template returns a response with no answer records. For AAAA filtering, this means IPv6 address queries return successfully but with no IPv6 addresses, causing clients to fall back to IPv4 (A record) queries.",
+}
+
+func (DNSTemplateAction) SwaggerDoc() map[string]string {
+	return map_DNSTemplateAction
 }
 
 var map_DNSTransportConfig = map[string]string{

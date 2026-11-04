@@ -241,6 +241,14 @@ var (
 							enable(inClusterProfile(SelfManaged), inDevPreviewNoUpgrade(), inCustomNoUpgrade()).
 							mustRegister()
 
+	FeatureGateDNSTemplatePlugin = newFeatureGate("DNSTemplatePlugin").
+					reportProblemsToJiraComponent("dns").
+					contactPerson("grzpiotrowski").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1936").
+					enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+					mustRegister()
+
 	FeatureGateImageModeStatusReporting = newFeatureGate("ImageModeStatusReporting").
 						reportProblemsToJiraComponent("MachineConfigOperator").
 						contactPerson("ijanssen").

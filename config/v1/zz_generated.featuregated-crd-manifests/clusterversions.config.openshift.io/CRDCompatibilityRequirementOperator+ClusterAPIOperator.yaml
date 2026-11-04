@@ -9,6 +9,7 @@ metadata:
     feature-gate.release.openshift.io/CRDCompatibilityRequirementOperator: "true"
     feature-gate.release.openshift.io/ClusterAPIOperator: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/bootstrap-required: "true"
   name: clusterversions.config.openshift.io
 spec:
   group: config.openshift.io

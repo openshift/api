@@ -1,0 +1,362 @@
+apiVersion: apiextensions.k8s.io/v1
+name: "ClusterMonitoring zero resource quantities"
+crdName: clustermonitorings.config.openshift.io
+featureGate: ClusterMonitoringConfig
+tests:
+  onCreate:
+    - name: Should accept numeric zero request and string limit for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: 0
+                limit: "100m"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: 0
+                limit: "100m"
+    - name: Should accept string zero request and numeric limit for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "0"
+                limit: 1
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "0"
+                limit: 1
+    - name: Should accept equivalent mixed quantities for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: 1
+                limit: "1000m"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: 1
+                limit: "1000m"
+    - name: Should reject mixed quantities with smaller string limit for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: 1
+                limit: "999m"
+      expectedError: 'request and limit must be non-negative quantities'
+    - name: Should reject mixed quantities with smaller numeric limit for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "1001m"
+                limit: 1
+      expectedError: 'request and limit must be non-negative quantities'
+    - name: Should reject negative fractional quantity for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "-1n"
+      expectedError: 'request and limit must be non-negative quantities'
+    - name: Should accept positive fractional quantity for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "1n"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "1n"
+    - name: Should accept zero with unit for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "0m"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "0m"
+    - name: Should accept omitted limit for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "0"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "0"
+    - name: Should accept omitted request for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                limit: "0"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                limit: "0"
+    - name: Should accept both zero quantities for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "0"
+                limit: "0"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "0"
+                limit: "0"
+    - name: Should accept numeric zero quantities for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: 0
+                limit: 0
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: 0
+                limit: 0
+    - name: Should accept zero request with positive limit for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "0"
+                limit: "100m"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "0"
+                limit: "100m"
+    - name: Should accept positive quantities for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "100m"
+                limit: "200m"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "100m"
+                limit: "200m"
+    - name: Should reject negative request for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "-1"
+      expectedError: 'request and limit must be non-negative quantities'
+    - name: Should reject negative limit for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                limit: "-1"
+      expectedError: 'request and limit must be non-negative quantities'
+    - name: Should reject limit below request for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "100m"
+                limit: "0"
+      expectedError: 'request and limit must be non-negative quantities'
+    - name: Should reject numeric limit below request for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: 1
+                limit: 0
+      expectedError: 'request and limit must be non-negative quantities'
+    - name: Should reject both fields omitted for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+      expectedError: 'at least one of request or limit must be set'
+    - name: Should reject malformed quantity for resource quantity presence
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "not-a-quantity"
+      expectedError: 'spec.prometheusConfig.resources[0].request'

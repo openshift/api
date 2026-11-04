@@ -321,6 +321,36 @@ func (in DNSOverTLSConfig) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in DNSResponseAction) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.DNSResponseAction"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in DNSResponseActionA) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.DNSResponseActionA"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in DNSResponseActionCNAME) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.DNSResponseActionCNAME"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in DNSResponseActionNXDOMAIN) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.DNSResponseActionNXDOMAIN"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in DNSResponseQuery) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.DNSResponseQuery"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in DNSResponseRule) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.DNSResponseRule"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in DNSSpec) OpenAPIModelName() string {
 	return "com.github.openshift.api.operator.v1.DNSSpec"
 }
@@ -328,6 +358,16 @@ func (in DNSSpec) OpenAPIModelName() string {
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in DNSStatus) OpenAPIModelName() string {
 	return "com.github.openshift.api.operator.v1.DNSStatus"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in DNSTemplate) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.DNSTemplate"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in DNSTemplateAction) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.DNSTemplateAction"
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.

@@ -19,3 +19,30 @@ tests:
             upstreams:
             - port: 53
               type: SystemResolvConf
+    - name: Should preserve duplicate forwarding upstreams without the feature gate
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          servers:
+          - name: example
+            zones: ["example.com"]
+            forwardPlugin:
+              upstreams: ["192.0.2.2", "192.0.2.2"]
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          servers:
+          - name: example
+            zones: ["example.com"]
+            forwardPlugin:
+              policy: Random
+              upstreams: ["192.0.2.2", "192.0.2.2"]

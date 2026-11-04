@@ -6,6 +6,7 @@ metadata:
     api.openshift.io/merged-by-featuregates: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: CustomNoUpgrade
   name: dnses.operator.openshift.io
 spec:
   group: operator.openshift.io
@@ -204,6 +205,194 @@ spec:
                 - Debug
                 - Trace
                 type: string
+              responseRules:
+                description: |-
+                  responseRules is an optional list of rules that configure CoreDNS to
+                  return custom A, CNAME, or NXDOMAIN responses for specific DNS names.
+
+                  Rules are evaluated independently; an exact-name rule always takes
+                  precedence over a wildcard rule for the same query, and among
+                  wildcard rules the most specific match wins. Queries that do not
+                  match any rule continue through normal CoreDNS resolution.
+
+                  responseRules apply only to the default server block; they do not
+                  affect spec.servers or spec.template.
+
+                  When this field is not set, no response rule configuration is added
+                  to CoreDNS.
+                  At most 100 rules may be configured. Each query name may appear only
+                  once. An exact A rule cannot overlap a wildcard CNAME rule because
+                  the wildcard would also answer AAAA and CNAME queries for that name.
+                items:
+                  description: |-
+                    DNSResponseRule configures CoreDNS to return a custom A, CNAME, or
+                    NXDOMAIN response for queries matching query.name.
+                    An exact-name CNAME cannot target itself because CoreDNS would repeatedly
+                    resolve the same name.
+                  properties:
+                    action:
+                      description: |-
+                        action specifies how matching queries are answered. Exactly one of
+                        a, cname, or nxdomain is set, as indicated by action.type.
+                      properties:
+                        a:
+                          description: |-
+                            a configures a synthesized A response. Required when type is A,
+                            forbidden otherwise.
+                          properties:
+                            addresses:
+                              description: |-
+                                addresses is the list of IPv4 addresses returned in the synthesized
+                                answer. At least 1 and at most 10 addresses may be specified.
+                              items:
+                                description: |-
+                                  IPv4Address is an IPv4 address in dotted-decimal notation, with four
+                                  decimal octets from 0 to 255 and no leading zeroes in multi-digit octets.
+                                  It must be 7-15 characters long.
+                                maxLength: 15
+                                minLength: 7
+                                type: string
+                                x-kubernetes-validations:
+                                - message: address must be an IPv4 address in dotted-decimal
+                                    notation
+                                  rule: isIP(self) && ip(self).family() == 4 && ip.isCanonical(self)
+                              maxItems: 10
+                              minItems: 1
+                              type: array
+                              x-kubernetes-list-type: set
+                          required:
+                          - addresses
+                          type: object
+                        cname:
+                          description: |-
+                            cname configures a synthesized CNAME response. Required when type
+                            is CNAME, forbidden otherwise.
+                          properties:
+                            target:
+                              description: |-
+                                target is the lowercase DNS name the CNAME response points to. It must
+                                have at least two labels, at most 253 characters overall, and at most
+                                63 characters per label. It must not include a trailing dot.
+                              maxLength: 253
+                              minLength: 3
+                              type: string
+                              x-kubernetes-validations:
+                              - message: CNAME target must be a lowercase DNS name
+                                rule: size(self.split('.')) >= 2 && !format.dns1123Subdomain().validate(self).hasValue()
+                              - message: each DNS label must be at most 63 characters
+                                rule: self.split('.').all(label, size(label) <= 63)
+                          required:
+                          - target
+                          type: object
+                        nxdomain:
+                          description: |-
+                            nxdomain configures a synthesized NXDOMAIN response. Required when
+                            type is NXDOMAIN, forbidden otherwise. nxdomain is only valid when
+                            the rule's query.name is an exact name, not a wildcard.
+                          type: object
+                        type:
+                          description: |-
+                            type specifies which kind of response this rule synthesizes.
+                            Valid values are "A", "CNAME", and "NXDOMAIN".
+                          enum:
+                          - A
+                          - CNAME
+                          - NXDOMAIN
+                          type: string
+                      required:
+                      - type
+                      type: object
+                      x-kubernetes-validations:
+                      - message: a must be set if type is 'A', but remain unset otherwise
+                        rule: 'self.type == ''A'' ? has(self.a) : !has(self.a)'
+                      - message: cname must be set if type is 'CNAME', but remain
+                          unset otherwise
+                        rule: 'self.type == ''CNAME'' ? has(self.cname) : !has(self.cname)'
+                      - message: nxdomain must be set if type is 'NXDOMAIN', but remain
+                          unset otherwise
+                        rule: 'self.type == ''NXDOMAIN'' ? has(self.nxdomain) : !has(self.nxdomain)'
+                    name:
+                      description: name uniquely identifies this rule within spec.responseRules.
+                      maxLength: 63
+                      minLength: 1
+                      type: string
+                      x-kubernetes-validations:
+                      - message: rule name must be a lowercase DNS label
+                        rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
+                    query:
+                      description: |-
+                        query selects the DNS name this rule answers: an exact name, or a
+                        name with exactly one leading wildcard label (e.g. "*.example.com").
+                      properties:
+                        name:
+                          description: |-
+                            name is the DNS name this rule matches: either an exact name, or a
+                            name with exactly one leading wildcard label replacing the first
+                            name segment (e.g. "*.example.com"). It must be a lowercase DNS name
+                            with at least two labels, at most 253 characters overall, and at most
+                            63 characters per label. It must not include a trailing dot.
+                            Rules cannot cover cluster.local, in-addr.arpa, or ip6.arpa, including
+                            a wildcard that matches one of those zones.
+                          maxLength: 253
+                          minLength: 3
+                          type: string
+                          x-kubernetes-validations:
+                          - message: query name must be a lowercase DNS name with
+                              an optional single leading wildcard label
+                            rule: 'self.startsWith(''*.'') ? size(self.split(''.''))
+                              >= 3 && !format.dns1123Subdomain().validate(self.substring(2)).hasValue()
+                              : size(self.split(''.'')) >= 2 && !format.dns1123Subdomain().validate(self).hasValue()'
+                          - message: each DNS label must be at most 63 characters
+                            rule: self.split('.').all(label, size(label) <= 63)
+                          - message: response rules must not cover cluster.local or
+                              reverse DNS zones
+                            rule: '!(self == ''cluster.local'' || self.endsWith(''.cluster.local'')
+                              || self == ''*.local'' || self == ''in-addr.arpa'' ||
+                              self.endsWith(''.in-addr.arpa'') || self == ''ip6.arpa''
+                              || self.endsWith(''.ip6.arpa'') || self == ''*.arpa'')'
+                      required:
+                      - name
+                      type: object
+                    ttlSeconds:
+                      default: 60
+                      description: |-
+                        ttlSeconds is the TTL, in seconds, included in synthesized answers.
+
+                        When omitted, this means no opinion and the platform chooses a
+                        reasonable default, which is subject to change over time. The
+                        current default is 60. Valid values are 30-3600.
+                      format: int32
+                      maximum: 3600
+                      minimum: 30
+                      type: integer
+                  required:
+                  - action
+                  - name
+                  - query
+                  type: object
+                  x-kubernetes-validations:
+                  - message: nxdomain is only valid when query.name is an exact name,
+                      not a wildcard
+                    rule: 'self.action.type == ''NXDOMAIN'' ? !self.query.name.startsWith(''*.'')
+                      : true'
+                  - message: an exact-name CNAME rule must not target its own query
+                      name
+                    rule: '!has(self.action.cname) || self.query.name.startsWith(''*.'')
+                      || self.action.cname.target != self.query.name'
+                maxItems: 100
+                minItems: 0
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
+                x-kubernetes-validations:
+                - message: responseRules must have distinct query names
+                  rule: self.all(r, self.exists_one(other, r.query.name == other.query.name))
+                - message: an exact A rule must not overlap a wildcard CNAME rule
+                  rule: self.all(a, a.action.type != 'A' || a.query.name.startsWith('*.')
+                    || self.all(c, c.action.type != 'CNAME' || !c.query.name.startsWith('*.')
+                    || !(a.query.name.endsWith(c.query.name.substring(1)) && !a.query.name.substring(0,
+                    size(a.query.name) - size(c.query.name) + 1).contains('.'))))
               servers:
                 description: |-
                   servers is a list of DNS resolvers that provide name query delegation for one or
@@ -353,6 +542,88 @@ spec:
                       type: array
                   type: object
                 type: array
+              template:
+                description: |-
+                  template is an optional configuration for custom DNS query handling via the CoreDNS template plugin.
+                  The template defines how to handle queries matching specific zones and query types.
+
+                  The template applies to all domains (custom domains from spec.servers and the cluster domain)
+                  to ensure consistent DNS resolution across all paths.
+
+                  When this field is not set, no template plugin configuration is added to CoreDNS.
+                properties:
+                  action:
+                    description: |-
+                      action defines how to handle queries matching this template's zones and query type.
+                      The action builds a single DNS response by specifying the response code and may be
+                      extended by additional fields in the future.
+                    properties:
+                      rcode:
+                        description: |-
+                          rcode is the DNS response code to return.
+                          Valid values are "NOERROR".
+
+                          The template returns a response with no answer records. For AAAA filtering,
+                          this means IPv6 address queries return successfully but with no IPv6 addresses,
+                          causing clients to fall back to IPv4 (A record) queries.
+                        enum:
+                        - NOERROR
+                        type: string
+                    required:
+                    - rcode
+                    type: object
+                  queryClass:
+                    description: |-
+                      queryClass specifies the DNS query class to match.
+                      Valid values are "IN".
+                    enum:
+                    - IN
+                    type: string
+                  queryType:
+                    description: |-
+                      queryType specifies the DNS query type to match.
+                      Valid values are "AAAA".
+                    enum:
+                    - AAAA
+                    type: string
+                  zones:
+                    description: |-
+                      zones specifies the DNS zones this template applies to.
+                      Each zone must be a valid DNS name as defined in RFC 1123.
+                      The special zone "." matches all domains (catch-all).
+                      Multiple zones can be specified to apply the same template actions to multiple domains.
+                      At least 1 and at most 15 zones may be specified.
+
+                      Note: root zone (".") includes cluster domain (cluster.local); use specific zones to avoid impacting IPv6 queries in IPv6 or dual-stack clusters.
+
+                      Examples:
+                      - ["."] matches all domains (catch-all for global AAAA filtering)
+                      - ["example.com"] matches only example.com and its subdomains
+                      - ["example.com", "test.com"] matches both domains and their subdomains
+                    items:
+                      description: |-
+                        Zone is a DNS zone name. It must be either "." (catch-all) or a valid RFC1123 subdomain.
+                        Valid RFC1123 subdomains consist of lowercase alphanumeric characters, hyphens, and dots.
+                        Labels cannot start or end with hyphens and must be 1-63 characters each.
+                        The entire value must be 1-253 characters long.
+                      maxLength: 253
+                      minLength: 1
+                      type: string
+                      x-kubernetes-validations:
+                      - message: zone must be '.' or a valid lowercase DNS subdomain
+                        rule: self == '.' || !format.dns1123Subdomain().validate(self).hasValue()
+                      - message: each DNS label must be at most 63 characters
+                        rule: self.split('.').all(label, size(label) <= 63)
+                    maxItems: 15
+                    minItems: 1
+                    type: array
+                    x-kubernetes-list-type: set
+                required:
+                - action
+                - queryClass
+                - queryType
+                - zones
+                type: object
               upstreamResolvers:
                 default: {}
                 description: |-

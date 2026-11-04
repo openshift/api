@@ -229,6 +229,9 @@
                         "name": "DNSNameResolver"
                     },
                     {
+                        "name": "DNSTemplatePlugin"
+                    },
+                    {
                         "name": "DRADeviceTaintRules"
                     },
                     {

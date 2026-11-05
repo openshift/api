@@ -433,7 +433,7 @@
                         "name": "VSphereMultiVCenterDay2"
                     },
                     {
-                        "name": "VSpherePerComponentScopedCreds"
+                        "name": "VSpherePerComponentScopedCredsInstall"
                     }
                 ],
                 "version": ""

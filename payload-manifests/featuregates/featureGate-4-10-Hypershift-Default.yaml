@@ -341,7 +341,7 @@
                         "name": "BuildCSIVolumes"
                     },
                     {
-                        "name": "EVPN"
+                        "name": "DualReplica"
                     },
                     {
                         "name": "EtcdBackendQuota"

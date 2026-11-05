@@ -557,6 +557,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.BackupSpec{}.OpenAPIModelName():                                         schema_openshift_api_config_v1alpha1_BackupSpec(ref),
 		configv1alpha1.BackupStatus{}.OpenAPIModelName():                                       schema_openshift_api_config_v1alpha1_BackupStatus(ref),
 		configv1alpha1.BasicAuth{}.OpenAPIModelName():                                          schema_openshift_api_config_v1alpha1_BasicAuth(ref),
+		configv1alpha1.BodySizeEnforcement{}.OpenAPIModelName():                                schema_openshift_api_config_v1alpha1_BodySizeEnforcement(ref),
+		configv1alpha1.BodySizeEnforcementCustomConfig{}.OpenAPIModelName():                    schema_openshift_api_config_v1alpha1_BodySizeEnforcementCustomConfig(ref),
 		configv1alpha1.CertificateConfig{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_CertificateConfig(ref),
 		configv1alpha1.ClusterMonitoring{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_ClusterMonitoring(ref),
 		configv1alpha1.ClusterMonitoringList{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ClusterMonitoringList(ref),
@@ -24867,6 +24869,69 @@ func schema_openshift_api_config_v1alpha1_BasicAuth(ref common.ReferenceCallback
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_BodySizeEnforcement(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BodySizeEnforcement configures the maximum size of the response body accepted from a scraped target. When mode is Custom, the custom field must be set, and it is forbidden otherwise.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode selects how the scrape response size limit is determined. This field is required. Valid values are Automatic, Custom and None. When set to Automatic, the Cluster Monitoring Operator calculates an appropriate limit based on cluster pod capacity. When set to Custom, the limit is taken from the custom field. When set to None, no limit is configured.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"custom": {
+						SchemaProps: spec.SchemaProps{
+							Description: "custom defines a fixed scrape response size limit. Required when mode is Custom, and forbidden otherwise.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.BodySizeEnforcementCustomConfig{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "mode",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"custom": "Custom",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.BodySizeEnforcementCustomConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_BodySizeEnforcementCustomConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BodySizeEnforcementCustomConfig defines a fixed scrape response size limit.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"maxSizeBytes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxSizeBytes defines the maximum size in bytes of the response body accepted from a scraped target. If a scraped target's body response is larger than the limit, the scrape will fail. This helps protect Prometheus from targets that return excessively large responses. The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB). Minimum value is 10240 (10kB). Maximum value is 1073741824 (1GB). This field is required.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+				Required: []string{"maxSizeBytes"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_CertificateConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27295,19 +27360,11 @@ func schema_openshift_api_config_v1alpha1_PrometheusConfig(ref common.ReferenceC
 							},
 						},
 					},
-					"enforcedBodySizeLimitBytes": {
+					"bodySizeEnforcement": {
 						SchemaProps: spec.SchemaProps{
-							Description: "enforcedBodySizeLimitBytes enforces a body size limit (in bytes) for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. This helps protect Prometheus from targets that return excessively large responses. The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB). May be set when enforcedBodySizeLimitMode is Explicit or omitted, and is required for Explicit. Must be omitted when enforcedBodySizeLimitMode is Automatic or Disabled. When omitted, enforcedBodySizeLimitMode determines the behavior. If both fields are omitted, the existing ConfigMap setting is preserved, or no limit is configured if absent. Minimum value is 10240 (10kB). Maximum value is 1073741824 (1GB).",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"enforcedBodySizeLimitMode": {
-						SchemaProps: spec.SchemaProps{
-							Description: "enforcedBodySizeLimitMode optionally selects how the scrape response size limit is determined. Valid values are Automatic, Explicit and Disabled. Automatic calculates a limit based on cluster pod capacity and forbids enforcedBodySizeLimitBytes. Explicit requires enforcedBodySizeLimitBytes and uses that fixed limit. Disabled configures no limit and forbids enforcedBodySizeLimitBytes. An existing prometheusK8s section in the ConfigMap takes precedence over these CRD settings. When omitted, enforcedBodySizeLimitBytes is used if set; otherwise the existing ConfigMap setting is preserved, or no limit is configured if absent.\n\nPossible enum values:\n - `\"Automatic\"` calculates the limit from cluster pod capacity.\n - `\"Disabled\"` configures no limit.\n - `\"Explicit\"` uses the configured byte limit.",
-							Type:        []string{"string"},
-							Format:      "",
-							Enum:        []interface{}{"Automatic", "Disabled", "Explicit"},
+							Description: "bodySizeEnforcement configures the maximum size of the response body accepted from a scraped target. If a scraped target's body response is larger than the limit, the scrape will fail. This helps protect Prometheus from targets that return excessively large responses. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is to calculate the limit automatically based on cluster capacity. An existing prometheusK8s section in the ConfigMap takes precedence over this setting.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.BodySizeEnforcement{}.OpenAPIModelName()),
 						},
 					},
 					"externalLabels": {
@@ -27466,7 +27523,7 @@ func schema_openshift_api_config_v1alpha1_PrometheusConfig(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			configv1alpha1.AdditionalAlertmanagerConfig{}.OpenAPIModelName(), configv1alpha1.ContainerResource{}.OpenAPIModelName(), configv1alpha1.Label{}.OpenAPIModelName(), configv1alpha1.RemoteWriteSpec{}.OpenAPIModelName(), configv1alpha1.Retention{}.OpenAPIModelName(), corev1.PersistentVolumeClaim{}.OpenAPIModelName(), corev1.Toleration{}.OpenAPIModelName(), corev1.TopologySpreadConstraint{}.OpenAPIModelName()},
+			configv1alpha1.AdditionalAlertmanagerConfig{}.OpenAPIModelName(), configv1alpha1.BodySizeEnforcement{}.OpenAPIModelName(), configv1alpha1.ContainerResource{}.OpenAPIModelName(), configv1alpha1.Label{}.OpenAPIModelName(), configv1alpha1.RemoteWriteSpec{}.OpenAPIModelName(), configv1alpha1.Retention{}.OpenAPIModelName(), corev1.PersistentVolumeClaim{}.OpenAPIModelName(), corev1.Toleration{}.OpenAPIModelName(), corev1.TopologySpreadConstraint{}.OpenAPIModelName()},
 	}
 }
 

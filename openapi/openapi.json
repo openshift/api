@@ -13328,6 +13328,46 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.BodySizeEnforcement": {
+      "description": "BodySizeEnforcement configures the maximum size of the response body accepted from a scraped target. When mode is Custom, the custom field must be set, and it is forbidden otherwise.",
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "custom": {
+          "description": "custom defines a fixed scrape response size limit. Required when mode is Custom, and forbidden otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.BodySizeEnforcementCustomConfig"
+        },
+        "mode": {
+          "description": "mode selects how the scrape response size limit is determined. This field is required. Valid values are Automatic, Custom and None. When set to Automatic, the Cluster Monitoring Operator calculates an appropriate limit based on cluster pod capacity. When set to Custom, the limit is taken from the custom field. When set to None, no limit is configured.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "mode",
+          "fields-to-discriminateBy": {
+            "custom": "Custom"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.config.v1alpha1.BodySizeEnforcementCustomConfig": {
+      "description": "BodySizeEnforcementCustomConfig defines a fixed scrape response size limit.",
+      "type": "object",
+      "required": [
+        "maxSizeBytes"
+      ],
+      "properties": {
+        "maxSizeBytes": {
+          "description": "maxSizeBytes defines the maximum size in bytes of the response body accepted from a scraped target. If a scraped target's body response is larger than the limit, the scrape will fail. This helps protect Prometheus from targets that return excessively large responses. The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB). Minimum value is 10240 (10kB). Maximum value is 1073741824 (1GB). This field is required.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.ClusterMonitoring": {
       "description": "ClusterMonitoring is the Custom Resource object which holds the current status of Cluster Monitoring Operator. CMO is a central component of the monitoring stack.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
       "type": "object",
@@ -14888,23 +14928,14 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "bodySizeEnforcement": {
+          "description": "bodySizeEnforcement configures the maximum size of the response body accepted from a scraped target. If a scraped target's body response is larger than the limit, the scrape will fail. This helps protect Prometheus from targets that return excessively large responses. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is to calculate the limit automatically based on cluster capacity. An existing prometheusK8s section in the ConfigMap takes precedence over this setting.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.BodySizeEnforcement"
+        },
         "collectionProfile": {
           "description": "collectionProfile defines the metrics collection profile that Prometheus uses to collect metrics from the platform components. Supported values are `Full` or `Minimal`. In the `Full` profile (default), Prometheus collects all metrics that are exposed by the platform components. In the `Minimal` profile, Prometheus only collects metrics necessary for the default platform alerts, recording rules, telemetry and console dashboards. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is `Full`.",
           "type": "string"
-        },
-        "enforcedBodySizeLimitBytes": {
-          "description": "enforcedBodySizeLimitBytes enforces a body size limit (in bytes) for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. This helps protect Prometheus from targets that return excessively large responses. The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB). May be set when enforcedBodySizeLimitMode is Explicit or omitted, and is required for Explicit. Must be omitted when enforcedBodySizeLimitMode is Automatic or Disabled. When omitted, enforcedBodySizeLimitMode determines the behavior. If both fields are omitted, the existing ConfigMap setting is preserved, or no limit is configured if absent. Minimum value is 10240 (10kB). Maximum value is 1073741824 (1GB).",
-          "type": "integer",
-          "format": "int64"
-        },
-        "enforcedBodySizeLimitMode": {
-          "description": "enforcedBodySizeLimitMode optionally selects how the scrape response size limit is determined. Valid values are Automatic, Explicit and Disabled. Automatic calculates a limit based on cluster pod capacity and forbids enforcedBodySizeLimitBytes. Explicit requires enforcedBodySizeLimitBytes and uses that fixed limit. Disabled configures no limit and forbids enforcedBodySizeLimitBytes. An existing prometheusK8s section in the ConfigMap takes precedence over these CRD settings. When omitted, enforcedBodySizeLimitBytes is used if set; otherwise the existing ConfigMap setting is preserved, or no limit is configured if absent.\n\nPossible enum values:\n - `\"Automatic\"` calculates the limit from cluster pod capacity.\n - `\"Disabled\"` configures no limit.\n - `\"Explicit\"` uses the configured byte limit.",
-          "type": "string",
-          "enum": [
-            "Automatic",
-            "Disabled",
-            "Explicit"
-          ]
         },
         "externalLabels": {
           "description": "externalLabels defines labels to be attached to time series and alerts when communicating with external systems such as federation, remote storage, and Alertmanager. These labels are not stored with metrics on disk; they are only added when data leaves Prometheus (e.g., during federation queries, remote write, or alert notifications). At least 1 label must be specified when set, with a maximum of 50 labels allowed. Each label key must be unique within this list. When omitted, no external labels are applied.",

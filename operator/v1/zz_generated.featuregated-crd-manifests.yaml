@@ -361,6 +361,7 @@ networks.operator.openshift.io:
   Category: ""
   FeatureGates:
   - NoOverlayMode
+  - OVNKubernetesStartupReadinessTimeout
   - OVNKubernetesUplinkMode
   FilenameOperatorName: network
   FilenameOperatorOrdering: "01"

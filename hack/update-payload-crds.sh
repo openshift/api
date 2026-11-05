@@ -9,6 +9,8 @@ crd_globs="\
     machine/v1/zz_generated.crd-manifests/*.crd*yaml\
     operator/v1/zz_generated.crd-manifests//*_config-operator_*.crd*yaml\
     operator/v1alpha1/zz_generated.crd-manifests//*_config-operator_*.crd*yaml\
+    config/v1/zz_generated.crd-manifests/*_cluster-version-operator_*.crd*yaml\
+    operator/v1alpha1/zz_generated.crd-manifests/*_cluster-version-operator_*.crd*yaml\
     quota/v1/zz_generated.crd-manifests/*.crd.yaml\
     security/v1/zz_generated.crd-manifests/*_config-operator_*.crd*yaml\
     securityinternal/v1/zz_generated.crd-manifests/*_config-operator_*.crd*yaml

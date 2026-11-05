@@ -56,6 +56,16 @@ func (in BasicAuth) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in BodySizeEnforcement) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1alpha1.BodySizeEnforcement"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in BodySizeEnforcementCustomConfig) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1alpha1.BodySizeEnforcementCustomConfig"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in CertificateConfig) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1alpha1.CertificateConfig"
 }

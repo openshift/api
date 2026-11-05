@@ -3430,6 +3430,57 @@ spec:
                     x-kubernetes-list-map-keys:
                     - name
                     x-kubernetes-list-type: map
+                  bodySizeEnforcement:
+                    description: |-
+                      bodySizeEnforcement configures the maximum size of the response body accepted from a scraped target.
+                      If a scraped target's body response is larger than the limit, the scrape will fail.
+                      This helps protect Prometheus from targets that return excessively large responses.
+                      When omitted, this means no opinion and the platform is left to choose a reasonable default,
+                      which is subject to change over time. The current default is to calculate the limit automatically
+                      based on cluster capacity.
+                      An existing prometheusK8s section in the ConfigMap takes precedence over this setting.
+                    properties:
+                      custom:
+                        description: |-
+                          custom defines a fixed scrape response size limit.
+                          Required when mode is Custom, and forbidden otherwise.
+                        properties:
+                          maxSizeBytes:
+                            description: |-
+                              maxSizeBytes defines the maximum size in bytes of the response body accepted from a scraped target.
+                              If a scraped target's body response is larger than the limit, the scrape will fail.
+                              This helps protect Prometheus from targets that return excessively large responses.
+                              The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB).
+                              Minimum value is 10240 (10kB).
+                              Maximum value is 1073741824 (1GB).
+                              This field is required.
+                            format: int64
+                            maximum: 1073741824
+                            minimum: 10240
+                            type: integer
+                        required:
+                        - maxSizeBytes
+                        type: object
+                      mode:
+                        description: |-
+                          mode selects how the scrape response size limit is determined.
+                          This field is required.
+                          Valid values are Automatic, Custom and None.
+                          When set to Automatic, the Cluster Monitoring Operator calculates an appropriate limit based on cluster pod capacity.
+                          When set to Custom, the limit is taken from the custom field.
+                          When set to None, no limit is configured.
+                        enum:
+                        - Automatic
+                        - Custom
+                        - None
+                        type: string
+                    required:
+                    - mode
+                    type: object
+                    x-kubernetes-validations:
+                    - message: custom is required when mode is Custom, and forbidden
+                        otherwise
+                      rule: 'self.mode == ''Custom'' ? has(self.custom) : !has(self.custom)'
                   collectionProfile:
                     description: |-
                       collectionProfile defines the metrics collection profile that Prometheus uses to collect
@@ -3444,20 +3495,6 @@ spec:
                     - Full
                     - Minimal
                     type: string
-                  enforcedBodySizeLimitBytes:
-                    description: |-
-                      enforcedBodySizeLimitBytes enforces a body size limit (in bytes) for Prometheus scraped metrics.
-                      If a scraped target's body response is larger than the limit, the scrape will fail.
-                      This helps protect Prometheus from targets that return excessively large responses.
-                      The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB).
-                      When omitted, the Cluster Monitoring Operator automatically calculates an appropriate
-                      limit based on cluster capacity. Set an explicit value to override the automatic calculation.
-                      Minimum value is 10240 (10kB).
-                      Maximum value is 1073741824 (1GB).
-                    format: int64
-                    maximum: 1073741824
-                    minimum: 10240
-                    type: integer
                   externalLabels:
                     description: |-
                       externalLabels defines labels to be attached to time series and alerts

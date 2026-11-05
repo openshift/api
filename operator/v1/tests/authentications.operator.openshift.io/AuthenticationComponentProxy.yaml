@@ -112,6 +112,44 @@ tests:
             httpsProxy: "http://proxy.example.com:3128"
             trustedCA:
               name: "proxy-ca-bundle"
+    - name: Should accept httpProxy with a trailing slash
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpProxy: "http://proxy.example.com:3128/"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          proxy:
+            httpProxy: "http://proxy.example.com:3128/"
+    - name: Should accept httpProxy with userinfo for proxy authentication
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpProxy: "http://user:password@proxy.example.com:3128"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          proxy:
+            httpProxy: "http://user:password@proxy.example.com:3128"
     - name: Should reject proxy with neither httpProxy nor httpsProxy
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -123,6 +161,25 @@ tests:
             noProxy:
               - "example.com"
       expectedError: "at least one of httpProxy or httpsProxy must be specified"
+    - name: Should reject an empty proxy object
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy: {}
+      expectedError: "should have at least 1 properties"
+    - name: Should reject empty httpProxy
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpProxy: ""
+      expectedError: "should be at least 1 chars long"
     - name: Should reject httpProxy that is not a valid URL
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -183,6 +240,16 @@ tests:
           proxy:
             httpProxy: "http://proxy.example.com:3128#frag"
       expectedError: "httpProxy must not contain a fragment"
+    - name: Should reject empty httpsProxy
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpsProxy: ""
+      expectedError: "should be at least 1 chars long"
     - name: Should reject httpsProxy that is not a valid URL
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -279,3 +346,114 @@ tests:
             httpProxy: "http://proxy.example.com:3128"
             noProxy: []
       expectedError: "should have at least 1 items"
+    - name: Should reject noProxy with more than 64 entries
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpsProxy: "http://proxy.example.com:3128"
+            noProxy:
+              - "no-proxy-hostname-000.example.com"
+              - "no-proxy-hostname-001.example.com"
+              - "no-proxy-hostname-002.example.com"
+              - "no-proxy-hostname-003.example.com"
+              - "no-proxy-hostname-004.example.com"
+              - "no-proxy-hostname-005.example.com"
+              - "no-proxy-hostname-006.example.com"
+              - "no-proxy-hostname-007.example.com"
+              - "no-proxy-hostname-008.example.com"
+              - "no-proxy-hostname-009.example.com"
+              - "no-proxy-hostname-010.example.com"
+              - "no-proxy-hostname-011.example.com"
+              - "no-proxy-hostname-012.example.com"
+              - "no-proxy-hostname-013.example.com"
+              - "no-proxy-hostname-014.example.com"
+              - "no-proxy-hostname-015.example.com"
+              - "no-proxy-hostname-016.example.com"
+              - "no-proxy-hostname-017.example.com"
+              - "no-proxy-hostname-018.example.com"
+              - "no-proxy-hostname-019.example.com"
+              - "no-proxy-hostname-020.example.com"
+              - "no-proxy-hostname-021.example.com"
+              - "no-proxy-hostname-022.example.com"
+              - "no-proxy-hostname-023.example.com"
+              - "no-proxy-hostname-024.example.com"
+              - "no-proxy-hostname-025.example.com"
+              - "no-proxy-hostname-026.example.com"
+              - "no-proxy-hostname-027.example.com"
+              - "no-proxy-hostname-028.example.com"
+              - "no-proxy-hostname-029.example.com"
+              - "no-proxy-hostname-030.example.com"
+              - "no-proxy-hostname-031.example.com"
+              - "no-proxy-hostname-032.example.com"
+              - "no-proxy-hostname-033.example.com"
+              - "no-proxy-hostname-034.example.com"
+              - "no-proxy-hostname-035.example.com"
+              - "no-proxy-hostname-036.example.com"
+              - "no-proxy-hostname-037.example.com"
+              - "no-proxy-hostname-038.example.com"
+              - "no-proxy-hostname-039.example.com"
+              - "no-proxy-hostname-040.example.com"
+              - "no-proxy-hostname-041.example.com"
+              - "no-proxy-hostname-042.example.com"
+              - "no-proxy-hostname-043.example.com"
+              - "no-proxy-hostname-044.example.com"
+              - "no-proxy-hostname-045.example.com"
+              - "no-proxy-hostname-046.example.com"
+              - "no-proxy-hostname-047.example.com"
+              - "no-proxy-hostname-048.example.com"
+              - "no-proxy-hostname-049.example.com"
+              - "no-proxy-hostname-050.example.com"
+              - "no-proxy-hostname-051.example.com"
+              - "no-proxy-hostname-052.example.com"
+              - "no-proxy-hostname-053.example.com"
+              - "no-proxy-hostname-054.example.com"
+              - "no-proxy-hostname-055.example.com"
+              - "no-proxy-hostname-056.example.com"
+              - "no-proxy-hostname-057.example.com"
+              - "no-proxy-hostname-058.example.com"
+              - "no-proxy-hostname-059.example.com"
+              - "no-proxy-hostname-060.example.com"
+              - "no-proxy-hostname-061.example.com"
+              - "no-proxy-hostname-062.example.com"
+              - "no-proxy-hostname-063.example.com"
+              - "no-proxy-hostname-064.example.com"
+      expectedError: "must have at most 64 items"
+    - name: Should reject trustedCA with an invalid DNS subdomain name
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpsProxy: "http://proxy.example.com:3128"
+            trustedCA:
+              name: "Invalid_TrustedCA_Name"
+      expectedError: "must be a valid DNS subdomain name"
+    - name: Should reject trustedCA without a name
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpsProxy: "http://proxy.example.com:3128"
+            trustedCA: {}
+      expectedError: "Required value"
+    - name: Should reject trustedCA with an empty name
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpsProxy: "http://proxy.example.com:3128"
+            trustedCA:
+              name: ""
+      expectedError: "should be at least 1 chars long"

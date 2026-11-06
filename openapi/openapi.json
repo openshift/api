@@ -33990,6 +33990,27 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.IngressControllerContainerResource": {
+      "description": "IngressControllerContainerResource defines an override for one resource.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "limit": {
+          "description": "limit optionally sets the maximum amount of this resource per replica. It must be a valid, positive, non-zero quantity of 1 to 20 characters and must not be less than request. Extended resource values must be whole numbers; hugepage values must be whole multiples of the page size. For extended resources and hugepages, an explicit request must equal limit. When request is omitted, the operator uses limit as the effective request, without defaulting the API field. When limit is omitted, the platform default applies (currently no limit), unless admission policy adds one.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "name": {
+          "description": "name is required and identifies cpu, memory, ephemeral-storage, hugepages-<size>, or a domain-qualified extended resource such as example.com/device. It must be a Kubernetes qualified name of 1 to 253 characters: an optional lowercase DNS subdomain and slash followed by an alphanumeric name of at most 63 characters, with '-', '_' and '.' allowed internally. Extended resource domains must not be kubernetes.io or its subdomains, and names must not start with 'requests.'. Hugepage sizes must be valid quantities of 1 to 20 characters representing a positive, whole number of bytes.",
+          "type": "string"
+        },
+        "request": {
+          "description": "request optionally sets the minimum amount of this resource per replica. It must be a valid, positive, non-zero quantity of 1 to 20 characters and must not exceed limit. Extended resources and hugepages require an equal limit; extended resource values must be whole numbers, and hugepage values must be whole multiples of the page size. When omitted with a limit, the operator uses that limit as the effective request, without defaulting this API field. When there is no entry for a resource, the platform default request applies.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.IngressControllerHTTPHeader": {
       "description": "IngressControllerHTTPHeader specifies configuration for setting or deleting an HTTP header.",
       "type": "object",
@@ -34144,6 +34165,34 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.IngressControllerResources": {
+      "description": "IngressControllerResources configures per-replica resources for ingress containers.",
+      "type": "object",
+      "properties": {
+        "haproxy": {
+          "description": "haproxy optionally configures resources for the proxy that handles ingress traffic. It runs as a restartable init sidecar in the router pod. When specified, it must be a list of 1 to 8 resource overrides with unique names. Removing an entry restores the platform default for that resource. When omitted, the platform applies its default for the haproxy container, as described on the spec.resources field.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerContainerResource"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "router": {
+          "description": "router optionally configures resources for the controller that watches routes and generates HAProxy configuration. When specified, it must be a list of 1 to 8 resource overrides with unique names. Removing an entry restores the platform default for that resource. When omitted, the platform applies its default for the router container, as described on the spec.resources field.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerContainerResource"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.IngressControllerSetHTTPHeader": {
       "description": "IngressControllerSetHTTPHeader defines the value which needs to be set on an HTTP header.",
       "type": "object",
@@ -34227,6 +34276,11 @@
           "description": "replicas is the desired number of ingress controller replicas. If unset, the default depends on the value of the defaultPlacement field in the cluster config.openshift.io/v1/ingresses status.\n\nThe value of replicas is set based on the value of a chosen field in the Infrastructure CR. If defaultPlacement is set to ControlPlane, the chosen field will be controlPlaneTopology. If it is set to Workers the chosen field will be infrastructureTopology. Replicas will then be set to 1 or 2 based whether the chosen field's value is SingleReplica or HighlyAvailable, respectively.\n\nThese defaults are subject to change.",
           "type": "integer",
           "format": "int32"
+        },
+        "resources": {
+          "description": "resources optionally configures per-replica resources for the router and haproxy containers independently. At least one container must be configured. When omitted, the platform is left to choose reasonable defaults, which are subject to change over time. The current defaults are requests of 25m CPU and 64Mi memory for router, requests of 100m CPU and 256Mi memory for haproxy, and no limits for either container. Resource claims are not supported.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerResources"
         },
         "routeAdmission": {
           "description": "routeAdmission defines a policy for handling new route claims (for example, to allow or deny claims across namespaces).\n\nIf empty, defaults will be applied. See specific routeAdmission fields for details about their defaults.",

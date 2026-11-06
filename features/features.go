@@ -682,6 +682,14 @@ var (
 								enable(inDefault(), inOKD(), inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 								mustRegister()
 
+	FeatureGateIngressControllerResourceConfiguration = newFeatureGate("IngressControllerResourceConfiguration").
+								reportProblemsToJiraComponent("Networking/router").
+								contactPerson("bentito").
+								productScope(ocpSpecific).
+								enhancementPR("https://github.com/openshift/enhancements/pull/2163").
+								enable(inDevPreviewNoUpgrade()).
+								mustRegister()
+
 	FeatureGateIngressComponentRouteLabels = newFeatureGate("IngressComponentRouteLabels").
 						reportProblemsToJiraComponent("Management Console").
 						contactPerson("leoli").

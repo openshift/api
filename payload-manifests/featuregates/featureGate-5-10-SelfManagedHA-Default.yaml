@@ -177,6 +177,9 @@
                         "name": "IngressComponentRouteLabels"
                     },
                     {
+                        "name": "IngressControllerResourceConfiguration"
+                    },
+                    {
                         "name": "KarpenterOperator"
                     },
                     {

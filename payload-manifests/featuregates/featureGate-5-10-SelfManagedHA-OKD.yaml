@@ -254,9 +254,6 @@
                         "name": "NewOLMConfigAPI"
                     },
                     {
-                        "name": "NewOLMOwnSingleNamespace"
-                    },
-                    {
                         "name": "NoOverlayMode"
                     },
                     {

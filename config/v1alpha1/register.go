@@ -40,6 +40,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&PKIList{},
 		&ControllerManager{},
 		&ControllerManagerList{},
+		&GlobalPullCredential{},
+		&GlobalPullCredentialList{},
 	)
 	metav1.AddToGroupVersion(scheme, GroupVersion)
 	return nil

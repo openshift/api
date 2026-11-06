@@ -421,9 +421,6 @@
                         "name": "TopologyAwareWorkloadScheduling"
                     },
                     {
-                        "name": "UpgradeStatus"
-                    },
-                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {

@@ -418,9 +418,6 @@
                         "name": "UnifiedClusterManagedDNSAndLB"
                     },
                     {
-                        "name": "UpgradeStatus"
-                    },
-                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {

@@ -320,14 +320,6 @@ var (
 						enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 
-	FeatureGateUpgradeStatus = newFeatureGate("UpgradeStatus").
-					reportProblemsToJiraComponent("Cluster Version Operator").
-					contactPerson("pmuller").
-					productScope(ocpSpecific).
-					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-					mustRegister()
-
 	FeatureGateExternalSnapshotMetadata = newFeatureGate("ExternalSnapshotMetadata").
 						reportProblemsToJiraComponent("Storage / Kubernetes External Components").
 						contactPerson("rbednar").

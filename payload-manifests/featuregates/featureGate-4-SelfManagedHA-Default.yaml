@@ -18,9 +18,6 @@
                         "name": "AWSClusterHostedDNS"
                     },
                     {
-                        "name": "AWSDedicatedHosts"
-                    },
-                    {
                         "name": "AWSEuropeanSovereignCloudInstall"
                     },
                     {
@@ -312,6 +309,9 @@
                 "enabled": [
                     {
                         "name": "AWSClusterHostedDNSInstall"
+                    },
+                    {
+                        "name": "AWSDedicatedHosts"
                     },
                     {
                         "name": "AWSDualStackInstall"

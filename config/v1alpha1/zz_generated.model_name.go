@@ -116,6 +116,26 @@ func (in GatherConfig) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in GlobalPullCredential) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1alpha1.GlobalPullCredential"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in GlobalPullCredentialList) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1alpha1.GlobalPullCredentialList"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in GlobalPullCredentialSpec) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1alpha1.GlobalPullCredentialSpec"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in GlobalPullCredentialStatus) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1alpha1.GlobalPullCredentialStatus"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in HashModActionConfig) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1alpha1.HashModActionConfig"
 }
@@ -408,6 +428,11 @@ func (in PrometheusRemoteWriteHeader) OpenAPIModelName() string {
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in QueueConfig) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1alpha1.QueueConfig"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in RegistryAuth) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1alpha1.RegistryAuth"
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.

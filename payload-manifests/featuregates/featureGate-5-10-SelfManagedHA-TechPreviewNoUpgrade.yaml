@@ -376,9 +376,6 @@
                         "name": "TLSGroupPreferences"
                     },
                     {
-                        "name": "UpgradeStatus"
-                    },
-                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {

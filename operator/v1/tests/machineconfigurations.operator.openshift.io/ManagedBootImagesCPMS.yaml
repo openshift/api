@@ -107,4 +107,4 @@ tests:
                 apiGroup: machine.openshift.io
                 selection:
                   mode: All
-      expectedError: "spec.managedBootImages.machineManagers[1]: Duplicate value: map[string]interface {}{\"apiGroup\":\"machine.openshift.io\", \"resource\":\"controlplanemachinesets\"}"
+      expectedError: "spec.managedBootImages.machineManagers[1]: Duplicate value: {\"apiGroup\":\"machine.openshift.io\",\"resource\":\"controlplanemachinesets\"}"

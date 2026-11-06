@@ -38,7 +38,7 @@ tests:
           driverConfig:
             driverType: IBMCloud
             ibmcloud: {}
-      expectedError: "spec.driverConfig.ibmcloud.encryptionKeyCRN: Required value, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation"
+      expectedError: "spec.driverConfig.ibmcloud.encryptionKeyCRN: Required value, <nil>: Invalid value: null: some validation rules were not checked because the object was invalid; correct the existing errors to complete validation"
     - name: SecretsStore driverType must have secretsStore spec
       initial: |
         apiVersion: operator.openshift.io/v1

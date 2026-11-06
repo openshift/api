@@ -38,6 +38,9 @@
                         "name": "ClusterUpdatePreflight"
                     },
                     {
+                        "name": "CompositePodGroup"
+                    },
+                    {
                         "name": "ConfidentialCluster"
                     },
                     {
@@ -74,6 +77,9 @@
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
+                        "name": "MetalEnrollmentAPI"
+                    },
+                    {
                         "name": "MultiArchInstallAzure"
                     },
                     {
@@ -98,7 +104,7 @@
                         "name": "UnifiedClusterManagedDNSAndLB"
                     },
                     {
-                        "name": "VSpherePerComponentScopedCreds"
+                        "name": "VSpherePerComponentScopedCredsInstall"
                     }
                 ],
                 "enabled": [
@@ -172,6 +178,9 @@
                         "name": "ClusterAPIMachineManagementGCP"
                     },
                     {
+                        "name": "ClusterAPIMachineManagementNutanix"
+                    },
+                    {
                         "name": "ClusterAPIMachineManagementOpenStack"
                     },
                     {
@@ -181,6 +190,9 @@
                         "name": "ClusterAPIMachineManagementVSphere"
                     },
                     {
+                        "name": "ClusterAPIOperator"
+                    },
+                    {
                         "name": "ClusterMonitoringConfig"
                     },
                     {
@@ -188,9 +200,6 @@
                     },
                     {
                         "name": "ClusterVersionOperatorConfiguration"
-                    },
-                    {
-                        "name": "CompositePodGroup"
                     },
                     {
                         "name": "ConfigurablePKI"
@@ -203,9 +212,6 @@
                     },
                     {
                         "name": "DRAWorkloadResourceClaims"
-                    },
-                    {
-                        "name": "DualReplica"
                     },
                     {
                         "name": "DyanmicServiceEndpointIBMCloud"
@@ -310,6 +316,9 @@
                         "name": "MachineAPIMigrationAWS"
                     },
                     {
+                        "name": "MachineAPIMigrationNutanix"
+                    },
+                    {
                         "name": "MachineAPIMigrationOpenStack"
                     },
                     {
@@ -382,19 +391,19 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
-                        "name": "PodGroupPreemptionPolicy"
+                        "name": "OpenStackMaxAllowedAddressPairs"
                     },
                     {
                         "name": "SELinuxMount"
-                    },
-                    {
-                        "name": "SELinuxMountGAReadiness"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
                         "name": "SignatureStores"
+                    },
+                    {
+                        "name": "StoragePathAlert"
                     },
                     {
                         "name": "StoragePerformantSecurityPolicy"
@@ -406,10 +415,10 @@
                         "name": "TLSGroupPreferences"
                     },
                     {
-                        "name": "TopologyAwareWorkloadScheduling"
+                        "name": "TNFObservability"
                     },
                     {
-                        "name": "UpgradeStatus"
+                        "name": "TopologyAwareWorkloadScheduling"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"

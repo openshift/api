@@ -338,7 +338,7 @@ tests:
                   type: Set
                   set:
                     value:
-      expectedError: 'IngressController.operator.openshift.io "default-not-allowed-values" is invalid: [spec.httpHeaders.actions.response[0].action.set.value: Required value, <nil>: Invalid value: "null": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]'
+      expectedError: 'IngressController.operator.openshift.io "default-not-allowed-values" is invalid: [spec.httpHeaders.actions.response[0].action.set.value: Required value, <nil>: Invalid value: null: some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]'
     - name: Should not allow empty value in request.
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -355,7 +355,7 @@ tests:
                   type: Set
                   set:
                     value:
-      expectedError: 'IngressController.operator.openshift.io "default-not-allowed-values" is invalid: [spec.httpHeaders.actions.request[0].action.set.value: Required value, <nil>: Invalid value: "null": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]'
+      expectedError: 'IngressController.operator.openshift.io "default-not-allowed-values" is invalid: [spec.httpHeaders.actions.request[0].action.set.value: Required value, <nil>: Invalid value: null: some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]'
     - name: Should not allow to set dynamic response header values with not allowed converters.
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -479,7 +479,7 @@ tests:
                 action:
                   set:
                     value: DENY
-      expectedError: 'IngressController.operator.openshift.io "default-not-allowed-values" is invalid: [spec.httpHeaders.actions.response[0].action.type: Required value, <nil>: Invalid value: "null": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]'
+      expectedError: 'IngressController.operator.openshift.io "default-not-allowed-values" is invalid: [spec.httpHeaders.actions.response[0].action.type: Required value, <nil>: Invalid value: null: some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]'
     - name: Should be able to create an IngressController with valid nominal connect timeout
       initial: |
         apiVersion: operator.openshift.io/v1

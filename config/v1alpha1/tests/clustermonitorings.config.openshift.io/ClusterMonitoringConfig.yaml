@@ -4,6 +4,204 @@ crdName: clustermonitorings.config.openshift.io
 featureGate: ClusterMonitoringConfig
 tests:
   onCreate:
+    - name: Should accept remoteWrite URL at sign in query value
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?contact=ops@example.com"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?contact=ops@example.com"
+    - name: Should accept remoteWrite URL at sign in path
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/team@ops/write?tenant=example"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/team@ops/write?tenant=example"
+    - name: Should reject remoteWrite URL username-only user information
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://user@remote.example.com/write?tenant=example"
+      expectedError: 'user information (e.g. user:password@host) is not allowed'
+    - name: Should reject remoteWrite URL encoded user information
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://user%40example.com:password@remote.example.com/write?tenant=example"
+      expectedError: 'user information (e.g. user:password@host) is not allowed'
+    - name: Should accept remoteWrite URL simple query
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?tenant=example"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?tenant=example"
+    - name: Should accept remoteWrite URL multiple query parameters
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?tenant=example&region=eu"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?tenant=example&region=eu"
+    - name: Should accept remoteWrite URL escaped query parameters
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?tenant=team%2Fa&filter=a%26b%3Dc"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?tenant=team%2Fa&filter=a%26b%3Dc"
+    - name: Should accept remoteWrite URL http query parameters
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "http://remote.example.com/write?tenant=example"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "http://remote.example.com/write?tenant=example"
+    - name: Should reject remoteWrite URL unsupported scheme with query
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "ftp://remote.example.com/write?tenant=example"
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].url: Invalid value'
+    - name: Should reject remoteWrite URL missing hostname with query
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https:///write?tenant=example"
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].url: Invalid value'
+    - name: Should reject remoteWrite URL fragment with query
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write?tenant=example#fragment"
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].url: Invalid value'
+    - name: Should reject remoteWrite URL user information with query
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: Disabled
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://user:password@remote.example.com/write?tenant=example"
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].url: Invalid value'
     - name: Should be able to create a minimal ClusterMonitoring
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -66,7 +264,7 @@ tests:
                   request: "100m"
                 - name: "cpu"
                   request: "200m"
-      expectedError: 'spec.alertmanagerConfig.customConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
+      expectedError: 'spec.alertmanagerConfig.customConfig.resources[1]: Duplicate value: {"name":"cpu"}'
     - name: Should reject ContainerResource with more than 5 items
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -231,6 +429,29 @@ tests:
                   request: "500m"
                   limit: "200m"
       expectedError: 'spec.alertmanagerConfig.customConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+    - name: Should accept additionalAlertmanagerConfigs with bare hostname in staticConfigs
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: external
+                staticConfigs:
+                  - alertmanager-observability.apps.example.com
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: external
+                staticConfigs:
+                  - alertmanager-observability.apps.example.com
     - name: Should be able to create a minimal MetricsServerConfig
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -793,7 +1014,7 @@ tests:
                 request: "100m"
               - name: "cpu"
                 request: "200m"
-      expectedError: 'spec.openShiftStateMetricsConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
+      expectedError: 'spec.openShiftStateMetricsConfig.resources[1]: Duplicate value: {"name":"cpu"}'
     - name: Should reject OpenShiftStateMetricsConfig with duplicate topologySpreadConstraints
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1275,7 +1496,7 @@ tests:
                 request: "100m"
               - name: "cpu"
                 request: "200m"
-      expectedError: 'spec.thanosQuerierConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
+      expectedError: 'spec.thanosQuerierConfig.resources[1]: Duplicate value: {"name":"cpu"}'
     - name: Should reject ThanosQuerierConfig with too many resources
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1748,7 +1969,7 @@ tests:
                 request: "100m"
               - name: "cpu"
                 request: "200m"
-      expectedError: 'spec.monitoringPluginConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
+      expectedError: 'spec.monitoringPluginConfig.resources[1]: Duplicate value: {"name":"cpu"}'
     - name: Should reject MonitoringPluginConfig with too many resources
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -2107,7 +2328,7 @@ tests:
                 request: "100m"
               - name: "cpu"
                 request: "200m"
-      expectedError: 'spec.nodeExporterConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
+      expectedError: 'spec.nodeExporterConfig.resources[1]: Duplicate value: {"name":"cpu"}'
     - name: Should reject NodeExporterConfig with limit less than request
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -2684,7 +2905,7 @@ tests:
                 request: "100m"
               - name: "cpu"
                 request: "200m"
-      expectedError: 'spec.kubeStateMetricsConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
+      expectedError: 'spec.kubeStateMetricsConfig.resources[1]: Duplicate value: {"name":"cpu"}'
     - name: Should reject KubeStateMetricsConfig with duplicate topologySpreadConstraints
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -3122,6 +3343,80 @@ tests:
                 authorization:
                   type: BearerToken
       expectedError: 'spec.prometheusConfig.remoteWrite[0].authorization.type: Unsupported value: "BearerToken": supported values: "Authorization", "BasicAuth", "OAuth2", "SigV4", "ServiceAccount"'
+    - name: Should accept writeRelabelConfigs with __name__ in sourceLabels
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: ServiceAccount
+                writeRelabelConfigs:
+                  - name: keep-by-name
+                    sourceLabels:
+                      - __name__
+                    regex: "my_metric_.+"
+                    action:
+                      type: Keep
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: ServiceAccount
+                writeRelabelConfigs:
+                  - name: keep-by-name
+                    sourceLabels:
+                      - __name__
+                    regex: "my_metric_.+"
+                    action:
+                      type: Keep
+    - name: Should accept writeRelabelConfigs with regex longer than 1000 bytes
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: ServiceAccount
+                writeRelabelConfigs:
+                  - name: keep-metrics
+                    regex: "(kube_node_spec_unschedulable|kube_pod_container_status_restarts_total|kube_pod_container_resource_requests|kube_pod_container_resource_limits|kube_pod_status_phase|kube_pod_status_ready|kube_deployment_status_replicas_available|kube_deployment_status_replicas_unavailable|kube_statefulset_status_replicas_ready|kube_daemonset_status_number_unavailable|kube_job_status_failed|kube_job_status_succeeded|kube_cronjob_status_active|kube_namespace_status_phase|kube_node_status_condition|kube_node_status_allocatable|kube_node_status_capacity|kube_persistentvolume_status_phase|kube_persistentvolumeclaim_status_phase|kube_resourcequota|kube_horizontalpodautoscaler_status_current_replicas|kube_horizontalpodautoscaler_status_desired_replicas|kube_horizontalpodautoscaler_spec_max_replicas|kube_horizontalpodautoscaler_spec_min_replicas|container_cpu_usage_seconds_total|container_memory_working_set_bytes|container_network_receive_bytes_total|container_network_transmit_bytes_total|process_start_time_seconds|up|scrape_duration_seconds|scrape_samples_scraped|scrape_samples_post_metric_relabeling)"
+                    action:
+                      type: Drop
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: ServiceAccount
+                writeRelabelConfigs:
+                  - name: keep-metrics
+                    regex: "(kube_node_spec_unschedulable|kube_pod_container_status_restarts_total|kube_pod_container_resource_requests|kube_pod_container_resource_limits|kube_pod_status_phase|kube_pod_status_ready|kube_deployment_status_replicas_available|kube_deployment_status_replicas_unavailable|kube_statefulset_status_replicas_ready|kube_daemonset_status_number_unavailable|kube_job_status_failed|kube_job_status_succeeded|kube_cronjob_status_active|kube_namespace_status_phase|kube_node_status_condition|kube_node_status_allocatable|kube_node_status_capacity|kube_persistentvolume_status_phase|kube_persistentvolumeclaim_status_phase|kube_resourcequota|kube_horizontalpodautoscaler_status_current_replicas|kube_horizontalpodautoscaler_status_desired_replicas|kube_horizontalpodautoscaler_spec_max_replicas|kube_horizontalpodautoscaler_spec_min_replicas|container_cpu_usage_seconds_total|container_memory_working_set_bytes|container_network_receive_bytes_total|container_network_transmit_bytes_total|process_start_time_seconds|up|scrape_duration_seconds|scrape_samples_scraped|scrape_samples_post_metric_relabeling)"
+                    action:
+                      type: Drop
     - name: Should accept prometheusConfig retention duration
       initial: |
         apiVersion: config.openshift.io/v1alpha1

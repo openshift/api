@@ -568,7 +568,7 @@ tests:
                 valueExpression: "claims.foo"
               - key: example.com/foo
                 valueExpression: "claims.foo"
-      expectedError: "Duplicate value: map[string]interface {}{\"key\":\"example.com/foo\"}"
+      expectedError: "Duplicate value: {\"key\":\"example.com/foo\"}"
     - name: Cannot set OIDC providers with extra claim with a key that is not a valid RFC 1123 DNS subdomain
       initial: |
         apiVersion: config.openshift.io/v1

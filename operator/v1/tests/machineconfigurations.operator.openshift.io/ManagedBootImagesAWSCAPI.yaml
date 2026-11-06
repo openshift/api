@@ -209,7 +209,7 @@ tests:
                 apiGroup: cluster.x-k8s.io
                 selection:
                   mode: None
-      expectedError: "spec.managedBootImages.machineManagers[1]: Duplicate value: map[string]interface {}{\"apiGroup\":\"cluster.x-k8s.io\", \"resource\":\"machinesets\"}"
+      expectedError: "spec.managedBootImages.machineManagers[1]: Duplicate value: {\"apiGroup\":\"cluster.x-k8s.io\",\"resource\":\"machinesets\"}"
   onUpdate:
     - name: Should permit an "All" CAPI MachineSet boot image configuration when bootImageSkewEnforcementStatus.mode is Automatic
       initial: |

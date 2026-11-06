@@ -5,24 +5,125 @@ featureGates:
 - ConfigurablePKI
 tests:
   onCreate:
-    - name: Should be able to create a PKI with mode Unmanaged
+    - name: Should reject a PKI not named cluster
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: not-cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: RSA
+                rsa:
+                  keySize: 2048
+      expectedError: "pki is a singleton, .metadata.name must be 'cluster'"
+    - name: Should be able to create a PKI with only required defaults (RSA)
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
         metadata:
           name: cluster
         spec:
-          certificateManagement:
-            mode: Unmanaged
+          certificates:
+            defaults:
+              key:
+                algorithm: RSA
+                rsa:
+                  keySize: 2048
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
         metadata:
           name: cluster
         spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: RSA
+                rsa:
+                  keySize: 2048
+    - name: Should be able to create a PKI with ECDSA defaults and category overrides
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+            caCertificates:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P384
+            serverCertificates:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+            clientCertificates:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+            caCertificates:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P384
+            serverCertificates:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+            clientCertificates:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+    - name: Should reject a PKI with neither certificates nor certificateManagement
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec: {}
+      expectedError: "exactly one of the fields in [certificates certificateManagement] must be set"
+    - name: Should reject a PKI with both certificates and certificateManagement
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: RSA
+                rsa:
+                  keySize: 2048
           certificateManagement:
-            mode: Unmanaged
-    - name: Should be able to create a PKI with mode Default
+            mode: Default
+      expectedError: "exactly one of the fields in [certificates certificateManagement] must be set"
+    - name: Should accept the deprecated certificateManagement shape (mode Default)
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
@@ -39,163 +140,7 @@ tests:
         spec:
           certificateManagement:
             mode: Default
-    - name: Should be able to create a PKI with mode Custom with minimal config
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 2048
-      expected: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 2048
-    - name: Should be able to create a PKI with mode Custom with ECDSA
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: ECDSA
-                  ecdsa:
-                    curve: P384
-      expected: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: ECDSA
-                  ecdsa:
-                    curve: P384
-    - name: Should be able to create a PKI with mode Custom with signerCertificates override
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 2048
-              signerCertificates:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 4096
-      expected: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 2048
-              signerCertificates:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 4096
-    - name: Should be able to create a PKI with mode Custom with all category overrides
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 2048
-              signerCertificates:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 4096
-              servingCertificates:
-                key:
-                  algorithm: ECDSA
-                  ecdsa:
-                    curve: P256
-              clientCertificates:
-                key:
-                  algorithm: ECDSA
-                  ecdsa:
-                    curve: P384
-      expected: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 2048
-              signerCertificates:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 4096
-              servingCertificates:
-                key:
-                  algorithm: ECDSA
-                  ecdsa:
-                    curve: P256
-              clientCertificates:
-                key:
-                  algorithm: ECDSA
-                  ecdsa:
-                    curve: P384
-    - name: Should not allow mode Unmanaged with custom field set
+    - name: Should accept the deprecated certificateManagement shape (mode Unmanaged)
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
@@ -204,14 +149,64 @@ tests:
         spec:
           certificateManagement:
             mode: Unmanaged
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Unmanaged
+    - name: Should accept the deprecated certificateManagement shape (mode Custom) and roundtrip it
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
             custom:
               defaults:
                 key:
                   algorithm: RSA
                   rsa:
                     keySize: 2048
-      expectedError: "spec.certificateManagement: Invalid value: \"object\": custom is required when mode is Custom, and forbidden otherwise"
-    - name: Should not allow mode Default with custom field set
+              signerCertificates:
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P384
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+              signerCertificates:
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P384
+    - name: Should reject mode Custom without custom
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+      expectedError: "custom is required when mode is Custom, and forbidden otherwise"
+    - name: Should reject mode Default with custom
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
@@ -226,8 +221,8 @@ tests:
                   algorithm: RSA
                   rsa:
                     keySize: 2048
-      expectedError: "spec.certificateManagement: Invalid value: \"object\": custom is required when mode is Custom, and forbidden otherwise"
-    - name: Should not allow mode Custom without custom field
+      expectedError: "custom is required when mode is Custom, and forbidden otherwise"
+    - name: Should reject an empty custom object
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
@@ -236,8 +231,35 @@ tests:
         spec:
           certificateManagement:
             mode: Custom
-      expectedError: "spec.certificateManagement: Invalid value: \"object\": custom is required when mode is Custom, and forbidden otherwise"
-    - name: Should not allow mode missing
+            custom: {}
+      expectedError: "should have at least 1 properties"
+    - name: Should reject the deprecated shape with RSA keySize 8192 (above the 4096 cap)
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 8192
+      expectedError: "spec.certificateManagement.custom.defaults.key.rsa.keySize in body should be less than or equal to 4096"
+    - name: Should reject the deprecated shape with an invalid mode
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Automatic
+      expectedError: "spec.certificateManagement.mode: Unsupported value: \"Automatic\": supported values: \"Unmanaged\", \"Default\", \"Custom\""
+    - name: Should reject the deprecated shape without a mode
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
@@ -246,254 +268,244 @@ tests:
         spec:
           certificateManagement: {}
       expectedError: "spec.certificateManagement.mode: Required value"
-    - name: Should not allow RSA algorithm without rsa field
+    - name: Should reject certificates without defaults
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
         metadata:
           name: cluster
         spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: RSA
-      expectedError: "spec.certificateManagement.custom.defaults.key: Invalid value: \"object\": rsa is required when algorithm is RSA, and forbidden otherwise"
-    - name: Should not allow ECDSA algorithm without ecdsa field
+          certificates:
+            caCertificates:
+              key:
+                algorithm: RSA
+                rsa:
+                  keySize: 4096
+      expectedError: "spec.certificates.defaults: Required value"
+    - name: Should reject an empty category override (key is required)
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
         metadata:
           name: cluster
         spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: ECDSA
-      expectedError: "spec.certificateManagement.custom.defaults.key: Invalid value: \"object\": ecdsa is required when algorithm is ECDSA, and forbidden otherwise"
-    - name: Should not allow rsa field with ECDSA algorithm
+          certificates:
+            defaults:
+              key:
+                algorithm: RSA
+                rsa:
+                  keySize: 2048
+            caCertificates: {}
+      expectedError: "spec.certificates.caCertificates.key: Required value"
+    - name: Should reject RSA without the rsa field
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
         metadata:
           name: cluster
         spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: ECDSA
-                  ecdsa:
-                    curve: P384
-                  rsa:
-                    keySize: 2048
-      expectedError: "spec.certificateManagement.custom.defaults.key: Invalid value: \"object\": rsa is required when algorithm is RSA, and forbidden otherwise"
-    - name: Should not allow ecdsa field with RSA algorithm
+          certificates:
+            defaults:
+              key:
+                algorithm: RSA
+      expectedError: "rsa is required when algorithm is RSA, and forbidden otherwise"
+    - name: Should reject ECDSA with an rsa field
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
         metadata:
           name: cluster
         spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 2048
-                  ecdsa:
-                    curve: P384
-      expectedError: "spec.certificateManagement.custom.defaults.key: Invalid value: \"object\": ecdsa is required when algorithm is ECDSA, and forbidden otherwise"
-    - name: Should not allow RSA keySize below minimum
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+                rsa:
+                  keySize: 2048
+      expectedError: "rsa is required when algorithm is RSA, and forbidden otherwise"
+    - name: Should accept RSA keySize 4096
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
         metadata:
           name: cluster
         spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 1024
-      expectedError: "spec.certificateManagement.custom.defaults.key.rsa.keySize in body should be greater than or equal to 2048"
-    - name: Should not allow RSA keySize above maximum
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 9216
-      expectedError: "spec.certificateManagement.custom.defaults.key.rsa.keySize in body should be less than or equal to 8192"
-    - name: Should not allow RSA keySize that is not a multiple of 1024
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 3000
-      expectedError: "spec.certificateManagement.custom.defaults.key.rsa.keySize in body should be a multiple of 1024"
-    - name: Should not allow invalid algorithm value
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: DSA
-      expectedError: "spec.certificateManagement.custom.defaults.key.algorithm: Unsupported value: \"DSA\": supported values: \"RSA\", \"ECDSA\""
-    - name: Should not allow invalid ECDSA curve value
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: ECDSA
-                  ecdsa:
-                    curve: P224
-      expectedError: "spec.certificateManagement.custom.defaults.key.ecdsa.curve: Unsupported value: \"P224\": supported values: \"P256\", \"P384\", \"P521\""
-    - name: Should not allow invalid mode value
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Invalid
-      expectedError: "spec.certificateManagement.mode: Unsupported value: \"Invalid\": supported values: \"Unmanaged\", \"Default\", \"Custom\""
-    - name: Should not allow empty signerCertificates override
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 2048
-              signerCertificates: {}
-      expectedError: "spec.certificateManagement.custom.signerCertificates in body should have at least 1 properties"
-    - name: Should not allow empty servingCertificates override
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 2048
-              servingCertificates: {}
-      expectedError: "spec.certificateManagement.custom.servingCertificates in body should have at least 1 properties"
-    - name: Should not allow empty clientCertificates override
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 2048
-              clientCertificates: {}
-      expectedError: "spec.certificateManagement.custom.clientCertificates in body should have at least 1 properties"
-  onUpdate:
-    - name: Should allow transition from Unmanaged to Default
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Unmanaged
-      updated: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: PKI
-        metadata:
-          name: cluster
-        spec:
-          certificateManagement:
-            mode: Default
+          certificates:
+            defaults:
+              key:
+                algorithm: RSA
+                rsa:
+                  keySize: 4096
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
         metadata:
           name: cluster
         spec:
-          certificateManagement:
-            mode: Default
-    - name: Should allow transition from Default to Custom
+          certificates:
+            defaults:
+              key:
+                algorithm: RSA
+                rsa:
+                  keySize: 4096
+    - name: Should reject RSA keySize 8192 (above the 4096 cap)
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
         metadata:
           name: cluster
         spec:
-          certificateManagement:
-            mode: Default
-      updated: |
+          certificates:
+            defaults:
+              key:
+                algorithm: RSA
+                rsa:
+                  keySize: 8192
+      expectedError: "spec.certificates.defaults.key.rsa.keySize in body should be less than or equal to 4096"
+    - name: Should reject RSA keySize that is not a multiple of 1024
+      initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
         metadata:
           name: cluster
         spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
+          certificates:
+            defaults:
+              key:
+                algorithm: RSA
+                rsa:
+                  keySize: 3000
+      expectedError: "spec.certificates.defaults.key.rsa.keySize in body should be a multiple of 1024"
+    - name: Should reject an invalid ECDSA curve
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P224
+      expectedError: "spec.certificates.defaults.key.ecdsa.curve: Unsupported value: \"P224\": supported values: \"P256\", \"P384\", \"P521\""
+    - name: Should accept a named certificate override with a valid prefixed name
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+            namedCertificates:
+              - name: openshift.io/service-ca.service-serving-signer
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+            namedCertificates:
+              - name: openshift.io/service-ca.service-serving-signer
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+    - name: Should reject a named certificate override with only a name (no overrides)
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+            namedCertificates:
+              - name: openshift.io/etcd.signer
+      expectedError: "spec.certificates.namedCertificates[0].key: Required value"
+    - name: Should reject a named certificate override with an unprefixed name
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+            namedCertificates:
+              - name: etcd.signer
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+      expectedError: "spec.certificates.namedCertificates[0].name: Invalid value: \"string\": name must be a prefixed qualified name, for example openshift.io/etcd.signer"
+    - name: Should reject duplicate named certificate names
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+            namedCertificates:
+              - name: openshift.io/etcd.signer
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/etcd.signer
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P384
+      expectedError: "Duplicate value"
+    - name: Should accept keys with a named key
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+          keys:
+            namedKeys:
+              - name: openshift.io/kube-apiserver.bound-service-account-token-signer
                 key:
                   algorithm: RSA
                   rsa:
@@ -504,54 +516,2776 @@ tests:
         metadata:
           name: cluster
         spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+          keys:
+            namedKeys:
+              - name: openshift.io/kube-apiserver.bound-service-account-token-signer
                 key:
                   algorithm: RSA
                   rsa:
                     keySize: 4096
-    - name: Should allow updating custom configuration
+    - name: Should reject a named key without a key
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
         metadata:
           name: cluster
         spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
-                key:
-                  algorithm: RSA
-                  rsa:
-                    keySize: 2048
-      updated: |
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+          keys:
+            namedKeys:
+              - name: openshift.io/kube-apiserver.bound-service-account-token-signer
+      expectedError: "spec.keys.namedKeys[0].key: Required value"
+    - name: Should reject duplicate named keys
+      initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
         metadata:
           name: cluster
         spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+          keys:
+            namedKeys:
+              - name: openshift.io/kube-apiserver.bound-service-account-token-signer
                 key:
-                  algorithm: ECDSA
-                  ecdsa:
-                    curve: P384
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+              - name: openshift.io/kube-apiserver.bound-service-account-token-signer
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 4096
+      expectedError: "Duplicate value"
+    - name: Should reject defaults with key omitted
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults: {}
+      expectedError: "spec.certificates.defaults.key: Required value"
+    - name: Should reject ECDSA algorithm without the ecdsa field
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+      expectedError: "ecdsa is required when algorithm is ECDSA, and forbidden otherwise"
+    - name: Should reject RSA keySize 1024 (below the 2048 floor)
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: RSA
+                rsa:
+                  keySize: 1024
+      expectedError: "spec.certificates.defaults.key.rsa.keySize in body should be greater than or equal to 2048"
+    - name: Should accept RSA keySize 3072
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: RSA
+                rsa:
+                  keySize: 3072
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
         metadata:
           name: cluster
         spec:
-          certificateManagement:
-            mode: Custom
-            custom:
-              defaults:
+          certificates:
+            defaults:
+              key:
+                algorithm: RSA
+                rsa:
+                  keySize: 3072
+    - name: Should accept ECDSA curve P521
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P521
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P521
+    - name: Should reject more than 512 namedCertificates entries
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+            namedCertificates:
+              - name: openshift.io/test.cert-1
                 key:
                   algorithm: ECDSA
                   ecdsa:
-                    curve: P384
+                    curve: P256
+              - name: openshift.io/test.cert-2
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-3
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-4
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-5
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-6
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-7
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-8
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-9
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-10
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-11
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-12
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-13
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-14
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-15
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-16
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-17
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-18
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-19
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-20
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-21
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-22
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-23
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-24
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-25
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-26
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-27
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-28
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-29
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-30
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-31
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-32
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-33
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-34
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-35
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-36
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-37
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-38
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-39
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-40
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-41
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-42
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-43
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-44
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-45
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-46
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-47
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-48
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-49
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-50
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-51
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-52
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-53
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-54
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-55
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-56
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-57
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-58
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-59
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-60
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-61
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-62
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-63
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-64
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-65
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-66
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-67
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-68
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-69
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-70
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-71
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-72
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-73
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-74
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-75
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-76
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-77
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-78
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-79
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-80
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-81
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-82
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-83
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-84
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-85
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-86
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-87
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-88
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-89
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-90
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-91
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-92
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-93
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-94
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-95
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-96
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-97
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-98
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-99
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-100
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-101
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-102
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-103
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-104
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-105
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-106
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-107
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-108
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-109
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-110
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-111
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-112
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-113
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-114
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-115
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-116
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-117
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-118
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-119
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-120
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-121
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-122
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-123
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-124
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-125
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-126
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-127
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-128
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-129
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-130
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-131
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-132
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-133
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-134
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-135
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-136
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-137
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-138
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-139
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-140
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-141
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-142
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-143
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-144
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-145
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-146
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-147
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-148
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-149
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-150
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-151
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-152
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-153
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-154
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-155
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-156
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-157
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-158
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-159
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-160
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-161
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-162
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-163
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-164
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-165
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-166
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-167
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-168
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-169
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-170
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-171
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-172
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-173
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-174
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-175
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-176
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-177
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-178
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-179
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-180
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-181
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-182
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-183
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-184
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-185
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-186
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-187
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-188
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-189
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-190
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-191
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-192
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-193
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-194
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-195
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-196
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-197
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-198
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-199
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-200
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-201
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-202
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-203
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-204
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-205
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-206
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-207
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-208
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-209
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-210
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-211
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-212
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-213
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-214
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-215
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-216
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-217
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-218
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-219
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-220
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-221
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-222
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-223
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-224
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-225
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-226
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-227
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-228
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-229
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-230
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-231
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-232
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-233
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-234
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-235
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-236
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-237
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-238
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-239
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-240
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-241
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-242
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-243
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-244
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-245
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-246
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-247
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-248
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-249
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-250
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-251
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-252
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-253
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-254
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-255
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-256
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-257
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-258
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-259
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-260
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-261
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-262
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-263
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-264
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-265
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-266
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-267
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-268
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-269
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-270
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-271
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-272
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-273
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-274
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-275
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-276
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-277
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-278
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-279
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-280
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-281
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-282
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-283
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-284
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-285
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-286
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-287
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-288
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-289
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-290
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-291
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-292
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-293
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-294
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-295
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-296
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-297
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-298
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-299
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-300
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-301
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-302
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-303
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-304
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-305
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-306
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-307
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-308
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-309
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-310
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-311
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-312
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-313
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-314
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-315
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-316
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-317
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-318
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-319
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-320
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-321
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-322
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-323
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-324
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-325
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-326
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-327
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-328
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-329
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-330
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-331
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-332
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-333
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-334
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-335
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-336
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-337
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-338
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-339
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-340
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-341
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-342
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-343
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-344
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-345
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-346
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-347
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-348
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-349
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-350
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-351
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-352
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-353
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-354
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-355
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-356
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-357
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-358
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-359
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-360
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-361
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-362
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-363
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-364
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-365
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-366
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-367
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-368
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-369
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-370
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-371
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-372
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-373
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-374
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-375
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-376
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-377
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-378
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-379
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-380
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-381
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-382
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-383
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-384
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-385
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-386
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-387
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-388
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-389
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-390
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-391
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-392
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-393
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-394
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-395
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-396
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-397
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-398
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-399
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-400
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-401
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-402
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-403
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-404
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-405
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-406
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-407
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-408
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-409
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-410
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-411
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-412
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-413
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-414
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-415
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-416
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-417
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-418
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-419
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-420
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-421
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-422
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-423
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-424
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-425
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-426
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-427
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-428
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-429
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-430
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-431
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-432
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-433
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-434
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-435
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-436
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-437
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-438
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-439
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-440
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-441
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-442
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-443
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-444
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-445
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-446
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-447
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-448
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-449
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-450
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-451
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-452
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-453
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-454
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-455
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-456
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-457
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-458
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-459
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-460
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-461
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-462
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-463
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-464
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-465
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-466
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-467
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-468
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-469
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-470
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-471
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-472
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-473
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-474
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-475
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-476
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-477
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-478
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-479
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-480
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-481
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-482
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-483
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-484
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-485
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-486
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-487
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-488
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-489
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-490
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-491
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-492
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-493
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-494
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-495
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-496
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-497
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-498
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-499
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-500
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-501
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-502
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-503
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-504
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-505
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-506
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-507
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-508
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-509
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-510
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-511
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-512
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              - name: openshift.io/test.cert-513
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+      expectedError: "spec.certificates.namedCertificates: Too many: 513: must have at most 512 items"
+    - name: Should reject an empty namedCertificates list
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+            namedCertificates: []
+      expectedError: "spec.certificates.namedCertificates in body should have at least 1 items"
+    - name: Should reject a named key with an unprefixed name
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+          keys:
+            namedKeys:
+              - name: bound-sa-signer
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+      expectedError: "spec.keys.namedKeys[0].name: Invalid value: \"string\": name must be a prefixed qualified name, for example openshift.io/etcd.signer"
+    - name: Should reject an empty keys object
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificates:
+            defaults:
+              key:
+                algorithm: ECDSA
+                ecdsa:
+                  curve: P256
+          keys: {}
+      expectedError: "spec.keys.namedKeys: Required value"

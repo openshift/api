@@ -6,8 +6,9 @@
 package generated_openapi
 
 import (
+	v1 "github.com/openshift/api/apiextensions/v1"
 	v1alpha1 "github.com/openshift/api/apiextensions/v1alpha1"
-	v1 "github.com/openshift/api/apiserver/v1"
+	apiserverv1 "github.com/openshift/api/apiserver/v1"
 	appsv1 "github.com/openshift/api/apps/v1"
 	authenticationv1alpha1 "github.com/openshift/api/authentication/v1alpha1"
 	authorizationv1 "github.com/openshift/api/authorization/v1"
@@ -67,6 +68,17 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
+		v1.APIExcludedField{}.OpenAPIModelName():                                               schema_openshift_api_apiextensions_v1_APIExcludedField(ref),
+		v1.APIVersions{}.OpenAPIModelName():                                                    schema_openshift_api_apiextensions_v1_APIVersions(ref),
+		v1.CRDData{}.OpenAPIModelName():                                                        schema_openshift_api_apiextensions_v1_CRDData(ref),
+		v1.CompatibilityRequirement{}.OpenAPIModelName():                                       schema_openshift_api_apiextensions_v1_CompatibilityRequirement(ref),
+		v1.CompatibilityRequirementList{}.OpenAPIModelName():                                   schema_openshift_api_apiextensions_v1_CompatibilityRequirementList(ref),
+		v1.CompatibilityRequirementSpec{}.OpenAPIModelName():                                   schema_openshift_api_apiextensions_v1_CompatibilityRequirementSpec(ref),
+		v1.CompatibilityRequirementStatus{}.OpenAPIModelName():                                 schema_openshift_api_apiextensions_v1_CompatibilityRequirementStatus(ref),
+		v1.CompatibilitySchema{}.OpenAPIModelName():                                            schema_openshift_api_apiextensions_v1_CompatibilitySchema(ref),
+		v1.CustomResourceDefinitionSchemaValidation{}.OpenAPIModelName():                       schema_openshift_api_apiextensions_v1_CustomResourceDefinitionSchemaValidation(ref),
+		v1.ObjectSchemaValidation{}.OpenAPIModelName():                                         schema_openshift_api_apiextensions_v1_ObjectSchemaValidation(ref),
+		v1.ObservedCRD{}.OpenAPIModelName():                                                    schema_openshift_api_apiextensions_v1_ObservedCRD(ref),
 		v1alpha1.APIExcludedField{}.OpenAPIModelName():                                         schema_openshift_api_apiextensions_v1alpha1_APIExcludedField(ref),
 		v1alpha1.APIVersions{}.OpenAPIModelName():                                              schema_openshift_api_apiextensions_v1alpha1_APIVersions(ref),
 		v1alpha1.CRDData{}.OpenAPIModelName():                                                  schema_openshift_api_apiextensions_v1alpha1_CRDData(ref),
@@ -78,14 +90,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v1alpha1.CustomResourceDefinitionSchemaValidation{}.OpenAPIModelName():                 schema_openshift_api_apiextensions_v1alpha1_CustomResourceDefinitionSchemaValidation(ref),
 		v1alpha1.ObjectSchemaValidation{}.OpenAPIModelName():                                   schema_openshift_api_apiextensions_v1alpha1_ObjectSchemaValidation(ref),
 		v1alpha1.ObservedCRD{}.OpenAPIModelName():                                              schema_openshift_api_apiextensions_v1alpha1_ObservedCRD(ref),
-		v1.APIRequestCount{}.OpenAPIModelName():                                                schema_openshift_api_apiserver_v1_APIRequestCount(ref),
-		v1.APIRequestCountList{}.OpenAPIModelName():                                            schema_openshift_api_apiserver_v1_APIRequestCountList(ref),
-		v1.APIRequestCountSpec{}.OpenAPIModelName():                                            schema_openshift_api_apiserver_v1_APIRequestCountSpec(ref),
-		v1.APIRequestCountStatus{}.OpenAPIModelName():                                          schema_openshift_api_apiserver_v1_APIRequestCountStatus(ref),
-		v1.PerNodeAPIRequestLog{}.OpenAPIModelName():                                           schema_openshift_api_apiserver_v1_PerNodeAPIRequestLog(ref),
-		v1.PerResourceAPIRequestLog{}.OpenAPIModelName():                                       schema_openshift_api_apiserver_v1_PerResourceAPIRequestLog(ref),
-		v1.PerUserAPIRequestCount{}.OpenAPIModelName():                                         schema_openshift_api_apiserver_v1_PerUserAPIRequestCount(ref),
-		v1.PerVerbAPIRequestCount{}.OpenAPIModelName():                                         schema_openshift_api_apiserver_v1_PerVerbAPIRequestCount(ref),
+		apiserverv1.APIRequestCount{}.OpenAPIModelName():                                       schema_openshift_api_apiserver_v1_APIRequestCount(ref),
+		apiserverv1.APIRequestCountList{}.OpenAPIModelName():                                   schema_openshift_api_apiserver_v1_APIRequestCountList(ref),
+		apiserverv1.APIRequestCountSpec{}.OpenAPIModelName():                                   schema_openshift_api_apiserver_v1_APIRequestCountSpec(ref),
+		apiserverv1.APIRequestCountStatus{}.OpenAPIModelName():                                 schema_openshift_api_apiserver_v1_APIRequestCountStatus(ref),
+		apiserverv1.PerNodeAPIRequestLog{}.OpenAPIModelName():                                  schema_openshift_api_apiserver_v1_PerNodeAPIRequestLog(ref),
+		apiserverv1.PerResourceAPIRequestLog{}.OpenAPIModelName():                              schema_openshift_api_apiserver_v1_PerResourceAPIRequestLog(ref),
+		apiserverv1.PerUserAPIRequestCount{}.OpenAPIModelName():                                schema_openshift_api_apiserver_v1_PerUserAPIRequestCount(ref),
+		apiserverv1.PerVerbAPIRequestCount{}.OpenAPIModelName():                                schema_openshift_api_apiserver_v1_PerVerbAPIRequestCount(ref),
 		appsv1.CustomDeploymentStrategyParams{}.OpenAPIModelName():                             schema_openshift_api_apps_v1_CustomDeploymentStrategyParams(ref),
 		appsv1.DeploymentCause{}.OpenAPIModelName():                                            schema_openshift_api_apps_v1_DeploymentCause(ref),
 		appsv1.DeploymentCauseImageTrigger{}.OpenAPIModelName():                                schema_openshift_api_apps_v1_DeploymentCauseImageTrigger(ref),
@@ -545,11 +557,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.BackupSpec{}.OpenAPIModelName():                                         schema_openshift_api_config_v1alpha1_BackupSpec(ref),
 		configv1alpha1.BackupStatus{}.OpenAPIModelName():                                       schema_openshift_api_config_v1alpha1_BackupStatus(ref),
 		configv1alpha1.BasicAuth{}.OpenAPIModelName():                                          schema_openshift_api_config_v1alpha1_BasicAuth(ref),
-		configv1alpha1.CRIOCredentialProviderConfig{}.OpenAPIModelName():                       schema_openshift_api_config_v1alpha1_CRIOCredentialProviderConfig(ref),
-		configv1alpha1.CRIOCredentialProviderConfigList{}.OpenAPIModelName():                   schema_openshift_api_config_v1alpha1_CRIOCredentialProviderConfigList(ref),
-		configv1alpha1.CRIOCredentialProviderConfigSpec{}.OpenAPIModelName():                   schema_openshift_api_config_v1alpha1_CRIOCredentialProviderConfigSpec(ref),
-		configv1alpha1.CRIOCredentialProviderConfigStatus{}.OpenAPIModelName():                 schema_openshift_api_config_v1alpha1_CRIOCredentialProviderConfigStatus(ref),
-		configv1alpha1.CertificateConfig{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_CertificateConfig(ref),
 		configv1alpha1.ClusterMonitoring{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_ClusterMonitoring(ref),
 		configv1alpha1.ClusterMonitoringList{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ClusterMonitoringList(ref),
 		configv1alpha1.ClusterMonitoringSpec{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref),
@@ -559,9 +566,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.ControllerManagerList{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ControllerManagerList(ref),
 		configv1alpha1.ControllerManagerSpec{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ControllerManagerSpec(ref),
 		configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName():                                    schema_openshift_api_config_v1alpha1_CustomPKIPolicy(ref),
-		configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_DefaultCertificateConfig(ref),
 		configv1alpha1.DropEqualActionConfig{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_DropEqualActionConfig(ref),
-		configv1alpha1.ECDSAKeyConfig{}.OpenAPIModelName():                                     schema_openshift_api_config_v1alpha1_ECDSAKeyConfig(ref),
 		configv1alpha1.EtcdBackupSpec{}.OpenAPIModelName():                                     schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref),
 		configv1alpha1.GatherConfig{}.OpenAPIModelName():                                       schema_openshift_api_config_v1alpha1_GatherConfig(ref),
 		configv1alpha1.HashModActionConfig{}.OpenAPIModelName():                                schema_openshift_api_config_v1alpha1_HashModActionConfig(ref),
@@ -570,7 +575,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.InsightsDataGatherSpec{}.OpenAPIModelName():                             schema_openshift_api_config_v1alpha1_InsightsDataGatherSpec(ref),
 		configv1alpha1.InsightsDataGatherStatus{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref),
 		configv1alpha1.KeepEqualActionConfig{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_KeepEqualActionConfig(ref),
-		configv1alpha1.KeyConfig{}.OpenAPIModelName():                                          schema_openshift_api_config_v1alpha1_KeyConfig(ref),
 		configv1alpha1.KubeStateMetricsConfig{}.OpenAPIModelName():                             schema_openshift_api_config_v1alpha1_KubeStateMetricsConfig(ref),
 		configv1alpha1.KubeStateMetricsResourceLabels{}.OpenAPIModelName():                     schema_openshift_api_config_v1alpha1_KubeStateMetricsResourceLabels(ref),
 		configv1alpha1.Label{}.OpenAPIModelName():                                              schema_openshift_api_config_v1alpha1_Label(ref),
@@ -604,9 +608,18 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.OAuth2EndpointParam{}.OpenAPIModelName():                                schema_openshift_api_config_v1alpha1_OAuth2EndpointParam(ref),
 		configv1alpha1.OpenShiftStateMetricsConfig{}.OpenAPIModelName():                        schema_openshift_api_config_v1alpha1_OpenShiftStateMetricsConfig(ref),
 		configv1alpha1.PKI{}.OpenAPIModelName():                                                schema_openshift_api_config_v1alpha1_PKI(ref),
+		configv1alpha1.PKICertificateConfig{}.OpenAPIModelName():                               schema_openshift_api_config_v1alpha1_PKICertificateConfig(ref),
 		configv1alpha1.PKICertificateManagement{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_PKICertificateManagement(ref),
+		configv1alpha1.PKICertificatePolicy{}.OpenAPIModelName():                               schema_openshift_api_config_v1alpha1_PKICertificatePolicy(ref),
+		configv1alpha1.PKIDefaultCertificateConfig{}.OpenAPIModelName():                        schema_openshift_api_config_v1alpha1_PKIDefaultCertificateConfig(ref),
+		configv1alpha1.PKIECDSAKeyConfig{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_PKIECDSAKeyConfig(ref),
+		configv1alpha1.PKIKeyConfig{}.OpenAPIModelName():                                       schema_openshift_api_config_v1alpha1_PKIKeyConfig(ref),
+		configv1alpha1.PKIKeyPolicy{}.OpenAPIModelName():                                       schema_openshift_api_config_v1alpha1_PKIKeyPolicy(ref),
 		configv1alpha1.PKIList{}.OpenAPIModelName():                                            schema_openshift_api_config_v1alpha1_PKIList(ref),
+		configv1alpha1.PKINamedCertificateConfig{}.OpenAPIModelName():                          schema_openshift_api_config_v1alpha1_PKINamedCertificateConfig(ref),
+		configv1alpha1.PKINamedKeyConfig{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_PKINamedKeyConfig(ref),
 		configv1alpha1.PKIProfile{}.OpenAPIModelName():                                         schema_openshift_api_config_v1alpha1_PKIProfile(ref),
+		configv1alpha1.PKIRSAKeyConfig{}.OpenAPIModelName():                                    schema_openshift_api_config_v1alpha1_PKIRSAKeyConfig(ref),
 		configv1alpha1.PKISpec{}.OpenAPIModelName():                                            schema_openshift_api_config_v1alpha1_PKISpec(ref),
 		configv1alpha1.PersistentVolumeClaimReference{}.OpenAPIModelName():                     schema_openshift_api_config_v1alpha1_PersistentVolumeClaimReference(ref),
 		configv1alpha1.PersistentVolumeConfig{}.OpenAPIModelName():                             schema_openshift_api_config_v1alpha1_PersistentVolumeConfig(ref),
@@ -615,7 +628,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.PrometheusOperatorConfig{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_PrometheusOperatorConfig(ref),
 		configv1alpha1.PrometheusRemoteWriteHeader{}.OpenAPIModelName():                        schema_openshift_api_config_v1alpha1_PrometheusRemoteWriteHeader(ref),
 		configv1alpha1.QueueConfig{}.OpenAPIModelName():                                        schema_openshift_api_config_v1alpha1_QueueConfig(ref),
-		configv1alpha1.RSAKeyConfig{}.OpenAPIModelName():                                       schema_openshift_api_config_v1alpha1_RSAKeyConfig(ref),
 		configv1alpha1.RelabelActionConfig{}.OpenAPIModelName():                                schema_openshift_api_config_v1alpha1_RelabelActionConfig(ref),
 		configv1alpha1.RelabelConfig{}.OpenAPIModelName():                                      schema_openshift_api_config_v1alpha1_RelabelConfig(ref),
 		configv1alpha1.RemoteWriteAuthorization{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_RemoteWriteAuthorization(ref),
@@ -690,6 +702,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		consolev1.Link{}.OpenAPIModelName():                                                    schema_openshift_api_console_v1_Link(ref),
 		consolev1.NamespaceDashboardSpec{}.OpenAPIModelName():                                  schema_openshift_api_console_v1_NamespaceDashboardSpec(ref),
 		etcdv1.PacemakerCluster{}.OpenAPIModelName():                                           schema_openshift_api_etcd_v1_PacemakerCluster(ref),
+		etcdv1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName():                           schema_openshift_api_etcd_v1_PacemakerClusterAlertAgentStatus(ref),
 		etcdv1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName():                         schema_openshift_api_etcd_v1_PacemakerClusterFencingAgentStatus(ref),
 		etcdv1.PacemakerClusterList{}.OpenAPIModelName():                                       schema_openshift_api_etcd_v1_PacemakerClusterList(ref),
 		etcdv1.PacemakerClusterNodeStatus{}.OpenAPIModelName():                                 schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref),
@@ -1903,6 +1916,458 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 	}
 }
 
+func schema_openshift_api_apiextensions_v1_APIExcludedField(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "APIExcludedField describes a field in the schema which will not be validated by crdSchemaValidation or objectSchemaValidation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"path": {
+						SchemaProps: spec.SchemaProps{
+							Description: "path is the path to the field in the schema. Paths are dot-separated field names (e.g., \"fieldA.fieldB.fieldC\") representing nested object fields. If part of the path is a slice (e.g., \"status.conditions\") the remaining path is applied to all items in the slice (e.g., \"status.conditions.lastTransitionTimestamp\"). Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only letters, digits, and underscores, and be between 1 and 63 characters in length. A path may contain at most 16 fields.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"versions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "versions are the API versions the field is excluded from. When not specified, the field is excluded from all versions.\n\nEach item must be at most 63 characters in length, and must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character. At most 32 versions may be specified.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"path", "versions"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_APIVersions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "APIVersions specifies a set of API versions of a CRD.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"defaultSelection": {
+						SchemaProps: spec.SchemaProps{
+							Description: "defaultSelection specifies a method for automatically selecting a set of versions to require.\n\nValid options are StorageOnly and AllServed. When set to StorageOnly, only the storage version is selected for compatibility assessment. When set to AllServed, all served versions are selected for compatibility assessment.\n\nThis field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"additionalVersions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "additionalVersions specifies a set api versions to require in addition to the default selection. It is explicitly permitted to specify a version in additionalVersions which was also selected by the default selection. The selections will be merged and deduplicated.\n\nEach item must be at most 63 characters in length, and must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character. At most 32 additional versions may be specified.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"defaultSelection"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_CRDData(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CRDData contains the complete definition of a CRD.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type indicates the type of the CRD data. The only supported type is \"YAML\". When set to YAML, the value in the data field is expected to be a valid YAML document. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"data": {
+						SchemaProps: spec.SchemaProps{
+							Description: "data contains the complete definition of the CRD. This field must be in the format specified by the type field. It may not be longer than 1572864 characters. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"type", "data"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_CompatibilityRequirement(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CompatibilityRequirement expresses a set of requirements on a target CRD. It is used to ensure compatibility between different actors using the same CRD.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec is the specification of the desired behavior of the Compatibility Requirement.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.CompatibilityRequirementSpec{}.OpenAPIModelName()),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status is the most recently observed status of the Compatibility Requirement.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.CompatibilityRequirementStatus{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"metadata", "spec"},
+			},
+		},
+		Dependencies: []string{
+			v1.CompatibilityRequirementSpec{}.OpenAPIModelName(), v1.CompatibilityRequirementStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_CompatibilityRequirementList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CompatibilityRequirementList is a collection of CompatibilityRequirements.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ListMeta{}.OpenAPIModelName()),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is a list of CompatibilityRequirements.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(v1.CompatibilityRequirement{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			v1.CompatibilityRequirement{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_CompatibilityRequirementSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CompatibilityRequirementSpec is the specification of the desired behavior of the Compatibility Requirement.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"compatibilitySchema": {
+						SchemaProps: spec.SchemaProps{
+							Description: "compatibilitySchema defines the schema used by customResourceDefinitionSchemaValidation and objectSchemaValidation. This field is required.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.CompatibilitySchema{}.OpenAPIModelName()),
+						},
+					},
+					"customResourceDefinitionSchemaValidation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "customResourceDefinitionSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement. If not specified, admission of the target CRD will not be validated. This field is optional.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.CustomResourceDefinitionSchemaValidation{}.OpenAPIModelName()),
+						},
+					},
+					"objectSchemaValidation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "objectSchemaValidation ensures that matching resources conform to compatibilitySchema. If not specified, admission of matching resources will not be validated. This field is optional.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.ObjectSchemaValidation{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"compatibilitySchema"},
+			},
+		},
+		Dependencies: []string{
+			v1.CompatibilitySchema{}.OpenAPIModelName(), v1.CustomResourceDefinitionSchemaValidation{}.OpenAPIModelName(), v1.ObjectSchemaValidation{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_CompatibilityRequirementStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CompatibilityRequirementStatus defines the observed status of the Compatibility Requirement.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions is a list of conditions and their status. Known condition types are Progressing, Admitted, and Compatible.\n\nThe Progressing condition indicates if reconciliation of a CompatibilityRequirement is still progressing or has finished.\n\nThe Admitted condition indicates if the validating webhook has been configured.\n\nThe Compatible condition indicates if the observed CRD is compatible with the requirement.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"observedCRD": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedCRD documents the uid and generation of the CRD object when the current status was written. This field will be omitted if the target CRD does not exist or could not be retrieved.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.ObservedCRD{}.OpenAPIModelName()),
+						},
+					},
+					"crdName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "crdName is the name of the target CRD. The target CRD is not required to exist, as we may legitimately place requirements on it before it is created.  The observed CRD is given in status.observedCRD, which will be empty if no CRD is observed. When present, must be between 1 and 253 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters. When not specified, the requirement applies to any CRD name discovered from the compatibility schema. This field is optional. Once set, the value cannot be changed and must always remain set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			v1.ObservedCRD{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_CompatibilitySchema(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CompatibilitySchema defines the schema used by crdSchemaValidation and objectSchemaValidation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"customResourceDefinition": {
+						SchemaProps: spec.SchemaProps{
+							Description: "customResourceDefinition contains the complete definition of the CRD for schema and object validation purposes. This field is required.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.CRDData{}.OpenAPIModelName()),
+						},
+					},
+					"requiredVersions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "requiredVersions specifies a subset of the CRD's API versions which will be asserted for compatibility. This field is required.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.APIVersions{}.OpenAPIModelName()),
+						},
+					},
+					"excludedFields": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "excludedFields is a set of fields in the schema which will not be validated by crdSchemaValidation or objectSchemaValidation. The list may contain at most 64 fields. Each path in the list must be unique. When not specified, all fields in the schema will be validated.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(v1.APIExcludedField{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"customResourceDefinition", "requiredVersions"},
+			},
+		},
+		Dependencies: []string{
+			v1.APIExcludedField{}.OpenAPIModelName(), v1.APIVersions{}.OpenAPIModelName(), v1.CRDData{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_CustomResourceDefinitionSchemaValidation(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CustomResourceDefinitionSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"action": {
+						SchemaProps: spec.SchemaProps{
+							Description: "action determines whether violations are rejected (Deny) or admitted with an API warning (Warn). Valid options are Deny and Warn. When set to Deny, incompatible CRDs will be rejected and not admitted to the cluster. When set to Warn, incompatible CRDs will be allowed but a warning will be generated in the API response. This field is required.\n\nPossible enum values:\n - `\"Deny\"` means that incompatible CRDs will be rejected.\n - `\"Warn\"` means that incompatible CRDs will be allowed but a warning will be generated.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Deny", "Warn"},
+						},
+					},
+				},
+				Required: []string{"action"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_ObjectSchemaValidation(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ObjectSchemaValidation ensures that matching objects conform to the compatibilitySchema.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"action": {
+						SchemaProps: spec.SchemaProps{
+							Description: "action determines whether violations are rejected (Deny) or admitted with an API warning (Warn). Valid options are Deny and Warn. When set to Deny, incompatible Objects will be rejected and not admitted to the cluster. When set to Warn, incompatible Objects will be allowed but a warning will be generated in the API response. This field is required.\n\nPossible enum values:\n - `\"Deny\"` means that incompatible CRDs will be rejected.\n - `\"Warn\"` means that incompatible CRDs will be allowed but a warning will be generated.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Deny", "Warn"},
+						},
+					},
+					"namespaceSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "namespaceSelector defines a label selector for namespaces. If defined, only objects in a namespace with matching labels will be subject to validation. When not specified, objects for validation will not be filtered by namespace.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.LabelSelector{}.OpenAPIModelName()),
+						},
+					},
+					"objectSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "objectSelector defines a label selector for objects. If defined, only objects with matching labels will be subject to validation. When not specified, objects for validation will not be filtered by label.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.LabelSelector{}.OpenAPIModelName()),
+						},
+					},
+					"matchConditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "matchConditions defines the matchConditions field of the resulting ValidatingWebhookConfiguration. When present, must contain between 1 and 64 match conditions. When not specified, the webhook will match all requests according to its other selectors.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(admissionregistrationv1.MatchCondition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"action"},
+			},
+		},
+		Dependencies: []string{
+			admissionregistrationv1.MatchCondition{}.OpenAPIModelName(), metav1.LabelSelector{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_ObservedCRD(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ObservedCRD contains information about the observed target CRD.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"uid": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uid is the uid of the observed CRD. Must be a valid UUID consisting of lowercase hexadecimal digits in 5 hyphenated blocks (8-4-4-4-12 format). Length must be between 1 and 36 characters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"generation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "generation is the observed generation of the CRD. Must be a positive integer (minimum value of 1).",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+				Required: []string{"uid", "generation"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_apiextensions_v1alpha1_APIExcludedField(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -2387,14 +2852,14 @@ func schema_openshift_api_apiserver_v1_APIRequestCount(ref common.ReferenceCallb
 						SchemaProps: spec.SchemaProps{
 							Description: "spec defines the characteristics of the resource.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(v1.APIRequestCountSpec{}.OpenAPIModelName()),
+							Ref:         ref(apiserverv1.APIRequestCountSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Description: "status contains the observed state of the resource.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(v1.APIRequestCountStatus{}.OpenAPIModelName()),
+							Ref:         ref(apiserverv1.APIRequestCountStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -2402,7 +2867,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCount(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			v1.APIRequestCountSpec{}.OpenAPIModelName(), v1.APIRequestCountStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+			apiserverv1.APIRequestCountSpec{}.OpenAPIModelName(), apiserverv1.APIRequestCountStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -2440,7 +2905,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCountList(ref common.ReferenceC
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref(v1.APIRequestCount{}.OpenAPIModelName()),
+										Ref: ref(apiserverv1.APIRequestCount{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2451,7 +2916,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCountList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			v1.APIRequestCount{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
+			apiserverv1.APIRequestCount{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -2521,7 +2986,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCountStatus(ref common.Referenc
 						SchemaProps: spec.SchemaProps{
 							Description: "currentHour contains request history for the current hour. This is porcelain to make the API easier to read by humans seeing if they addressed a problem. This field is reset on the hour.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(v1.PerResourceAPIRequestLog{}.OpenAPIModelName()),
+							Ref:         ref(apiserverv1.PerResourceAPIRequestLog{}.OpenAPIModelName()),
 						},
 					},
 					"last24h": {
@@ -2531,7 +2996,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCountStatus(ref common.Referenc
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref(v1.PerResourceAPIRequestLog{}.OpenAPIModelName()),
+										Ref: ref(apiserverv1.PerResourceAPIRequestLog{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2542,7 +3007,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCountStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			v1.PerResourceAPIRequestLog{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+			apiserverv1.PerResourceAPIRequestLog{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -2576,7 +3041,7 @@ func schema_openshift_api_apiserver_v1_PerNodeAPIRequestLog(ref common.Reference
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref(v1.PerUserAPIRequestCount{}.OpenAPIModelName()),
+										Ref: ref(apiserverv1.PerUserAPIRequestCount{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2587,7 +3052,7 @@ func schema_openshift_api_apiserver_v1_PerNodeAPIRequestLog(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			v1.PerUserAPIRequestCount{}.OpenAPIModelName()},
+			apiserverv1.PerUserAPIRequestCount{}.OpenAPIModelName()},
 	}
 }
 
@@ -2605,7 +3070,7 @@ func schema_openshift_api_apiserver_v1_PerResourceAPIRequestLog(ref common.Refer
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref(v1.PerNodeAPIRequestLog{}.OpenAPIModelName()),
+										Ref: ref(apiserverv1.PerNodeAPIRequestLog{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2624,7 +3089,7 @@ func schema_openshift_api_apiserver_v1_PerResourceAPIRequestLog(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			v1.PerNodeAPIRequestLog{}.OpenAPIModelName()},
+			apiserverv1.PerNodeAPIRequestLog{}.OpenAPIModelName()},
 	}
 }
 
@@ -2666,7 +3131,7 @@ func schema_openshift_api_apiserver_v1_PerUserAPIRequestCount(ref common.Referen
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref(v1.PerVerbAPIRequestCount{}.OpenAPIModelName()),
+										Ref: ref(apiserverv1.PerVerbAPIRequestCount{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2677,7 +3142,7 @@ func schema_openshift_api_apiserver_v1_PerUserAPIRequestCount(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			v1.PerVerbAPIRequestCount{}.OpenAPIModelName()},
+			apiserverv1.PerVerbAPIRequestCount{}.OpenAPIModelName()},
 	}
 }
 
@@ -16922,7 +17387,7 @@ func schema_openshift_api_config_v1_InfrastructureStatus(ref common.ReferenceCal
 					},
 					"controlPlaneTopology": {
 						SchemaProps: spec.SchemaProps{
-							Description: "controlPlaneTopology expresses the expectations for operands that normally run on control nodes. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation The 'External' mode indicates that the control plane is hosted externally to the cluster and that its components are not visible within the cluster. The 'HighlyAvailableArbiter' mode indicates that the control plane will consist of 2 control-plane nodes that run conventional services and 1 smaller sized arbiter node that runs a bare minimum of services to maintain quorum.",
+							Description: "controlPlaneTopology expresses the expectations for operands that normally run on control nodes. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation The 'DualReplica' mode is used in two-node deployments with fencing. The 'External' mode indicates that the control plane is hosted externally to the cluster and that its components are not visible within the cluster. The 'HighlyAvailableArbiter' mode indicates that the control plane will consist of 2 control-plane nodes that run conventional services and 1 smaller sized arbiter node that runs a bare minimum of services to maintain quorum.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19710,6 +20175,13 @@ func schema_openshift_api_config_v1_OpenStackPlatformSpec(ref common.ReferenceCa
 									},
 								},
 							},
+						},
+					},
+					"maxAllowedAddressPairs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxAllowedAddressPairs is the maximum number of allowed address pairs configured in Neutron. When set, the value must be between 1 and 2,147,483,647 inclusive. When omitted, it means there is no opinion and the platform will choose a reasonable default which is subject to change. Currently, the default value matches Neutron's default.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 				},
@@ -23986,7 +24458,7 @@ func schema_openshift_api_config_v1alpha1_AdditionalAlertmanagerConfig(ref commo
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "staticConfigs is a list of statically configured Alertmanager endpoints in the form of `<host>:<port>`. Each entry must be a valid hostname, IPv4 address, or IPv6 address (in brackets) followed by a colon and a valid port number (1-65535). Examples: \"alertmanager.example.com:9093\", \"192.168.1.100:9093\", \"[::1]:9093\" At least one endpoint must be specified (minimum 1, maximum 10 endpoints). Each entry must be unique and non-empty (empty string is invalid).",
+							Description: "staticConfigs is a list of statically configured Alertmanager endpoints. Each entry must be a valid hostname, IPv4 address, or IPv6 address (in brackets), optionally followed by a colon and a port number (1-65535). When the port is omitted, Prometheus uses the default port for the configured scheme (80 for HTTP, 443 for HTTPS). Examples: \"alertmanager.example.com\", \"alertmanager.example.com:9093\", \"192.168.1.100:9093\", \"[::1]:9093\" At least one endpoint must be specified (minimum 1, maximum 10 endpoints). Each entry must be unique and non-empty (empty string is invalid).",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -24407,195 +24879,6 @@ func schema_openshift_api_config_v1alpha1_BasicAuth(ref common.ReferenceCallback
 	}
 }
 
-func schema_openshift_api_config_v1alpha1_CRIOCredentialProviderConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CRIOCredentialProviderConfig holds cluster-wide singleton resource configurations for CRI-O credential provider, the name of this instance is \"cluster\". CRI-O credential provider is a binary shipped with CRI-O that provides a way to obtain container image pull credentials from external sources. For example, it can be used to fetch mirror registry credentials from secrets resources in the cluster within the same namespace the pod will be running in. CRIOCredentialProviderConfig configuration specifies the pod image sources registries that should trigger the CRI-O credential provider execution, which will resolve the CRI-O mirror configurations and obtain the necessary credentials for pod creation. Note: Configuration changes will only take effect after the kubelet restarts, which is automatically managed by the cluster during rollout.\n\nThe resource is a singleton named \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-							Default:     map[string]interface{}{},
-							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Description: "spec defines the desired configuration of the CRI-O Credential Provider. This field is required and must be provided when creating the resource.",
-							Ref:         ref(configv1alpha1.CRIOCredentialProviderConfigSpec{}.OpenAPIModelName()),
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "status represents the current state of the CRIOCredentialProviderConfig. When omitted or nil, it indicates that the status has not yet been set by the controller. The controller will populate this field with validation conditions and operational state.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CRIOCredentialProviderConfigStatus{}.OpenAPIModelName()),
-						},
-					},
-				},
-				Required: []string{"spec"},
-			},
-		},
-		Dependencies: []string{
-			configv1alpha1.CRIOCredentialProviderConfigSpec{}.OpenAPIModelName(), configv1alpha1.CRIOCredentialProviderConfigStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_CRIOCredentialProviderConfigList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CRIOCredentialProviderConfigList contains a list of CRIOCredentialProviderConfig resources\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-							Default:     map[string]interface{}{},
-							Ref:         ref(metav1.ListMeta{}.OpenAPIModelName()),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Ref: ref(configv1alpha1.CRIOCredentialProviderConfig{}.OpenAPIModelName()),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"metadata", "items"},
-			},
-		},
-		Dependencies: []string{
-			configv1alpha1.CRIOCredentialProviderConfig{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_CRIOCredentialProviderConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CRIOCredentialProviderConfigSpec defines the desired configuration of the CRI-O Credential Provider.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"matchImages": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "set",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "matchImages is a list of string patterns used to determine whether the CRI-O credential provider should be invoked for a given image. This list is passed to the kubelet CredentialProviderConfig, and if any pattern matches the requested image, CRI-O credential provider will be invoked to obtain credentials for pulling that image or its mirrors. Depending on the platform, the CRI-O credential provider may be installed alongside an existing platform specific provider. Conflicts between the existing platform specific provider image match configuration and this list will be handled by the following precedence rule: credentials from built-in kubelet providers (e.g., ECR, GCR, ACR) take precedence over those from the CRIOCredentialProviderConfig when both match the same image. To avoid uncertainty, it is recommended to avoid configuring your private image patterns to overlap with existing platform specific provider config(e.g., the entries from https://github.com/openshift/machine-config-operator/blob/main/templates/common/aws/files/etc-kubernetes-credential-providers-ecr-credential-provider.yaml). You can check the resource's Status conditions to see if any entries were ignored due to exact matches with known built-in provider patterns.\n\nThis field is optional, the items of the list must contain between 1 and 50 entries. The list is treated as a set, so duplicate entries are not allowed.\n\nFor more details, see: https://kubernetes.io/docs/tasks/administer-cluster/kubelet-credential-provider/ https://github.com/cri-o/crio-credential-provider#architecture\n\nEach entry in matchImages is a pattern which can optionally contain a port and a path. Each entry must be no longer than 512 characters. Wildcards ('*') are supported for full subdomain labels, such as '*.k8s.io' or 'k8s.*.io', and for top-level domains, such as 'k8s.*' (which matches 'k8s.io' or 'k8s.net'). A global wildcard '*' (matching any domain) is not allowed. Wildcards may replace an entire hostname label (e.g., *.example.com), but they cannot appear within a label (e.g., f*oo.example.com) and are not allowed in the port or path. For example, 'example.*.com' is valid, but 'exa*mple.*.com' is not. Each wildcard matches only a single domain label, so '*.io' does **not** match '*.k8s.io'.\n\nA match exists between an image and a matchImage when all of the below are true: Both contain the same number of domain parts and each part matches. The URL path of an matchImages must be a prefix of the target image URL path. If the matchImages contains a port, then the port must match in the image as well.\n\nExample values of matchImages: - 123456789.dkr.ecr.us-east-1.amazonaws.com - *.azurecr.io - gcr.io - *.*.registry.io - registry.io:8080/path",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_CRIOCredentialProviderConfigStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CRIOCredentialProviderConfigStatus defines the observed state of CRIOCredentialProviderConfig",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"conditions": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"type",
-								},
-								"x-kubernetes-list-type": "map",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the latest available observations of the configuration state. When omitted, it indicates that no conditions have been reported yet. The maximum number of conditions is 16. Conditions are stored as a map keyed by condition type, ensuring uniqueness.\n\nExpected condition types include: \"Validated\": indicates whether the matchImages configuration is valid",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Ref: ref(metav1.Condition{}.OpenAPIModelName()),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			metav1.Condition{}.OpenAPIModelName()},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_CertificateConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CertificateConfig specifies configuration parameters for certificates. At least one property must be specified.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"key": {
-						SchemaProps: spec.SchemaProps{
-							Description: "key specifies the cryptographic parameters for the certificate's key pair. Currently this is the only configurable parameter. When omitted in an overrides entry, the key configuration from defaults is used.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.KeyConfig{}.OpenAPIModelName()),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			configv1alpha1.KeyConfig{}.OpenAPIModelName()},
-	}
-}
-
 func schema_openshift_api_config_v1alpha1_ClusterMonitoring(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24959,35 +25242,35 @@ func schema_openshift_api_config_v1alpha1_CustomPKIPolicy(ref common.ReferenceCa
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "CustomPKIPolicy contains administrator-specified cryptographic configuration. Administrators must specify defaults for all certificates and may optionally override specific categories of certificates.",
+				Description: "CustomPKIPolicy contains administrator-specified cryptographic configuration, wrapping a PKIProfile. When set, at least one property must be specified.\n\nDeprecated: the wrapped fields were flattened into PKICertificatePolicy.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"defaults": {
 						SchemaProps: spec.SchemaProps{
-							Description: "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override.",
+							Description: "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override. This field is required so that every certificate has a well-defined configuration.\n\nDeprecated: use PKICertificatePolicy.Defaults instead.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName()),
+							Ref:         ref(configv1alpha1.PKIDefaultCertificateConfig{}.OpenAPIModelName()),
 						},
 					},
 					"signerCertificates": {
 						SchemaProps: spec.SchemaProps{
-							Description: "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates.",
+							Description: "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.CACertificates instead.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
 						},
 					},
 					"servingCertificates": {
 						SchemaProps: spec.SchemaProps{
-							Description: "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates.",
+							Description: "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.ServerCertificates instead.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
 						},
 					},
 					"clientCertificates": {
 						SchemaProps: spec.SchemaProps{
-							Description: "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates.",
+							Description: "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.ClientCertificates instead.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -24995,30 +25278,7 @@ func schema_openshift_api_config_v1alpha1_CustomPKIPolicy(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			configv1alpha1.CertificateConfig{}.OpenAPIModelName(), configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName()},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_DefaultCertificateConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DefaultCertificateConfig specifies the default certificate configuration parameters. All fields are required to ensure that defaults are fully specified for all certificates.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"key": {
-						SchemaProps: spec.SchemaProps{
-							Description: "key specifies the cryptographic parameters for the certificate's key pair. This field is required in defaults to ensure all certificates have a well-defined key configuration.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.KeyConfig{}.OpenAPIModelName()),
-						},
-					},
-				},
-				Required: []string{"key"},
-			},
-		},
-		Dependencies: []string{
-			configv1alpha1.KeyConfig{}.OpenAPIModelName()},
+			configv1alpha1.PKICertificateConfig{}.OpenAPIModelName(), configv1alpha1.PKIDefaultCertificateConfig{}.OpenAPIModelName()},
 	}
 }
 
@@ -25038,27 +25298,6 @@ func schema_openshift_api_config_v1alpha1_DropEqualActionConfig(ref common.Refer
 					},
 				},
 				Required: []string{"targetLabel"},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_ECDSAKeyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ECDSAKeyConfig specifies parameters for ECDSA key generation.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"curve": {
-						SchemaProps: spec.SchemaProps{
-							Description: "curve specifies the NIST elliptic curve for ECDSA keys. Valid values are \"P256\", \"P384\", and \"P521\".\n\nWhen set to P256, the NIST P-256 curve (also known as secp256r1) is used, providing 128-bit security.\n\nWhen set to P384, the NIST P-384 curve (also known as secp384r1) is used, providing 192-bit security.\n\nWhen set to P521, the NIST P-521 curve (also known as secp521r1) is used, providing 256-bit security.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"curve"},
 			},
 		},
 	}
@@ -25334,56 +25573,6 @@ func schema_openshift_api_config_v1alpha1_KeepEqualActionConfig(ref common.Refer
 				Required: []string{"targetLabel"},
 			},
 		},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_KeyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "KeyConfig specifies cryptographic parameters for key generation.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"algorithm": {
-						SchemaProps: spec.SchemaProps{
-							Description: "algorithm specifies the key generation algorithm. Valid values are \"RSA\" and \"ECDSA\".\n\nWhen set to RSA, the rsa field must be specified and the generated key will be an RSA key with the configured key size.\n\nWhen set to ECDSA, the ecdsa field must be specified and the generated key will be an ECDSA key using the configured elliptic curve.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"rsa": {
-						SchemaProps: spec.SchemaProps{
-							Description: "rsa specifies RSA key parameters. Required when algorithm is RSA, and forbidden otherwise.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.RSAKeyConfig{}.OpenAPIModelName()),
-						},
-					},
-					"ecdsa": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ecdsa specifies ECDSA key parameters. Required when algorithm is ECDSA, and forbidden otherwise.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.ECDSAKeyConfig{}.OpenAPIModelName()),
-						},
-					},
-				},
-				Required: []string{"algorithm"},
-			},
-			VendorExtensible: spec.VendorExtensible{
-				Extensions: spec.Extensions{
-					"x-kubernetes-unions": []interface{}{
-						map[string]interface{}{
-							"discriminator": "algorithm",
-							"fields-to-discriminateBy": map[string]interface{}{
-								"ecdsa": "ECDSA",
-								"rsa":   "RSA",
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			configv1alpha1.ECDSAKeyConfig{}.OpenAPIModelName(), configv1alpha1.RSAKeyConfig{}.OpenAPIModelName()},
 	}
 }
 
@@ -26763,23 +26952,46 @@ func schema_openshift_api_config_v1alpha1_PKI(ref common.ReferenceCallback) comm
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_PKICertificateConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKICertificateConfig specifies configuration parameters for certificates.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key specifies the cryptographic parameters for the certificate's key pair.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"key"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_PKICertificateManagement(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PKICertificateManagement determines whether components use hardcoded defaults (Unmanaged), follow OpenShift best practices (Default), or use administrator-specified cryptographic parameters (Custom). This provides flexibility for organizations with specific compliance requirements or security policies while maintaining backwards compatibility for existing clusters.",
+				Description: "PKICertificateManagement is the former container for certificate configuration, a mode union determining whether components use hardcoded defaults (Unmanaged), follow OpenShift best practices (Default), or use administrator-specified cryptographic parameters (Custom).\n\nDeprecated: use PKICertificatePolicy instead.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "mode determines how PKI configuration is managed. Valid values are \"Unmanaged\", \"Default\", and \"Custom\".\n\nWhen set to Unmanaged, components use their existing hardcoded certificate generation behavior, exactly as if this feature did not exist. Each component generates certificates using whatever parameters it was using before this feature. While most components use RSA 2048, some may use different parameters. Use of this mode might prevent upgrading to the next major OpenShift release.\n\nWhen set to Default, OpenShift-recommended best practices for certificate generation are applied. The specific parameters may evolve across OpenShift releases to adopt improved cryptographic standards. In the initial release, this matches Unmanaged behavior for each component. In future releases, this may adopt ECDSA or larger RSA keys based on industry best practices. Recommended for most customers who want to benefit from security improvements automatically.\n\nWhen set to Custom, the certificate management parameters can be set explicitly. Use the custom field to specify certificate generation parameters.",
+							Description: "mode determines how PKI configuration is managed. Valid values are \"Unmanaged\", \"Default\", and \"Custom\".\n\nWhen set to Unmanaged, components use their existing hardcoded certificate generation behavior, exactly as if this feature did not exist. Each component generates certificates using whatever parameters it was using before this feature. While most components use RSA 2048, some may use different parameters. Use of this mode might prevent upgrading to the next major OpenShift release.\n\nWhen set to Default, OpenShift-recommended best practices for certificate generation are applied. The specific parameters may evolve across OpenShift releases to adopt improved cryptographic standards. In the initial release, this matches Unmanaged behavior for each component. In future releases, this may adopt ECDSA or larger RSA keys based on industry best practices. Recommended for most customers who want to benefit from security improvements automatically.\n\nWhen set to Custom, the certificate management parameters can be set explicitly. Use the custom field to specify certificate generation parameters.\n\nDeprecated: configure PKICertificatePolicy via the certificates field instead.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"custom": {
 						SchemaProps: spec.SchemaProps{
-							Description: "custom contains administrator-specified cryptographic configuration. Use the defaults and category override fields to specify certificate generation parameters. Required when mode is Custom, and forbidden otherwise.",
+							Description: "custom contains administrator-specified cryptographic configuration. Use the defaults and category override fields of the embedded PKIProfile to specify certificate generation parameters. Required when mode is Custom, and forbidden otherwise. When omitted, mode governs behavior on its own.\n\nDeprecated: use the fields of PKICertificatePolicy instead.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName()),
 						},
@@ -26802,6 +27014,202 @@ func schema_openshift_api_config_v1alpha1_PKICertificateManagement(ref common.Re
 		},
 		Dependencies: []string{
 			configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKICertificatePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKICertificatePolicy is the cluster's policy for internally-generated certificates: a required defaults, optional per-category overrides, and optional overrides for specific named certificates. The most-specific setting wins.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"defaults": {
+						SchemaProps: spec.SchemaProps{
+							Description: "defaults specifies the default certificate configuration applied to any certificate that has no more-specific (category or named) override. This field is required so that every certificate has a well-defined configuration.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIDefaultCertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"caCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "caCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all CA certificates. When omitted, defaults are used for CA certificates.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"serverCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "serverCertificates optionally overrides certificate parameters for TLS server certificates. When set, these parameters take precedence over defaults for all server certificates. When omitted, defaults are used for server certificates.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"clientCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "clientCertificates optionally overrides certificate parameters for client authentication certificates. When set, these parameters take precedence over defaults for all client certificates. When omitted, defaults are used for client certificates.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"namedCertificates": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "namedCertificates optionally overrides certificate parameters for specific certificates identified by their well-known name. These overrides have the highest precedence (named, then category, then defaults). Entries are keyed by name, so a given name may appear at most once. When omitted, no named overrides are applied. When present, the list must contain at least one entry. At most 512 named certificate overrides may be specified.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(configv1alpha1.PKINamedCertificateConfig{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"defaults"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.PKICertificateConfig{}.OpenAPIModelName(), configv1alpha1.PKIDefaultCertificateConfig{}.OpenAPIModelName(), configv1alpha1.PKINamedCertificateConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKIDefaultCertificateConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKIDefaultCertificateConfig specifies the default certificate configuration parameters. All fields are required to ensure that defaults are fully specified for all certificates.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key specifies the cryptographic parameters for the certificate's key pair. This field is required in defaults to ensure all certificates have a well-defined key configuration.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"key"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKIECDSAKeyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKIECDSAKeyConfig specifies parameters for ECDSA key generation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"curve": {
+						SchemaProps: spec.SchemaProps{
+							Description: "curve specifies the NIST elliptic curve for ECDSA keys. Valid values are \"P256\", \"P384\", and \"P521\".\n\nWhen set to P256, the NIST P-256 curve (also known as secp256r1) is used, providing 128-bit security.\n\nWhen set to P384, the NIST P-384 curve (also known as secp384r1) is used, providing 192-bit security.\n\nWhen set to P521, the NIST P-521 curve (also known as secp521r1) is used, providing 256-bit security.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"curve"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKIKeyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKIKeyConfig specifies cryptographic parameters for key generation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"algorithm": {
+						SchemaProps: spec.SchemaProps{
+							Description: "algorithm specifies the key generation algorithm. Valid values are \"RSA\" and \"ECDSA\".\n\nWhen set to RSA, the rsa field must be specified and the generated key will be an RSA key with the configured key size.\n\nWhen set to ECDSA, the ecdsa field must be specified and the generated key will be an ECDSA key using the configured elliptic curve.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"rsa": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rsa specifies RSA key parameters. Required when algorithm is RSA, and forbidden otherwise.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIRSAKeyConfig{}.OpenAPIModelName()),
+						},
+					},
+					"ecdsa": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ecdsa specifies ECDSA key parameters. Required when algorithm is ECDSA, and forbidden otherwise.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIECDSAKeyConfig{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"algorithm"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "algorithm",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"ecdsa": "ECDSA",
+								"rsa":   "RSA",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.PKIECDSAKeyConfig{}.OpenAPIModelName(), configv1alpha1.PKIRSAKeyConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKIKeyPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKIKeyPolicy configures keys generated outside of any certificate, by well-known name. When set, at least one named key must be specified; an empty object is rejected.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"namedKeys": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "namedKeys configures keys generated outside of any certificate, such as the bound service-account token signing key, identified by their well-known name. Entries are opt-in with no inherited default and are keyed by name, so a given name may appear at most once. This field is required so that a keys object is never empty. At most 16 named keys may be specified.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(configv1alpha1.PKINamedKeyConfig{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"namedKeys"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.PKINamedKeyConfig{}.OpenAPIModelName()},
 	}
 }
 
@@ -26855,39 +27263,99 @@ func schema_openshift_api_config_v1alpha1_PKIList(ref common.ReferenceCallback) 
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_PKINamedCertificateConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKINamedCertificateConfig overrides certificate parameters for a specific certificate identified by its well-known name.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the well-known override name of the targeted certificate. It is a DNS subdomain prefix, a \"/\", then a name made of alphanumerics, \"-\", \"_\" and \".\" (for example \"openshift.io/service-ca.service-serving-signer\"). The prefix is at most 253 characters and the name after the \"/\" at most 63, so the full name must be between 1 and 317 characters. The name is validated for format only; there is no registry of valid names, because certificates can be registered dynamically. Core-platform certificates use the bare \"openshift.io/\" prefix; names outside the core platform use an owner subdomain prefix (for example \"hypershift.openshift.io/\"). This field is required so that every named certificate override identifies the certificate it applies to.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key specifies the cryptographic parameters for the certificate's key pair.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"name", "key"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKINamedKeyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKINamedKeyConfig configures the cryptographic parameters for a single key generated outside of any certificate, identified by its well-known name.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the well-known name of the key. It is a DNS subdomain prefix, a \"/\", then a name made of alphanumerics, \"-\", \"_\" and \".\" (for example \"openshift.io/kube-apiserver.bound-service-account-token-signer\"). The prefix is at most 253 characters and the name after the \"/\" at most 63, so the full name must be between 1 and 317 characters. The name is validated for format only, using the same rules as a named certificate override. This field is required so that every named key entry identifies the key it configures.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key specifies the cryptographic parameters for this key. It is required because keys configured here have no inherited default.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"name", "key"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.PKIKeyConfig{}.OpenAPIModelName()},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_PKIProfile(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PKIProfile defines the certificate generation parameters that OpenShift components use to create certificates. Category overrides take precedence over defaults.",
+				Description: "PKIProfile defines the certificate generation parameters that OpenShift components use to create certificates. Category overrides take precedence over defaults.\n\nDeprecated: use PKICertificatePolicy instead.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"defaults": {
 						SchemaProps: spec.SchemaProps{
-							Description: "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override.",
+							Description: "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override. This field is required so that every certificate has a well-defined configuration.\n\nDeprecated: use PKICertificatePolicy.Defaults instead.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName()),
+							Ref:         ref(configv1alpha1.PKIDefaultCertificateConfig{}.OpenAPIModelName()),
 						},
 					},
 					"signerCertificates": {
 						SchemaProps: spec.SchemaProps{
-							Description: "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates.",
+							Description: "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.CACertificates instead.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
 						},
 					},
 					"servingCertificates": {
 						SchemaProps: spec.SchemaProps{
-							Description: "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates.",
+							Description: "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.ServerCertificates instead.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
 						},
 					},
 					"clientCertificates": {
 						SchemaProps: spec.SchemaProps{
-							Description: "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates.",
+							Description: "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.ClientCertificates instead.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
+							Ref:         ref(configv1alpha1.PKICertificateConfig{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -26895,7 +27363,28 @@ func schema_openshift_api_config_v1alpha1_PKIProfile(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			configv1alpha1.CertificateConfig{}.OpenAPIModelName(), configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName()},
+			configv1alpha1.PKICertificateConfig{}.OpenAPIModelName(), configv1alpha1.PKIDefaultCertificateConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKIRSAKeyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKIRSAKeyConfig specifies parameters for RSA key generation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"keySize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keySize specifies the size of RSA keys in bits. Valid values are multiples of 1024 from 2048 to 4096.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"keySize"},
+			},
+		},
 	}
 }
 
@@ -26903,22 +27392,35 @@ func schema_openshift_api_config_v1alpha1_PKISpec(ref common.ReferenceCallback) 
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PKISpec holds the specification for PKI configuration.",
+				Description: "PKISpec holds the specification for PKI configuration. Exactly one of certificates or certificateManagement must be set.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"certificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "certificates specifies the cluster's certificate policy for internally-generated certificates, resolved most-specific-wins: a named certificate override, then a category override (CA, server, client), then the required defaults. This field is optional and mutually exclusive with the deprecated certificateManagement field; exactly one of the two must be set. This field names a configuration policy; it is unrelated to the X.509 certificate-policies extension.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKICertificatePolicy{}.OpenAPIModelName()),
+						},
+					},
+					"keys": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keys optionally configures keys generated outside of any certificate, such as the bound service-account token signing key. Entries are named and opt-in with no inherited default. When omitted, no keys are configured by this resource. When set, at least one named key must be specified; an empty object is rejected. Unlike certificates, keys have no resolution chain: a key is either configured here or it is not, and a component whose key is not configured decides for itself (an internal default, or an error if it has none).",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.PKIKeyPolicy{}.OpenAPIModelName()),
+						},
+					},
 					"certificateManagement": {
 						SchemaProps: spec.SchemaProps{
-							Description: "certificateManagement specifies how PKI configuration is managed for internally-generated certificates. This controls the certificate generation approach for all OpenShift components that create certificates internally, including certificate authorities, serving certificates, and client certificates.",
+							Description: "certificateManagement is the former shape of certificates, a mode union (Unmanaged/Default/Custom). It is retained only so that clients written against it keep compiling and so that objects using it keep roundtripping; it is mutually exclusive with certificates and exactly one of the two must be set. Note that key validation is tighter than it was when this field was current: RSA key sizes above 4096 bits, which were previously accepted, are now rejected.\n\nDeprecated: use certificates instead.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1alpha1.PKICertificateManagement{}.OpenAPIModelName()),
 						},
 					},
 				},
-				Required: []string{"certificateManagement"},
 			},
 		},
 		Dependencies: []string{
-			configv1alpha1.PKICertificateManagement{}.OpenAPIModelName()},
+			configv1alpha1.PKICertificateManagement{}.OpenAPIModelName(), configv1alpha1.PKICertificatePolicy{}.OpenAPIModelName(), configv1alpha1.PKIKeyPolicy{}.OpenAPIModelName()},
 	}
 }
 
@@ -27422,27 +27924,6 @@ func schema_openshift_api_config_v1alpha1_QueueConfig(ref common.ReferenceCallba
 	}
 }
 
-func schema_openshift_api_config_v1alpha1_RSAKeyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RSAKeyConfig specifies parameters for RSA key generation.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"keySize": {
-						SchemaProps: spec.SchemaProps{
-							Description: "keySize specifies the size of RSA keys in bits. Valid values are multiples of 1024 from 2048 to 8192.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-				},
-				Required: []string{"keySize"},
-			},
-		},
-	}
-}
-
 func schema_openshift_api_config_v1alpha1_RelabelActionConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27554,7 +28035,7 @@ func schema_openshift_api_config_v1alpha1_RelabelConfig(ref common.ReferenceCall
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "sourceLabels specifies which label names to extract from each series for this relabeling rule. The values of these labels are joined together using the configured separator, and the resulting string is then matched against the regular expression. If a referenced label does not exist on a series, Prometheus substitutes an empty string. When omitted, the rule operates without extracting source labels (useful for actions like labelmap). Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters. Each entry must be unique. Label names beginning with \"__\" (two underscores) are reserved for internal Prometheus use and are not allowed. Label names SHOULD start with a letter (a-z, A-Z) or underscore (_), followed by zero or more letters, digits (0-9), or underscores for best compatibility. While Prometheus supports UTF-8 characters in label names (since v3.0.0), using the recommended character set ensures better compatibility with the wider ecosystem (tooling, third-party instrumentation, etc.).",
+							Description: "sourceLabels specifies which label names to extract from each series for this relabeling rule. The values of these labels are joined together using the configured separator, and the resulting string is then matched against the regular expression. If a referenced label does not exist on a series, Prometheus substitutes an empty string. When omitted, the rule operates without extracting source labels (useful for actions like labelmap). Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters. Each entry must be unique. Labels beginning with \"__\" (two underscores) are Prometheus internal/meta labels (e.g., __name__, __address__) and are valid in sourceLabels because relabeling reads from them before they are stripped. Using __name__ in sourceLabels is the standard way to filter metrics by name in writeRelabelConfigs. Label names SHOULD start with a letter (a-z, A-Z) or underscore (_), followed by zero or more letters, digits (0-9), or underscores for best compatibility. While Prometheus supports UTF-8 characters in label names (since v3.0.0), using the recommended character set ensures better compatibility with the wider ecosystem (tooling, third-party instrumentation, etc.).",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -27575,7 +28056,7 @@ func schema_openshift_api_config_v1alpha1_RelabelConfig(ref common.ReferenceCall
 					},
 					"regex": {
 						SchemaProps: spec.SchemaProps{
-							Description: "regex is the regular expression to match against the concatenated source label values. Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"(.*)\" to match everything. Must be between 1 and 1000 characters in length when specified.",
+							Description: "regex is the regular expression to match against the concatenated source label values. Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"(.*)\" to match everything. Must be between 1 and 8192 characters in length when specified.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -27671,7 +28152,7 @@ func schema_openshift_api_config_v1alpha1_RemoteWriteSpec(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"url": {
 						SchemaProps: spec.SchemaProps{
-							Description: "url is the URL of the remote write endpoint. Must be a valid URL with http or https scheme and a non-empty hostname. Query parameters, fragments, and user information (e.g. user:password@host) are not allowed. Empty string is invalid. Must be between 1 and 2048 characters in length.",
+							Description: "url is the URL of the remote write endpoint. Must be a valid URL with http or https scheme and a non-empty hostname. Query parameters are allowed. Fragments and user information (e.g. user:password@host) are not allowed. Empty string is invalid. Must be between 1 and 2048 characters in length.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -30739,6 +31220,51 @@ func schema_openshift_api_etcd_v1_PacemakerCluster(ref common.ReferenceCallback)
 	}
 }
 
+func schema_openshift_api_etcd_v1_PacemakerClusterAlertAgentStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerClusterAlertAgentStatus represents the status of a pacemaker alert agent tracked on a node. Unlike a pacemaker resource, an alert agent is registered in the CIB's <alerts> section rather than its <resources> section: pacemaker does not start, stop, monitor, or move it. Its delivery chain (script, helper script, systemd unit, sudoers entry) is delivered to each node independently by MCO.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the observations of the alert agent's current state. Known condition types are: \"Healthy\", \"Configured\", \"Available\". The \"Healthy\" condition is an aggregate that tracks the overall health of the alert agent. The \"Configured\" condition tracks whether the alert agent is registered in the CIB as expected. The \"Available\" condition tracks whether the agent's full delivery chain is present on this node. The \"Healthy\" condition may be Unknown with reason \"Pending\" when health has not yet been determined. Each of these conditions is required, so the array must contain exactly 3 items. A condition with reason \"Pending\" must have status \"Unknown\".",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is required and identifies the alert agent. Valid values are \"TaintAlertAgent\" and \"UntaintAlertAgent\". The TaintAlertAgent taints a node after it is fenced. The UntaintAlertAgent removes a node's taint once it rejoins the cluster.\n\nPossible enum values:\n - `\"TaintAlertAgent\"` is the alert agent that taints a node after it is fenced.\n - `\"UntaintAlertAgent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"TaintAlertAgent", "UntaintAlertAgent"},
+						},
+					},
+				},
+				Required: []string{"conditions", "name"},
+			},
+		},
+		Dependencies: []string{
+			metav1.Condition{}.OpenAPIModelName()},
+	}
+}
+
 func schema_openshift_api_etcd_v1_PacemakerClusterFencingAgentStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -30845,7 +31371,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref common.Referenc
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including the node's conditions and the health of critical resources running on that node.",
+				Description: "PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including the node's conditions and the health of critical resources running on that node. When the TNFObservability feature gate is enabled, once a status collector reports alertAgents for a node, later updates may not remove it. The field remains optional to tolerate collector versions that predate alert-agent tracking.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"conditions": {
@@ -30858,7 +31384,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref common.Referenc
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the node's current state. Known condition types are: \"Healthy\", \"Online\", \"InService\", \"Active\", \"Ready\", \"Clean\", \"Member\", \"FencingAvailable\", \"FencingHealthy\". The \"Healthy\" condition is an aggregate that tracks the overall health of the node. The \"Online\" condition tracks whether the node is online. The \"InService\" condition tracks whether the node is in service (not in maintenance mode). The \"Active\" condition tracks whether the node is active (not in standby mode). The \"Ready\" condition tracks whether the node is ready (not in a pending state). The \"Clean\" condition tracks whether the node is in a clean (status known) state. The \"Member\" condition tracks whether the node is a member of the cluster. The \"FencingAvailable\" condition tracks whether this node can be fenced by at least one healthy agent. The \"FencingHealthy\" condition tracks whether all fencing agents for this node are healthy. Each of these conditions is required, so the array must contain at least 9 items.",
+							Description: "conditions represent the observations of the node's current state. Known condition types are: \"Healthy\", \"Online\", \"InService\", \"Active\", \"Ready\", \"Clean\", \"Member\", \"FencingAvailable\", \"FencingHealthy\". The \"Healthy\" condition is an aggregate that tracks the overall health of the node. The \"Online\" condition tracks whether the node is online. The \"InService\" condition tracks whether the node is in service (not in maintenance mode). The \"Active\" condition tracks whether the node is active (not in standby mode). The \"Ready\" condition tracks whether the node is ready (not in a pending state). The \"Clean\" condition tracks whether the node is in a clean (status known) state. The \"Member\" condition tracks whether the node is a member of the cluster. The \"FencingAvailable\" condition tracks whether this node can be fenced by at least one healthy agent. The \"FencingHealthy\" condition tracks whether all fencing agents for this node are healthy. Each of these conditions is required, so the array must contain at least 9 items. An optional \"AlertAgentsHealthy\" condition (see NodeAlertAgentsHealthyConditionType) may also be reported when the TNFObservability feature gate is enabled; it is not one of the required 9 and its absence does not affect validation. When reported as Unknown with reason \"Pending\", \"AlertAgentsHealthy\" means the health of the tracked alert agents has not yet been determined.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30936,12 +31462,33 @@ func schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref common.Referenc
 							},
 						},
 					},
+					"alertAgents": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "alertAgents contains the status of pacemaker alert agents tracked for this node. Unlike resources, an alert agent is not managed by pacemaker: it is a script registered in the CIB's <alerts> section, delivered to this node independently by MCO. Valid alert agent names are \"TaintAlertAgent\" and \"UntaintAlertAgent\". Names must be unique within this array. This field is optional. When omitted, alert agent status is not reported for this node. This field is available only when the TNFObservability feature gate is enabled. When present, the array must contain exactly 2 items: one TaintAlertAgent and one UntaintAlertAgent.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(etcdv1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"conditions", "nodeName", "addresses", "resources", "fencingAgents"},
 			},
 		},
 		Dependencies: []string{
-			etcdv1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+			etcdv1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName(), etcdv1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -31007,7 +31554,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterStatus(ref common.ReferenceCal
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these conditions is required, so the array must contain at least 3 items.",
+							Description: "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\", \"FencingEnabled\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. The \"FencingEnabled\" condition tracks whether STONITH (fencing) is enabled in the cluster. The \"Healthy\", \"InService\", and \"NodeCountAsExpected\" conditions are required, so the array must contain at least 3 items. The \"FencingEnabled\" condition is optional and is omitted when the status collector has not yet observed the stonith-enabled property, for example immediately after an upgrade from a version that does not report it. The \"FencingEnabled\" condition is only reported when the TNFObservability feature gate is enabled. When the gate is enabled and the condition is present, its reason must be one of \"FencingEnabled\", \"FencingDisabled\", or \"Pending\".",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31395,7 +31942,7 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterStatus(ref common.Refere
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these conditions is required, so the array must contain at least 3 items.",
+							Description: "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\", \"FencingEnabled\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. The \"FencingEnabled\" condition tracks whether STONITH (fencing) is enabled in the cluster. The \"Healthy\", \"InService\", and \"NodeCountAsExpected\" conditions are required, so the array must contain at least 3 items. The \"FencingEnabled\" condition is optional and is omitted when the status collector has not yet observed the stonith-enabled property, for example immediately after an upgrade from a version that does not report it. The \"FencingEnabled\" condition is only reported when the TNFObservability feature gate is enabled. When the gate is enabled and the condition is present, its reason must be one of \"FencingEnabled\", \"FencingDisabled\", or \"Pending\".",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31877,6 +32424,13 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 						SchemaProps: spec.SchemaProps{
 							Description: "formatMarkerExamples demonstrates all Kubebuilder Format markers supported as of Kubernetes 1.33. This field serves as a comprehensive reference for format marker validation.",
 							Ref:         ref(examplev1.FormatMarkerExamples{}.OpenAPIModelName()),
+						},
+					},
+					"openShiftReleaseVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "openShiftReleaseVersion demonstrates how to validate an OpenShift release version using the isSemver CEL function. Valid values are semantic versions, which includes stable releases (e.g. 4.22.20), early candidates (e.g. 4.23.0-ec.1), release candidates (e.g. 4.22.0-rc.5), nightly builds (e.g. 4.20.0-0.nightly-2026-10-28-054721), ci builds (e.g. 4.21.0-0.ci-2026-10-28-124831), and assembly builds (e.g. 4.16.23-assembly.art12586). The validation performed on this field matches exactly the validation performed by the Cluster Version Operator's validating webhook on the desiredUpdate field. When empty, no release version is specified. The maximum length of 128 is arbitrary and should be adjusted upwards if it is ever found to be insufficient. The minimum length of 5 is the length of the shortest valid semantic version (0.0.0).",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -34946,7 +35500,7 @@ func schema_openshift_api_insights_v1_HealthCheck(ref common.ReferenceCallback) 
 					},
 					"advisorURI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "advisorURI is required field that provides the URL link to the Insights Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+							Description: "advisorURI is a required field that provides the URL link to the Red\u00a0Hat Lightspeed Advisor UI. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -35518,7 +36072,7 @@ func schema_openshift_api_insights_v1alpha1_HealthCheck(ref common.ReferenceCall
 					},
 					"advisorURI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "advisorURI is required field that provides the URL link to the Insights Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+							Description: "advisorURI is a required field that provides the URL link to the Red\u00a0Hat Lightspeed Advisor UI. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -35526,7 +36080,7 @@ func schema_openshift_api_insights_v1alpha1_HealthCheck(ref common.ReferenceCall
 					},
 					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
+							Description: "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Red\u00a0Hat Lightspeed Advisor UI.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36156,7 +36710,7 @@ func schema_openshift_api_insights_v1alpha2_HealthCheck(ref common.ReferenceCall
 					},
 					"advisorURI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "advisorURI is required field that provides the URL link to the Insights Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+							Description: "advisorURI is a required field that provides the URL link to the Red\u00a0Hat Lightspeed Advisor UI. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57984,7 +58538,7 @@ func schema_openshift_api_operator_v1_HealthCheck(ref common.ReferenceCallback) 
 					},
 					"advisorURI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "advisorURI provides the URL link to the Insights Advisor.",
+							Description: "advisorURI provides the URL link to the Red\u00a0Hat Lightspeed Advisor UI.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57992,7 +58546,7 @@ func schema_openshift_api_operator_v1_HealthCheck(ref common.ReferenceCallback) 
 					},
 					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
+							Description: "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Red\u00a0Hat Lightspeed Advisor UI.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -59794,7 +60348,7 @@ func schema_openshift_api_operator_v1_KMSPluginHealthReport(ref common.Reference
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "status contains a health indicator for the respective KMS plugin The field can have three states: healthy, unhealthy, error. With error and unhealthy containing additional information in Detail.",
+							Description: "status contains a health indicator for the respective KMS plugin. status is required and must be one of Healthy, Unhealthy or Error. When set to Healthy, the plugin responded successfully to the KMS v2 Status call and remoteKeyID is set. When set to Unhealthy, the plugin responded but reported that it is not healthy. When set to Error, the Status call failed or returned no response, for example because the plugin was unreachable. Unhealthy and Error may include additional information in detail.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -59807,7 +60361,7 @@ func schema_openshift_api_operator_v1_KMSPluginHealthReport(ref common.Reference
 					},
 					"remoteKeyID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "remoteKeyID refers to the remote key identifier from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the KEK. The value must be between 1 and 1024 characters.",
+							Description: "remoteKeyID refers to the remote key identifier from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the KEK. When omitted, no remote key identifier is available. This is expected when status is Unhealthy or Error, for example when the plugin reports that it is not healthy or could not be reached. When status is Healthy, remoteKeyID is required. When set, the value must be between 1 and 1024 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -59820,7 +60374,7 @@ func schema_openshift_api_operator_v1_KMSPluginHealthReport(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"nodeName", "keyID", "status", "lastCheckedTime", "remoteKeyID"},
+				Required: []string{"nodeName", "keyID", "status", "lastCheckedTime"},
 			},
 		},
 		Dependencies: []string{

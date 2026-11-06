@@ -777,6 +777,127 @@ tests:
           formatMarkerExamples:
             passwordField: any-string-is-valid
           nonZeroDefault: 8
+    - name: Should accept a 4.x stable OpenShift release version
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "4.22.20"
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "4.22.20"
+          nonZeroDefault: 8
+    - name: Should accept a 5.x stable OpenShift release version
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "5.0.0"
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "5.0.0"
+          nonZeroDefault: 8
+    - name: Should accept an early candidate (-ec) OpenShift release version
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "4.23.0-ec.1"
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "4.23.0-ec.1"
+          nonZeroDefault: 8
+    - name: Should accept a release candidate (-rc) OpenShift release version
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "4.22.0-rc.5"
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "4.22.0-rc.5"
+          nonZeroDefault: 8
+    - name: Should accept a nightly OpenShift release version
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "4.20.0-0.nightly-2026-10-28-054721"
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "4.20.0-0.nightly-2026-10-28-054721"
+          nonZeroDefault: 8
+    - name: Should accept a ci OpenShift release version
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "4.21.0-0.ci-2026-10-28-124831"
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "4.21.0-0.ci-2026-10-28-124831"
+          nonZeroDefault: 8
+    - name: Should accept an art assembly OpenShift release version
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "5.0.0-0.nightly-art23398-2026-09-15-115920"
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "5.0.0-0.nightly-art23398-2026-09-15-115920"
+          nonZeroDefault: 8
+    - name: Should accept a hotfix release
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          # Specific example taken from ART-12586
+          openShiftReleaseVersion: "4.16.23-assembly.art12586"
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "4.16.23-assembly.art12586"
+          nonZeroDefault: 8
+    - name: Should not accept an invalid OpenShift release version
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          openShiftReleaseVersion: "4.16"
+      expectedError: "must be a valid OpenShift release version"
 
 # The following tests pass, but we would prefer they fail due to CVE-2021-29923
 #    - name: Should reject IPv4 address with leading zeros

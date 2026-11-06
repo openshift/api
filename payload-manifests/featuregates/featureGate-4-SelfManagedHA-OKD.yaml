@@ -38,9 +38,6 @@
                         "name": "AzureDualStackInstall"
                     },
                     {
-                        "name": "AzureMultiDisk"
-                    },
-                    {
                         "name": "BGPBasedVIPManagement"
                     },
                     {
@@ -86,6 +83,9 @@
                         "name": "ClusterAPIMachineManagementGCP"
                     },
                     {
+                        "name": "ClusterAPIMachineManagementNutanix"
+                    },
+                    {
                         "name": "ClusterAPIMachineManagementOpenStack"
                     },
                     {
@@ -93,6 +93,9 @@
                     },
                     {
                         "name": "ClusterAPIMachineManagementVSphere"
+                    },
+                    {
+                        "name": "ClusterAPIOperator"
                     },
                     {
                         "name": "ClusterMonitoringConfig"
@@ -161,9 +164,6 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
-                        "name": "GatewayAPIManagementMode"
-                    },
-                    {
                         "name": "GenericWorkload"
                     },
                     {
@@ -174,12 +174,6 @@
                     },
                     {
                         "name": "ImageModeStatusReporting"
-                    },
-                    {
-                        "name": "IngressControllerLBSecurityGroupsAWS"
-                    },
-                    {
-                        "name": "KMSEncryption"
                     },
                     {
                         "name": "KarpenterOperator"
@@ -203,6 +197,9 @@
                         "name": "MachineAPIMigrationGCP"
                     },
                     {
+                        "name": "MachineAPIMigrationNutanix"
+                    },
+                    {
                         "name": "MachineAPIMigrationOpenStack"
                     },
                     {
@@ -219,6 +216,9 @@
                     },
                     {
                         "name": "MaxUnavailableStatefulSet"
+                    },
+                    {
+                        "name": "MetalEnrollmentAPI"
                     },
                     {
                         "name": "MinimumKubeletVersion"
@@ -272,7 +272,10 @@
                         "name": "OnPremDNSRecords"
                     },
                     {
-                        "name": "PodGroupPreemptionPolicy"
+                        "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
+                        "name": "OpenStackMaxAllowedAddressPairs"
                     },
                     {
                         "name": "ProvisioningRequestAvailable"
@@ -284,7 +287,13 @@
                         "name": "SignatureStores"
                     },
                     {
+                        "name": "StoragePathAlert"
+                    },
+                    {
                         "name": "TLSGroupPreferences"
+                    },
+                    {
+                        "name": "TNFObservability"
                     },
                     {
                         "name": "TopologyAwareWorkloadScheduling"
@@ -296,7 +305,7 @@
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {
-                        "name": "VSpherePerComponentScopedCreds"
+                        "name": "VSpherePerComponentScopedCredsInstall"
                     }
                 ],
                 "enabled": [
@@ -313,13 +322,13 @@
                         "name": "AuthenticationComponentProxy"
                     },
                     {
+                        "name": "AzureMultiDisk"
+                    },
+                    {
                         "name": "BuildCSIVolumes"
                     },
                     {
                         "name": "CRIOCredentialProviderConfig"
-                    },
-                    {
-                        "name": "DualReplica"
                     },
                     {
                         "name": "EVPN"
@@ -343,6 +352,9 @@
                         "name": "GCPSovereignCloudInstall"
                     },
                     {
+                        "name": "GatewayAPIManagementMode"
+                    },
+                    {
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {
@@ -355,6 +367,9 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
+                        "name": "IngressControllerLBSecurityGroupsAWS"
+                    },
+                    {
                         "name": "IngressControllerMultipleHAProxyVersions"
                     },
                     {
@@ -365,6 +380,9 @@
                     },
                     {
                         "name": "IrreconcilableMachineConfig"
+                    },
+                    {
+                        "name": "KMSEncryption"
                     },
                     {
                         "name": "KMSv1"
@@ -394,13 +412,7 @@
                         "name": "OSStreams"
                     },
                     {
-                        "name": "OpenShiftPodSecurityAdmission"
-                    },
-                    {
                         "name": "SELinuxMount"
-                    },
-                    {
-                        "name": "SELinuxMountGAReadiness"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"
@@ -410,9 +422,6 @@
                     },
                     {
                         "name": "TLSAdherence"
-                    },
-                    {
-                        "name": "UpgradeStatus"
                     },
                     {
                         "name": "VSphereHostVMGroupZonal"

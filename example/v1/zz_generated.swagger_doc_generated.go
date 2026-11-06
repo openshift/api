@@ -75,19 +75,20 @@ func (StableConfigTypeList) SwaggerDoc() map[string]string {
 }
 
 var map_StableConfigTypeSpec = map[string]string{
-	"":                       "StableConfigTypeSpec is the desired state",
-	"coolNewField":           "coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present",
-	"stableField":            "stableField is a field that is present on default clusters and on tech preview clusters\n\nIf empty, the platform will choose a good default, which may change over time without notice.",
-	"immutableField":         "immutableField is a field that is immutable once the object has been created. It is required at all times.",
-	"optionalImmutableField": "optionalImmutableField is a field that is immutable once set. It is optional but may not be changed once set.",
-	"evolvingUnion":          "evolvingUnion demonstrates how to phase in new values into discriminated union",
-	"celUnion":               "celUnion demonstrates how to validate a discrminated union using CEL",
-	"nonZeroDefault":         "nonZeroDefault is a demonstration of creating an integer field that has a non zero default. It required two default tags (one for CRD generation, one for client generation) and must have `omitempty` and be optional. A minimum value is added to demonstrate that a zero value would not be accepted.",
-	"evolvingCollection":     "evolvingCollection demonstrates how to have a collection where the maximum number of items varies on cluster type. For default clusters, this will be \"1\" but on TechPreview clusters, this value will be \"3\".",
-	"set":                    "set demonstrates how to define and validate set of strings",
-	"subdomainNameField":     "subdomainNameField represents a kubenetes name field. The intention is that it validates the name in the same way metadata.Name is validated. That is, it is a DNS-1123 subdomain.",
-	"subnetsWithExclusions":  "subnetsWithExclusions demonstrates how to validate a list of subnets with exclusions",
-	"formatMarkerExamples":   "formatMarkerExamples demonstrates all Kubebuilder Format markers supported as of Kubernetes 1.33. This field serves as a comprehensive reference for format marker validation.",
+	"":                        "StableConfigTypeSpec is the desired state",
+	"coolNewField":            "coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present",
+	"stableField":             "stableField is a field that is present on default clusters and on tech preview clusters\n\nIf empty, the platform will choose a good default, which may change over time without notice.",
+	"immutableField":          "immutableField is a field that is immutable once the object has been created. It is required at all times.",
+	"optionalImmutableField":  "optionalImmutableField is a field that is immutable once set. It is optional but may not be changed once set.",
+	"evolvingUnion":           "evolvingUnion demonstrates how to phase in new values into discriminated union",
+	"celUnion":                "celUnion demonstrates how to validate a discrminated union using CEL",
+	"nonZeroDefault":          "nonZeroDefault is a demonstration of creating an integer field that has a non zero default. It required two default tags (one for CRD generation, one for client generation) and must have `omitempty` and be optional. A minimum value is added to demonstrate that a zero value would not be accepted.",
+	"evolvingCollection":      "evolvingCollection demonstrates how to have a collection where the maximum number of items varies on cluster type. For default clusters, this will be \"1\" but on TechPreview clusters, this value will be \"3\".",
+	"set":                     "set demonstrates how to define and validate set of strings",
+	"subdomainNameField":      "subdomainNameField represents a kubenetes name field. The intention is that it validates the name in the same way metadata.Name is validated. That is, it is a DNS-1123 subdomain.",
+	"subnetsWithExclusions":   "subnetsWithExclusions demonstrates how to validate a list of subnets with exclusions",
+	"formatMarkerExamples":    "formatMarkerExamples demonstrates all Kubebuilder Format markers supported as of Kubernetes 1.33. This field serves as a comprehensive reference for format marker validation.",
+	"openShiftReleaseVersion": "openShiftReleaseVersion demonstrates how to validate an OpenShift release version using the isSemver CEL function. Valid values are semantic versions, which includes stable releases (e.g. 4.22.20), early candidates (e.g. 4.23.0-ec.1), release candidates (e.g. 4.22.0-rc.5), nightly builds (e.g. 4.20.0-0.nightly-2026-10-28-054721), ci builds (e.g. 4.21.0-0.ci-2026-10-28-124831), and assembly builds (e.g. 4.16.23-assembly.art12586). The validation performed on this field matches exactly the validation performed by the Cluster Version Operator's validating webhook on the desiredUpdate field. When empty, no release version is specified. The maximum length of 128 is arbitrary and should be adjusted upwards if it is ever found to be insufficient. The minimum length of 5 is the length of the shortest valid semantic version (0.0.0).",
 }
 
 func (StableConfigTypeSpec) SwaggerDoc() map[string]string {

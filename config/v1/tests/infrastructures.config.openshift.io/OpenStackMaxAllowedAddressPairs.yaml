@@ -1,0 +1,76 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "OpenStackMaxAllowedAddressPairs Infrastructure"
+crdName: infrastructures.config.openshift.io
+featureGates:
+- OpenStackMaxAllowedAddressPairs
+tests:
+  onCreate:
+  - name: Should allow omitting maxAllowedAddressPairs
+    initial: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec:
+        platformSpec:
+          type: OpenStack
+          openstack: {}
+    expected: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec:
+        platformSpec:
+          type: OpenStack
+          openstack: {}
+  - name: Should allow the minimum maxAllowedAddressPairs value
+    initial: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec:
+        platformSpec:
+          type: OpenStack
+          openstack:
+            maxAllowedAddressPairs: 1
+    expected: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec:
+        platformSpec:
+          type: OpenStack
+          openstack:
+            maxAllowedAddressPairs: 1
+  - name: Should allow the maximum maxAllowedAddressPairs value
+    initial: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec:
+        platformSpec:
+          type: OpenStack
+          openstack:
+            maxAllowedAddressPairs: 2147483647
+    expected: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec:
+        platformSpec:
+          type: OpenStack
+          openstack:
+            maxAllowedAddressPairs: 2147483647
+  - name: Should reject maxAllowedAddressPairs below the minimum
+    initial: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec:
+        platformSpec:
+          type: OpenStack
+          openstack:
+            maxAllowedAddressPairs: 0
+    expectedError: "maxAllowedAddressPairs in body should be greater than or equal to 1"
+  - name: Should reject maxAllowedAddressPairs above the maximum
+    initial: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec:
+        platformSpec:
+          type: OpenStack
+          openstack:
+            maxAllowedAddressPairs: 2147483648
+    expectedError: "maxAllowedAddressPairs in body should be less than or equal to 2147483647"

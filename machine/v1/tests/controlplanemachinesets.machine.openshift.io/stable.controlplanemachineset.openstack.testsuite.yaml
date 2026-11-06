@@ -119,7 +119,7 @@ tests:
               openstack:
               - rootVolume:
                   availabilityZone: foo
-    expectedError: "spec.template.machines_v1beta1_machine_openshift_io.failureDomains.openstack[0].rootVolume.volumeType: Required value, <nil>: Invalid value: \"null\": some validation rules were not checked"
+    expectedError: "spec.template.machines_v1beta1_machine_openshift_io.failureDomains.openstack[0].rootVolume.volumeType: Required value, <nil>: Invalid value: null: some validation rules were not checked"
   - name: Should reject an OpenStack failure domain with an empty rootVolume volumeType provided
     initial: |
       apiVersion: machine.openshift.io/v1

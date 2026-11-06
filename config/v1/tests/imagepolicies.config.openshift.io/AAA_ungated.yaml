@@ -528,7 +528,7 @@ tests:
             rootOfTrust:
               policyType: PKI
               pki: {}
-      expectedError: "spec.policy.rootOfTrust.pki.caRootsData: Required value, spec.policy.rootOfTrust.pki.pkiCertificateSubject: Required value, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation"
+      expectedError: "spec.policy.rootOfTrust.pki.caRootsData: Required value, spec.policy.rootOfTrust.pki.pkiCertificateSubject: Required value, <nil>: Invalid value: null: some validation rules were not checked because the object was invalid; correct the existing errors to complete validation"
     - name: Should not allow caRootsData not encoded from PEM
       initial: |
         apiVersion: config.openshift.io/v1

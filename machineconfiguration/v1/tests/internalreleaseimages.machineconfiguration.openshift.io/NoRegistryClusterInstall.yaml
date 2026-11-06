@@ -75,7 +75,7 @@ tests:
         releases:
           - name: ocp-release-bundle-4.18.0-x86_64
           - name: ocp-release-bundle-4.18.0-x86_64
-    expectedError: "Duplicate value: map[string]interface {}{\"name\":\"ocp-release-bundle-4.18.0-x86_64\"}"
+    expectedError: "Duplicate value: {\"name\":\"ocp-release-bundle-4.18.0-x86_64\"}"
   - name: Invalid release name format
     initial: |
       apiVersion: machineconfiguration.openshift.io/v1

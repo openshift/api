@@ -29,6 +29,12 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
+                        "name": "ClusterAPIOperator"
+                    },
+                    {
+                        "name": "CompositePodGroup"
+                    },
+                    {
                         "name": "ControllerManagerConfig"
                     },
                     {
@@ -84,6 +90,9 @@
                     },
                     {
                         "name": "ShortCertRotation"
+                    },
+                    {
+                        "name": "TNFObservability"
                     },
                     {
                         "name": "UnifiedClusterManagedDNSAndLB"
@@ -166,6 +175,9 @@
                         "name": "ClusterAPIMachineManagementGCP"
                     },
                     {
+                        "name": "ClusterAPIMachineManagementNutanix"
+                    },
+                    {
                         "name": "ClusterAPIMachineManagementOpenStack"
                     },
                     {
@@ -187,9 +199,6 @@
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
-                        "name": "CompositePodGroup"
-                    },
-                    {
                         "name": "ConfidentialCluster"
                     },
                     {
@@ -203,9 +212,6 @@
                     },
                     {
                         "name": "DRAWorkloadResourceClaims"
-                    },
-                    {
-                        "name": "DualReplica"
                     },
                     {
                         "name": "DyanmicServiceEndpointIBMCloud"
@@ -316,6 +322,9 @@
                         "name": "MachineAPIMigrationAWS"
                     },
                     {
+                        "name": "MachineAPIMigrationNutanix"
+                    },
+                    {
                         "name": "MachineAPIMigrationOpenStack"
                     },
                     {
@@ -329,6 +338,9 @@
                     },
                     {
                         "name": "MaxUnavailableStatefulSet"
+                    },
+                    {
+                        "name": "MetalEnrollmentAPI"
                     },
                     {
                         "name": "MetricsCollectionProfiles"
@@ -376,7 +388,7 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
-                        "name": "PodGroupPreemptionPolicy"
+                        "name": "OpenStackMaxAllowedAddressPairs"
                     },
                     {
                         "name": "ProvisioningRequestAvailable"
@@ -385,13 +397,13 @@
                         "name": "SELinuxMount"
                     },
                     {
-                        "name": "SELinuxMountGAReadiness"
-                    },
-                    {
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
                         "name": "SignatureStores"
+                    },
+                    {
+                        "name": "StoragePathAlert"
                     },
                     {
                         "name": "StoragePerformantSecurityPolicy"
@@ -406,9 +418,6 @@
                         "name": "TopologyAwareWorkloadScheduling"
                     },
                     {
-                        "name": "UpgradeStatus"
-                    },
-                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {
@@ -421,7 +430,7 @@
                         "name": "VSphereMultiVCenterDay2"
                     },
                     {
-                        "name": "VSpherePerComponentScopedCreds"
+                        "name": "VSpherePerComponentScopedCredsInstall"
                     }
                 ],
                 "version": ""

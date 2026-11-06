@@ -1,0 +1,239 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "ClusterVersion"
+crdName: clusterversions.config.openshift.io
+featureGates:
+  - CRDCompatibilityRequirementOperator
+  - ClusterAPIOperator
+tests:
+  onCreate:
+    - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities baremetal and MachineAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
+            - MachineAPI
+            - ClusterAPI
+            - CompatibilityRequirements
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
+            - MachineAPI
+            - ClusterAPI
+            - CompatibilityRequirements
+    - name: Should reject MachineAPI without ClusterAPI when both gates are enabled
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - MachineAPI
+            - CompatibilityRequirements
+      expectedError: the MachineAPI capability requires the ClusterAPI capability
+    - name: Should accept MachineAPI with both prerequisites when both gates are enabled
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - MachineAPI
+            - ClusterAPI
+            - CompatibilityRequirements
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - MachineAPI
+            - ClusterAPI
+            - CompatibilityRequirements
+    - name: Should be able to create a ClusterVersion with the vCurrent baseline supplying CompatibilityRequirements for an explicitly added ClusterAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: vCurrent
+            additionalEnabledCapabilities:
+            - ClusterAPI
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: vCurrent
+            additionalEnabledCapabilities:
+            - ClusterAPI
+    - name: Should be able to create a ClusterVersion with the vCurrent baseline and both MachineAPI and ClusterAPI explicitly added
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: vCurrent
+            additionalEnabledCapabilities:
+            - MachineAPI
+            - ClusterAPI
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: vCurrent
+            additionalEnabledCapabilities:
+            - MachineAPI
+            - ClusterAPI
+    - name: Should be able to create a ClusterVersion with an omitted baseline supplying CompatibilityRequirements for an explicitly added ClusterAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            additionalEnabledCapabilities:
+            - ClusterAPI
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            additionalEnabledCapabilities:
+            - ClusterAPI
+    - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities ClusterAPI and CompatibilityRequirements
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - ClusterAPI
+            - CompatibilityRequirements
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - ClusterAPI
+            - CompatibilityRequirements
+    - name: Should not be able to create a ClusterVersion with base capability None, and additional capability ClusterAPI without CompatibilityRequirements
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - ClusterAPI
+      expectedError: the `ClusterAPI` capability requires the `CompatibilityRequirements` capability, which is neither explicitly or implicitly enabled in this cluster, please enable the `CompatibilityRequirements` capability
+    - name: Should be able to create a ClusterVersion with base capability None, and additional capability CompatibilityRequirements without ClusterAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - CompatibilityRequirements
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - CompatibilityRequirements
+  onUpdate:
+    - name: Should be able to add the ClusterAPI capability with CompatibilityRequirements already implicitly enabled
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          capabilities:
+            enabledCapabilities:
+            - CompatibilityRequirements
+          availableUpdates:
+            - version: foo
+              image: foo
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - ClusterAPI
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          capabilities:
+            enabledCapabilities:
+            - CompatibilityRequirements
+          availableUpdates:
+            - version: foo
+              image: foo
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - ClusterAPI
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          capabilities:
+            enabledCapabilities:
+            - CompatibilityRequirements
+          availableUpdates:
+            - version: foo
+              image: foo

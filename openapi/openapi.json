@@ -6,6 +6,278 @@
   },
   "paths": null,
   "definitions": {
+    "com.github.openshift.api.apiextensions.v1.APIExcludedField": {
+      "description": "APIExcludedField describes a field in the schema which will not be validated by crdSchemaValidation or objectSchemaValidation.",
+      "type": "object",
+      "required": [
+        "path",
+        "versions"
+      ],
+      "properties": {
+        "path": {
+          "description": "path is the path to the field in the schema. Paths are dot-separated field names (e.g., \"fieldA.fieldB.fieldC\") representing nested object fields. If part of the path is a slice (e.g., \"status.conditions\") the remaining path is applied to all items in the slice (e.g., \"status.conditions.lastTransitionTimestamp\"). Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only letters, digits, and underscores, and be between 1 and 63 characters in length. A path may contain at most 16 fields.",
+          "type": "string"
+        },
+        "versions": {
+          "description": "versions are the API versions the field is excluded from. When not specified, the field is excluded from all versions.\n\nEach item must be at most 63 characters in length, and must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character. At most 32 versions may be specified.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-kubernetes-list-type": "set"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1.APIVersions": {
+      "description": "APIVersions specifies a set of API versions of a CRD.",
+      "type": "object",
+      "required": [
+        "defaultSelection"
+      ],
+      "properties": {
+        "additionalVersions": {
+          "description": "additionalVersions specifies a set api versions to require in addition to the default selection. It is explicitly permitted to specify a version in additionalVersions which was also selected by the default selection. The selections will be merged and deduplicated.\n\nEach item must be at most 63 characters in length, and must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character. At most 32 additional versions may be specified.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "defaultSelection": {
+          "description": "defaultSelection specifies a method for automatically selecting a set of versions to require.\n\nValid options are StorageOnly and AllServed. When set to StorageOnly, only the storage version is selected for compatibility assessment. When set to AllServed, all served versions are selected for compatibility assessment.\n\nThis field is required.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1.CRDData": {
+      "description": "CRDData contains the complete definition of a CRD.",
+      "type": "object",
+      "required": [
+        "type",
+        "data"
+      ],
+      "properties": {
+        "data": {
+          "description": "data contains the complete definition of the CRD. This field must be in the format specified by the type field. It may not be longer than 1572864 characters. This field is required.",
+          "type": "string"
+        },
+        "type": {
+          "description": "type indicates the type of the CRD data. The only supported type is \"YAML\". When set to YAML, the value in the data field is expected to be a valid YAML document. This field is required.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1.CompatibilityRequirement": {
+      "description": "CompatibilityRequirement expresses a set of requirements on a target CRD. It is used to ensure compatibility between different actors using the same CRD.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata",
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the specification of the desired behavior of the Compatibility Requirement.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1.CompatibilityRequirementSpec"
+        },
+        "status": {
+          "description": "status is the most recently observed status of the Compatibility Requirement.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1.CompatibilityRequirementStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1.CompatibilityRequirementList": {
+      "description": "CompatibilityRequirementList is a collection of CompatibilityRequirements.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of CompatibilityRequirements.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1.CompatibilityRequirement"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1.CompatibilityRequirementSpec": {
+      "description": "CompatibilityRequirementSpec is the specification of the desired behavior of the Compatibility Requirement.",
+      "type": "object",
+      "required": [
+        "compatibilitySchema"
+      ],
+      "properties": {
+        "compatibilitySchema": {
+          "description": "compatibilitySchema defines the schema used by customResourceDefinitionSchemaValidation and objectSchemaValidation. This field is required.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1.CompatibilitySchema"
+        },
+        "customResourceDefinitionSchemaValidation": {
+          "description": "customResourceDefinitionSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement. If not specified, admission of the target CRD will not be validated. This field is optional.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1.CustomResourceDefinitionSchemaValidation"
+        },
+        "objectSchemaValidation": {
+          "description": "objectSchemaValidation ensures that matching resources conform to compatibilitySchema. If not specified, admission of matching resources will not be validated. This field is optional.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1.ObjectSchemaValidation"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1.CompatibilityRequirementStatus": {
+      "description": "CompatibilityRequirementStatus defines the observed status of the Compatibility Requirement.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions is a list of conditions and their status. Known condition types are Progressing, Admitted, and Compatible.\n\nThe Progressing condition indicates if reconciliation of a CompatibilityRequirement is still progressing or has finished.\n\nThe Admitted condition indicates if the validating webhook has been configured.\n\nThe Compatible condition indicates if the observed CRD is compatible with the requirement.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "crdName": {
+          "description": "crdName is the name of the target CRD. The target CRD is not required to exist, as we may legitimately place requirements on it before it is created.  The observed CRD is given in status.observedCRD, which will be empty if no CRD is observed. When present, must be between 1 and 253 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters. When not specified, the requirement applies to any CRD name discovered from the compatibility schema. This field is optional. Once set, the value cannot be changed and must always remain set.",
+          "type": "string"
+        },
+        "observedCRD": {
+          "description": "observedCRD documents the uid and generation of the CRD object when the current status was written. This field will be omitted if the target CRD does not exist or could not be retrieved.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1.ObservedCRD"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1.CompatibilitySchema": {
+      "description": "CompatibilitySchema defines the schema used by crdSchemaValidation and objectSchemaValidation.",
+      "type": "object",
+      "required": [
+        "customResourceDefinition",
+        "requiredVersions"
+      ],
+      "properties": {
+        "customResourceDefinition": {
+          "description": "customResourceDefinition contains the complete definition of the CRD for schema and object validation purposes. This field is required.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1.CRDData"
+        },
+        "excludedFields": {
+          "description": "excludedFields is a set of fields in the schema which will not be validated by crdSchemaValidation or objectSchemaValidation. The list may contain at most 64 fields. Each path in the list must be unique. When not specified, all fields in the schema will be validated.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1.APIExcludedField"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "requiredVersions": {
+          "description": "requiredVersions specifies a subset of the CRD's API versions which will be asserted for compatibility. This field is required.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1.APIVersions"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1.CustomResourceDefinitionSchemaValidation": {
+      "description": "CustomResourceDefinitionSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement.",
+      "type": "object",
+      "required": [
+        "action"
+      ],
+      "properties": {
+        "action": {
+          "description": "action determines whether violations are rejected (Deny) or admitted with an API warning (Warn). Valid options are Deny and Warn. When set to Deny, incompatible CRDs will be rejected and not admitted to the cluster. When set to Warn, incompatible CRDs will be allowed but a warning will be generated in the API response. This field is required.\n\nPossible enum values:\n - `\"Deny\"` means that incompatible CRDs will be rejected.\n - `\"Warn\"` means that incompatible CRDs will be allowed but a warning will be generated.",
+          "type": "string",
+          "enum": [
+            "Deny",
+            "Warn"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1.ObjectSchemaValidation": {
+      "description": "ObjectSchemaValidation ensures that matching objects conform to the compatibilitySchema.",
+      "type": "object",
+      "required": [
+        "action"
+      ],
+      "properties": {
+        "action": {
+          "description": "action determines whether violations are rejected (Deny) or admitted with an API warning (Warn). Valid options are Deny and Warn. When set to Deny, incompatible Objects will be rejected and not admitted to the cluster. When set to Warn, incompatible Objects will be allowed but a warning will be generated in the API response. This field is required.\n\nPossible enum values:\n - `\"Deny\"` means that incompatible CRDs will be rejected.\n - `\"Warn\"` means that incompatible CRDs will be allowed but a warning will be generated.",
+          "type": "string",
+          "enum": [
+            "Deny",
+            "Warn"
+          ]
+        },
+        "matchConditions": {
+          "description": "matchConditions defines the matchConditions field of the resulting ValidatingWebhookConfiguration. When present, must contain between 1 and 64 match conditions. When not specified, the webhook will match all requests according to its other selectors.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.admissionregistration.v1.MatchCondition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "namespaceSelector": {
+          "description": "namespaceSelector defines a label selector for namespaces. If defined, only objects in a namespace with matching labels will be subject to validation. When not specified, objects for validation will not be filtered by namespace.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
+        },
+        "objectSelector": {
+          "description": "objectSelector defines a label selector for objects. If defined, only objects with matching labels will be subject to validation. When not specified, objects for validation will not be filtered by label.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1.ObservedCRD": {
+      "description": "ObservedCRD contains information about the observed target CRD.",
+      "type": "object",
+      "required": [
+        "uid",
+        "generation"
+      ],
+      "properties": {
+        "generation": {
+          "description": "generation is the observed generation of the CRD. Must be a positive integer (minimum value of 1).",
+          "type": "integer",
+          "format": "int64"
+        },
+        "uid": {
+          "description": "uid is the uid of the observed CRD. Must be a valid UUID consisting of lowercase hexadecimal digits in 5 hyphenated blocks (8-4-4-4-12 format). Length must be between 1 and 36 characters.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.apiextensions.v1alpha1.APIExcludedField": {
       "description": "APIExcludedField describes a field in the schema which will not be validated by crdSchemaValidation or objectSchemaValidation.",
       "type": "object",
@@ -8753,7 +9025,7 @@
           "default": ""
         },
         "controlPlaneTopology": {
-          "description": "controlPlaneTopology expresses the expectations for operands that normally run on control nodes. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation The 'External' mode indicates that the control plane is hosted externally to the cluster and that its components are not visible within the cluster. The 'HighlyAvailableArbiter' mode indicates that the control plane will consist of 2 control-plane nodes that run conventional services and 1 smaller sized arbiter node that runs a bare minimum of services to maintain quorum.",
+          "description": "controlPlaneTopology expresses the expectations for operands that normally run on control nodes. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation The 'DualReplica' mode is used in two-node deployments with fencing. The 'External' mode indicates that the control plane is hosted externally to the cluster and that its components are not visible within the cluster. The 'HighlyAvailableArbiter' mode indicates that the control plane will consist of 2 control-plane nodes that run conventional services and 1 smaller sized arbiter node that runs a bare minimum of services to maintain quorum.",
           "type": "string",
           "default": ""
         },
@@ -10363,6 +10635,11 @@
             "type": "string"
           },
           "x-kubernetes-list-type": "atomic"
+        },
+        "maxAllowedAddressPairs": {
+          "description": "maxAllowedAddressPairs is the maximum number of allowed address pairs configured in Neutron. When set, the value must be between 1 and 2,147,483,647 inclusive. When omitted, it means there is no opinion and the platform will choose a reasonable default which is subject to change. Currently, the default value matches Neutron's default.",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -12887,7 +13164,7 @@
           "type": "string"
         },
         "staticConfigs": {
-          "description": "staticConfigs is a list of statically configured Alertmanager endpoints in the form of `<host>:<port>`. Each entry must be a valid hostname, IPv4 address, or IPv6 address (in brackets) followed by a colon and a valid port number (1-65535). Examples: \"alertmanager.example.com:9093\", \"192.168.1.100:9093\", \"[::1]:9093\" At least one endpoint must be specified (minimum 1, maximum 10 endpoints). Each entry must be unique and non-empty (empty string is invalid).",
+          "description": "staticConfigs is a list of statically configured Alertmanager endpoints. Each entry must be a valid hostname, IPv4 address, or IPv6 address (in brackets), optionally followed by a colon and a port number (1-65535). When the port is omitted, Prometheus uses the default port for the configured scheme (80 for HTTP, 443 for HTTPS). Examples: \"alertmanager.example.com\", \"alertmanager.example.com:9093\", \"192.168.1.100:9093\", \"[::1]:9093\" At least one endpoint must be specified (minimum 1, maximum 10 endpoints). Each entry must be unique and non-empty (empty string is invalid).",
           "type": "array",
           "items": {
             "type": "string"
@@ -13128,108 +13405,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1alpha1.CRIOCredentialProviderConfig": {
-      "description": "CRIOCredentialProviderConfig holds cluster-wide singleton resource configurations for CRI-O credential provider, the name of this instance is \"cluster\". CRI-O credential provider is a binary shipped with CRI-O that provides a way to obtain container image pull credentials from external sources. For example, it can be used to fetch mirror registry credentials from secrets resources in the cluster within the same namespace the pod will be running in. CRIOCredentialProviderConfig configuration specifies the pod image sources registries that should trigger the CRI-O credential provider execution, which will resolve the CRI-O mirror configurations and obtain the necessary credentials for pod creation. Note: Configuration changes will only take effect after the kubelet restarts, which is automatically managed by the cluster during rollout.\n\nThe resource is a singleton named \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-      "type": "object",
-      "required": [
-        "spec"
-      ],
-      "properties": {
-        "apiVersion": {
-          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-          "type": "string"
-        },
-        "kind": {
-          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-          "type": "string"
-        },
-        "metadata": {
-          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
-        },
-        "spec": {
-          "description": "spec defines the desired configuration of the CRI-O Credential Provider. This field is required and must be provided when creating the resource.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CRIOCredentialProviderConfigSpec"
-        },
-        "status": {
-          "description": "status represents the current state of the CRIOCredentialProviderConfig. When omitted or nil, it indicates that the status has not yet been set by the controller. The controller will populate this field with validation conditions and operational state.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CRIOCredentialProviderConfigStatus"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.CRIOCredentialProviderConfigList": {
-      "description": "CRIOCredentialProviderConfigList contains a list of CRIOCredentialProviderConfig resources\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-      "type": "object",
-      "required": [
-        "metadata",
-        "items"
-      ],
-      "properties": {
-        "apiVersion": {
-          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-          "type": "string"
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CRIOCredentialProviderConfig"
-          }
-        },
-        "kind": {
-          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-          "type": "string"
-        },
-        "metadata": {
-          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.CRIOCredentialProviderConfigSpec": {
-      "description": "CRIOCredentialProviderConfigSpec defines the desired configuration of the CRI-O Credential Provider.",
-      "type": "object",
-      "properties": {
-        "matchImages": {
-          "description": "matchImages is a list of string patterns used to determine whether the CRI-O credential provider should be invoked for a given image. This list is passed to the kubelet CredentialProviderConfig, and if any pattern matches the requested image, CRI-O credential provider will be invoked to obtain credentials for pulling that image or its mirrors. Depending on the platform, the CRI-O credential provider may be installed alongside an existing platform specific provider. Conflicts between the existing platform specific provider image match configuration and this list will be handled by the following precedence rule: credentials from built-in kubelet providers (e.g., ECR, GCR, ACR) take precedence over those from the CRIOCredentialProviderConfig when both match the same image. To avoid uncertainty, it is recommended to avoid configuring your private image patterns to overlap with existing platform specific provider config(e.g., the entries from https://github.com/openshift/machine-config-operator/blob/main/templates/common/aws/files/etc-kubernetes-credential-providers-ecr-credential-provider.yaml). You can check the resource's Status conditions to see if any entries were ignored due to exact matches with known built-in provider patterns.\n\nThis field is optional, the items of the list must contain between 1 and 50 entries. The list is treated as a set, so duplicate entries are not allowed.\n\nFor more details, see: https://kubernetes.io/docs/tasks/administer-cluster/kubelet-credential-provider/ https://github.com/cri-o/crio-credential-provider#architecture\n\nEach entry in matchImages is a pattern which can optionally contain a port and a path. Each entry must be no longer than 512 characters. Wildcards ('*') are supported for full subdomain labels, such as '*.k8s.io' or 'k8s.*.io', and for top-level domains, such as 'k8s.*' (which matches 'k8s.io' or 'k8s.net'). A global wildcard '*' (matching any domain) is not allowed. Wildcards may replace an entire hostname label (e.g., *.example.com), but they cannot appear within a label (e.g., f*oo.example.com) and are not allowed in the port or path. For example, 'example.*.com' is valid, but 'exa*mple.*.com' is not. Each wildcard matches only a single domain label, so '*.io' does **not** match '*.k8s.io'.\n\nA match exists between an image and a matchImage when all of the below are true: Both contain the same number of domain parts and each part matches. The URL path of an matchImages must be a prefix of the target image URL path. If the matchImages contains a port, then the port must match in the image as well.\n\nExample values of matchImages: - 123456789.dkr.ecr.us-east-1.amazonaws.com - *.azurecr.io - gcr.io - *.*.registry.io - registry.io:8080/path",
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-kubernetes-list-type": "set"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.CRIOCredentialProviderConfigStatus": {
-      "description": "CRIOCredentialProviderConfigStatus defines the observed state of CRIOCredentialProviderConfig",
-      "type": "object",
-      "properties": {
-        "conditions": {
-          "description": "conditions represent the latest available observations of the configuration state. When omitted, it indicates that no conditions have been reported yet. The maximum number of conditions is 16. Conditions are stored as a map keyed by condition type, ensuring uniqueness.\n\nExpected condition types include: \"Validated\": indicates whether the matchImages configuration is valid",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
-          },
-          "x-kubernetes-list-map-keys": [
-            "type"
-          ],
-          "x-kubernetes-list-type": "map"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.CertificateConfig": {
-      "description": "CertificateConfig specifies configuration parameters for certificates. At least one property must be specified.",
-      "type": "object",
-      "properties": {
-        "key": {
-          "description": "key specifies the cryptographic parameters for the certificate's key pair. Currently this is the only configurable parameter. When omitted in an overrides entry, the key configuration from defaults is used.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.KeyConfig"
-        }
-      }
-    },
     "com.github.openshift.api.config.v1alpha1.ClusterMonitoring": {
       "description": "ClusterMonitoring is the Custom Resource object which holds the current status of Cluster Monitoring Operator. CMO is a central component of the monitoring stack.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
       "type": "object",
@@ -13450,45 +13625,31 @@
       }
     },
     "com.github.openshift.api.config.v1alpha1.CustomPKIPolicy": {
-      "description": "CustomPKIPolicy contains administrator-specified cryptographic configuration. Administrators must specify defaults for all certificates and may optionally override specific categories of certificates.",
+      "description": "CustomPKIPolicy contains administrator-specified cryptographic configuration, wrapping a PKIProfile. When set, at least one property must be specified.\n\nDeprecated: the wrapped fields were flattened into PKICertificatePolicy.",
       "type": "object",
       "required": [
         "defaults"
       ],
       "properties": {
         "clientCertificates": {
-          "description": "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates.",
+          "description": "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.ClientCertificates instead.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CertificateConfig"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateConfig"
         },
         "defaults": {
-          "description": "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override.",
+          "description": "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override. This field is required so that every certificate has a well-defined configuration.\n\nDeprecated: use PKICertificatePolicy.Defaults instead.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.DefaultCertificateConfig"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIDefaultCertificateConfig"
         },
         "servingCertificates": {
-          "description": "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates.",
+          "description": "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.ServerCertificates instead.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CertificateConfig"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateConfig"
         },
         "signerCertificates": {
-          "description": "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates.",
+          "description": "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.CACertificates instead.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CertificateConfig"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.DefaultCertificateConfig": {
-      "description": "DefaultCertificateConfig specifies the default certificate configuration parameters. All fields are required to ensure that defaults are fully specified for all certificates.",
-      "type": "object",
-      "required": [
-        "key"
-      ],
-      "properties": {
-        "key": {
-          "description": "key specifies the cryptographic parameters for the certificate's key pair. This field is required in defaults to ensure all certificates have a well-defined key configuration.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.KeyConfig"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateConfig"
         }
       }
     },
@@ -13501,19 +13662,6 @@
       "properties": {
         "targetLabel": {
           "description": "targetLabel is the label name whose value is compared to the concatenated source_labels; targets that match are dropped. Must be between 1 and 128 characters in length.",
-          "type": "string"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.ECDSAKeyConfig": {
-      "description": "ECDSAKeyConfig specifies parameters for ECDSA key generation.",
-      "type": "object",
-      "required": [
-        "curve"
-      ],
-      "properties": {
-        "curve": {
-          "description": "curve specifies the NIST elliptic curve for ECDSA keys. Valid values are \"P256\", \"P384\", and \"P521\".\n\nWhen set to P256, the NIST P-256 curve (also known as secp256r1) is used, providing 128-bit security.\n\nWhen set to P384, the NIST P-384 curve (also known as secp384r1) is used, providing 192-bit security.\n\nWhen set to P521, the NIST P-521 curve (also known as secp521r1) is used, providing 256-bit security.",
           "type": "string"
         }
       }
@@ -13671,38 +13819,6 @@
           "type": "string"
         }
       }
-    },
-    "com.github.openshift.api.config.v1alpha1.KeyConfig": {
-      "description": "KeyConfig specifies cryptographic parameters for key generation.",
-      "type": "object",
-      "required": [
-        "algorithm"
-      ],
-      "properties": {
-        "algorithm": {
-          "description": "algorithm specifies the key generation algorithm. Valid values are \"RSA\" and \"ECDSA\".\n\nWhen set to RSA, the rsa field must be specified and the generated key will be an RSA key with the configured key size.\n\nWhen set to ECDSA, the ecdsa field must be specified and the generated key will be an ECDSA key using the configured elliptic curve.",
-          "type": "string"
-        },
-        "ecdsa": {
-          "description": "ecdsa specifies ECDSA key parameters. Required when algorithm is ECDSA, and forbidden otherwise.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ECDSAKeyConfig"
-        },
-        "rsa": {
-          "description": "rsa specifies RSA key parameters. Required when algorithm is RSA, and forbidden otherwise.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RSAKeyConfig"
-        }
-      },
-      "x-kubernetes-unions": [
-        {
-          "discriminator": "algorithm",
-          "fields-to-discriminateBy": {
-            "ecdsa": "ECDSA",
-            "rsa": "RSA"
-          }
-        }
-      ]
     },
     "com.github.openshift.api.config.v1alpha1.KubeStateMetricsConfig": {
       "description": "KubeStateMetricsConfig provides configuration options for the kube-state-metrics agent that runs in the `openshift-monitoring` namespace. kube-state-metrics generates metrics about the state of Kubernetes objects such as Deployments, Nodes, and Pods.",
@@ -14538,20 +14654,34 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.PKICertificateConfig": {
+      "description": "PKICertificateConfig specifies configuration parameters for certificates.",
+      "type": "object",
+      "required": [
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "description": "key specifies the cryptographic parameters for the certificate's key pair.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIKeyConfig"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.PKICertificateManagement": {
-      "description": "PKICertificateManagement determines whether components use hardcoded defaults (Unmanaged), follow OpenShift best practices (Default), or use administrator-specified cryptographic parameters (Custom). This provides flexibility for organizations with specific compliance requirements or security policies while maintaining backwards compatibility for existing clusters.",
+      "description": "PKICertificateManagement is the former container for certificate configuration, a mode union determining whether components use hardcoded defaults (Unmanaged), follow OpenShift best practices (Default), or use administrator-specified cryptographic parameters (Custom).\n\nDeprecated: use PKICertificatePolicy instead.",
       "type": "object",
       "required": [
         "mode"
       ],
       "properties": {
         "custom": {
-          "description": "custom contains administrator-specified cryptographic configuration. Use the defaults and category override fields to specify certificate generation parameters. Required when mode is Custom, and forbidden otherwise.",
+          "description": "custom contains administrator-specified cryptographic configuration. Use the defaults and category override fields of the embedded PKIProfile to specify certificate generation parameters. Required when mode is Custom, and forbidden otherwise. When omitted, mode governs behavior on its own.\n\nDeprecated: use the fields of PKICertificatePolicy instead.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CustomPKIPolicy"
         },
         "mode": {
-          "description": "mode determines how PKI configuration is managed. Valid values are \"Unmanaged\", \"Default\", and \"Custom\".\n\nWhen set to Unmanaged, components use their existing hardcoded certificate generation behavior, exactly as if this feature did not exist. Each component generates certificates using whatever parameters it was using before this feature. While most components use RSA 2048, some may use different parameters. Use of this mode might prevent upgrading to the next major OpenShift release.\n\nWhen set to Default, OpenShift-recommended best practices for certificate generation are applied. The specific parameters may evolve across OpenShift releases to adopt improved cryptographic standards. In the initial release, this matches Unmanaged behavior for each component. In future releases, this may adopt ECDSA or larger RSA keys based on industry best practices. Recommended for most customers who want to benefit from security improvements automatically.\n\nWhen set to Custom, the certificate management parameters can be set explicitly. Use the custom field to specify certificate generation parameters.",
+          "description": "mode determines how PKI configuration is managed. Valid values are \"Unmanaged\", \"Default\", and \"Custom\".\n\nWhen set to Unmanaged, components use their existing hardcoded certificate generation behavior, exactly as if this feature did not exist. Each component generates certificates using whatever parameters it was using before this feature. While most components use RSA 2048, some may use different parameters. Use of this mode might prevent upgrading to the next major OpenShift release.\n\nWhen set to Default, OpenShift-recommended best practices for certificate generation are applied. The specific parameters may evolve across OpenShift releases to adopt improved cryptographic standards. In the initial release, this matches Unmanaged behavior for each component. In future releases, this may adopt ECDSA or larger RSA keys based on industry best practices. Recommended for most customers who want to benefit from security improvements automatically.\n\nWhen set to Custom, the certificate management parameters can be set explicitly. Use the custom field to specify certificate generation parameters.\n\nDeprecated: configure PKICertificatePolicy via the certificates field instead.",
           "type": "string"
         }
       },
@@ -14563,6 +14693,125 @@
           }
         }
       ]
+    },
+    "com.github.openshift.api.config.v1alpha1.PKICertificatePolicy": {
+      "description": "PKICertificatePolicy is the cluster's policy for internally-generated certificates: a required defaults, optional per-category overrides, and optional overrides for specific named certificates. The most-specific setting wins.",
+      "type": "object",
+      "required": [
+        "defaults"
+      ],
+      "properties": {
+        "caCertificates": {
+          "description": "caCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all CA certificates. When omitted, defaults are used for CA certificates.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateConfig"
+        },
+        "clientCertificates": {
+          "description": "clientCertificates optionally overrides certificate parameters for client authentication certificates. When set, these parameters take precedence over defaults for all client certificates. When omitted, defaults are used for client certificates.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateConfig"
+        },
+        "defaults": {
+          "description": "defaults specifies the default certificate configuration applied to any certificate that has no more-specific (category or named) override. This field is required so that every certificate has a well-defined configuration.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIDefaultCertificateConfig"
+        },
+        "namedCertificates": {
+          "description": "namedCertificates optionally overrides certificate parameters for specific certificates identified by their well-known name. These overrides have the highest precedence (named, then category, then defaults). Entries are keyed by name, so a given name may appear at most once. When omitted, no named overrides are applied. When present, the list must contain at least one entry. At most 512 named certificate overrides may be specified.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKINamedCertificateConfig"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "serverCertificates": {
+          "description": "serverCertificates optionally overrides certificate parameters for TLS server certificates. When set, these parameters take precedence over defaults for all server certificates. When omitted, defaults are used for server certificates.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateConfig"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.PKIDefaultCertificateConfig": {
+      "description": "PKIDefaultCertificateConfig specifies the default certificate configuration parameters. All fields are required to ensure that defaults are fully specified for all certificates.",
+      "type": "object",
+      "required": [
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "description": "key specifies the cryptographic parameters for the certificate's key pair. This field is required in defaults to ensure all certificates have a well-defined key configuration.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIKeyConfig"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.PKIECDSAKeyConfig": {
+      "description": "PKIECDSAKeyConfig specifies parameters for ECDSA key generation.",
+      "type": "object",
+      "required": [
+        "curve"
+      ],
+      "properties": {
+        "curve": {
+          "description": "curve specifies the NIST elliptic curve for ECDSA keys. Valid values are \"P256\", \"P384\", and \"P521\".\n\nWhen set to P256, the NIST P-256 curve (also known as secp256r1) is used, providing 128-bit security.\n\nWhen set to P384, the NIST P-384 curve (also known as secp384r1) is used, providing 192-bit security.\n\nWhen set to P521, the NIST P-521 curve (also known as secp521r1) is used, providing 256-bit security.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.PKIKeyConfig": {
+      "description": "PKIKeyConfig specifies cryptographic parameters for key generation.",
+      "type": "object",
+      "required": [
+        "algorithm"
+      ],
+      "properties": {
+        "algorithm": {
+          "description": "algorithm specifies the key generation algorithm. Valid values are \"RSA\" and \"ECDSA\".\n\nWhen set to RSA, the rsa field must be specified and the generated key will be an RSA key with the configured key size.\n\nWhen set to ECDSA, the ecdsa field must be specified and the generated key will be an ECDSA key using the configured elliptic curve.",
+          "type": "string"
+        },
+        "ecdsa": {
+          "description": "ecdsa specifies ECDSA key parameters. Required when algorithm is ECDSA, and forbidden otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIECDSAKeyConfig"
+        },
+        "rsa": {
+          "description": "rsa specifies RSA key parameters. Required when algorithm is RSA, and forbidden otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIRSAKeyConfig"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "algorithm",
+          "fields-to-discriminateBy": {
+            "ecdsa": "ECDSA",
+            "rsa": "RSA"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.config.v1alpha1.PKIKeyPolicy": {
+      "description": "PKIKeyPolicy configures keys generated outside of any certificate, by well-known name. When set, at least one named key must be specified; an empty object is rejected.",
+      "type": "object",
+      "required": [
+        "namedKeys"
+      ],
+      "properties": {
+        "namedKeys": {
+          "description": "namedKeys configures keys generated outside of any certificate, such as the bound service-account token signing key, identified by their well-known name. Entries are opt-in with no inherited default and are keyed by name, so a given name may appear at most once. This field is required so that a keys object is never empty. At most 16 named keys may be specified.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKINamedKeyConfig"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
     },
     "com.github.openshift.api.config.v1alpha1.PKIList": {
       "description": "PKIList is a collection of PKI resources.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
@@ -14593,46 +14842,105 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.PKINamedCertificateConfig": {
+      "description": "PKINamedCertificateConfig overrides certificate parameters for a specific certificate identified by its well-known name.",
+      "type": "object",
+      "required": [
+        "name",
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "description": "key specifies the cryptographic parameters for the certificate's key pair.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIKeyConfig"
+        },
+        "name": {
+          "description": "name is the well-known override name of the targeted certificate. It is a DNS subdomain prefix, a \"/\", then a name made of alphanumerics, \"-\", \"_\" and \".\" (for example \"openshift.io/service-ca.service-serving-signer\"). The prefix is at most 253 characters and the name after the \"/\" at most 63, so the full name must be between 1 and 317 characters. The name is validated for format only; there is no registry of valid names, because certificates can be registered dynamically. Core-platform certificates use the bare \"openshift.io/\" prefix; names outside the core platform use an owner subdomain prefix (for example \"hypershift.openshift.io/\"). This field is required so that every named certificate override identifies the certificate it applies to.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.PKINamedKeyConfig": {
+      "description": "PKINamedKeyConfig configures the cryptographic parameters for a single key generated outside of any certificate, identified by its well-known name.",
+      "type": "object",
+      "required": [
+        "name",
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "description": "key specifies the cryptographic parameters for this key. It is required because keys configured here have no inherited default.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIKeyConfig"
+        },
+        "name": {
+          "description": "name is the well-known name of the key. It is a DNS subdomain prefix, a \"/\", then a name made of alphanumerics, \"-\", \"_\" and \".\" (for example \"openshift.io/kube-apiserver.bound-service-account-token-signer\"). The prefix is at most 253 characters and the name after the \"/\" at most 63, so the full name must be between 1 and 317 characters. The name is validated for format only, using the same rules as a named certificate override. This field is required so that every named key entry identifies the key it configures.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.PKIProfile": {
-      "description": "PKIProfile defines the certificate generation parameters that OpenShift components use to create certificates. Category overrides take precedence over defaults.",
+      "description": "PKIProfile defines the certificate generation parameters that OpenShift components use to create certificates. Category overrides take precedence over defaults.\n\nDeprecated: use PKICertificatePolicy instead.",
       "type": "object",
       "required": [
         "defaults"
       ],
       "properties": {
         "clientCertificates": {
-          "description": "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates.",
+          "description": "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.ClientCertificates instead.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CertificateConfig"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateConfig"
         },
         "defaults": {
-          "description": "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override.",
+          "description": "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override. This field is required so that every certificate has a well-defined configuration.\n\nDeprecated: use PKICertificatePolicy.Defaults instead.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.DefaultCertificateConfig"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIDefaultCertificateConfig"
         },
         "servingCertificates": {
-          "description": "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates.",
+          "description": "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.ServerCertificates instead.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CertificateConfig"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateConfig"
         },
         "signerCertificates": {
-          "description": "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates.",
+          "description": "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates. The key field within it is now marked required (previously enforced via minProperties: 1).\n\nDeprecated: use PKICertificatePolicy.CACertificates instead.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CertificateConfig"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateConfig"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.PKIRSAKeyConfig": {
+      "description": "PKIRSAKeyConfig specifies parameters for RSA key generation.",
+      "type": "object",
+      "required": [
+        "keySize"
+      ],
+      "properties": {
+        "keySize": {
+          "description": "keySize specifies the size of RSA keys in bits. Valid values are multiples of 1024 from 2048 to 4096.",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
     "com.github.openshift.api.config.v1alpha1.PKISpec": {
-      "description": "PKISpec holds the specification for PKI configuration.",
+      "description": "PKISpec holds the specification for PKI configuration. Exactly one of certificates or certificateManagement must be set.",
       "type": "object",
-      "required": [
-        "certificateManagement"
-      ],
       "properties": {
         "certificateManagement": {
-          "description": "certificateManagement specifies how PKI configuration is managed for internally-generated certificates. This controls the certificate generation approach for all OpenShift components that create certificates internally, including certificate authorities, serving certificates, and client certificates.",
+          "description": "certificateManagement is the former shape of certificates, a mode union (Unmanaged/Default/Custom). It is retained only so that clients written against it keep compiling and so that objects using it keep roundtripping; it is mutually exclusive with certificates and exactly one of the two must be set. Note that key validation is tighter than it was when this field was current: RSA key sizes above 4096 bits, which were previously accepted, are now rejected.\n\nDeprecated: use certificates instead.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateManagement"
+        },
+        "certificates": {
+          "description": "certificates specifies the cluster's certificate policy for internally-generated certificates, resolved most-specific-wins: a named certificate override, then a category override (CA, server, client), then the required defaults. This field is optional and mutually exclusive with the deprecated certificateManagement field; exactly one of the two must be set. This field names a configuration policy; it is unrelated to the X.509 certificate-policies extension.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificatePolicy"
+        },
+        "keys": {
+          "description": "keys optionally configures keys generated outside of any certificate, such as the bound service-account token signing key. Entries are named and opt-in with no inherited default. When omitted, no keys are configured by this resource. When set, at least one named key must be specified; an empty object is rejected. Unlike certificates, keys have no resolution chain: a key is either configured here or it is not, and a component whose key is not configured decides for itself (an internal default, or an error if it has none).",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIKeyPolicy"
         }
       }
     },
@@ -14911,20 +15219,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1alpha1.RSAKeyConfig": {
-      "description": "RSAKeyConfig specifies parameters for RSA key generation.",
-      "type": "object",
-      "required": [
-        "keySize"
-      ],
-      "properties": {
-        "keySize": {
-          "description": "keySize specifies the size of RSA keys in bits. Valid values are multiples of 1024 from 2048 to 8192.",
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
     "com.github.openshift.api.config.v1alpha1.RelabelActionConfig": {
       "description": "RelabelActionConfig represents the action to perform and its configuration. Exactly one action-specific configuration must be specified based on the action type.",
       "type": "object",
@@ -15005,7 +15299,7 @@
           "type": "string"
         },
         "regex": {
-          "description": "regex is the regular expression to match against the concatenated source label values. Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"(.*)\" to match everything. Must be between 1 and 1000 characters in length when specified.",
+          "description": "regex is the regular expression to match against the concatenated source label values. Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"(.*)\" to match everything. Must be between 1 and 8192 characters in length when specified.",
           "type": "string"
         },
         "separator": {
@@ -15013,7 +15307,7 @@
           "type": "string"
         },
         "sourceLabels": {
-          "description": "sourceLabels specifies which label names to extract from each series for this relabeling rule. The values of these labels are joined together using the configured separator, and the resulting string is then matched against the regular expression. If a referenced label does not exist on a series, Prometheus substitutes an empty string. When omitted, the rule operates without extracting source labels (useful for actions like labelmap). Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters. Each entry must be unique. Label names beginning with \"__\" (two underscores) are reserved for internal Prometheus use and are not allowed. Label names SHOULD start with a letter (a-z, A-Z) or underscore (_), followed by zero or more letters, digits (0-9), or underscores for best compatibility. While Prometheus supports UTF-8 characters in label names (since v3.0.0), using the recommended character set ensures better compatibility with the wider ecosystem (tooling, third-party instrumentation, etc.).",
+          "description": "sourceLabels specifies which label names to extract from each series for this relabeling rule. The values of these labels are joined together using the configured separator, and the resulting string is then matched against the regular expression. If a referenced label does not exist on a series, Prometheus substitutes an empty string. When omitted, the rule operates without extracting source labels (useful for actions like labelmap). Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters. Each entry must be unique. Labels beginning with \"__\" (two underscores) are Prometheus internal/meta labels (e.g., __name__, __address__) and are valid in sourceLabels because relabeling reads from them before they are stripped. Using __name__ in sourceLabels is the standard way to filter metrics by name in writeRelabelConfigs. Label names SHOULD start with a letter (a-z, A-Z) or underscore (_), followed by zero or more letters, digits (0-9), or underscores for best compatibility. While Prometheus supports UTF-8 characters in label names (since v3.0.0), using the recommended character set ensures better compatibility with the wider ecosystem (tooling, third-party instrumentation, etc.).",
           "type": "array",
           "items": {
             "type": "string"
@@ -15127,7 +15421,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.TLSConfig"
         },
         "url": {
-          "description": "url is the URL of the remote write endpoint. Must be a valid URL with http or https scheme and a non-empty hostname. Query parameters, fragments, and user information (e.g. user:password@host) are not allowed. Empty string is invalid. Must be between 1 and 2048 characters in length.",
+          "description": "url is the URL of the remote write endpoint. Must be a valid URL with http or https scheme and a non-empty hostname. Query parameters are allowed. Fragments and user information (e.g. user:password@host) are not allowed. Empty string is invalid. Must be between 1 and 2048 characters in length.",
           "type": "string"
         },
         "writeRelabelConfigs": {
@@ -16931,6 +17225,35 @@
         }
       }
     },
+    "com.github.openshift.api.etcd.v1.PacemakerClusterAlertAgentStatus": {
+      "description": "PacemakerClusterAlertAgentStatus represents the status of a pacemaker alert agent tracked on a node. Unlike a pacemaker resource, an alert agent is registered in the CIB's <alerts> section rather than its <resources> section: pacemaker does not start, stop, monitor, or move it. Its delivery chain (script, helper script, systemd unit, sudoers entry) is delivered to each node independently by MCO.",
+      "type": "object",
+      "required": [
+        "conditions",
+        "name"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the alert agent's current state. Known condition types are: \"Healthy\", \"Configured\", \"Available\". The \"Healthy\" condition is an aggregate that tracks the overall health of the alert agent. The \"Configured\" condition tracks whether the alert agent is registered in the CIB as expected. The \"Available\" condition tracks whether the agent's full delivery chain is present on this node. The \"Healthy\" condition may be Unknown with reason \"Pending\" when health has not yet been determined. Each of these conditions is required, so the array must contain exactly 3 items. A condition with reason \"Pending\" must have status \"Unknown\".",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "name": {
+          "description": "name is required and identifies the alert agent. Valid values are \"TaintAlertAgent\" and \"UntaintAlertAgent\". The TaintAlertAgent taints a node after it is fenced. The UntaintAlertAgent removes a node's taint once it rejoins the cluster.\n\nPossible enum values:\n - `\"TaintAlertAgent\"` is the alert agent that taints a node after it is fenced.\n - `\"UntaintAlertAgent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+          "type": "string",
+          "enum": [
+            "TaintAlertAgent",
+            "UntaintAlertAgent"
+          ]
+        }
+      }
+    },
     "com.github.openshift.api.etcd.v1.PacemakerClusterFencingAgentStatus": {
       "description": "PacemakerClusterFencingAgentStatus represents the status of a fencing agent that can fence a node. Fencing agents are STONITH (Shoot The Other Node In The Head) devices used to isolate failed nodes. Unlike regular pacemaker resources, fencing agents are mapped to their target node (the node they can fence), not the node where their monitoring operations are scheduled.",
       "type": "object",
@@ -16995,7 +17318,7 @@
       }
     },
     "com.github.openshift.api.etcd.v1.PacemakerClusterNodeStatus": {
-      "description": "PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including the node's conditions and the health of critical resources running on that node.",
+      "description": "PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including the node's conditions and the health of critical resources running on that node. When the TNFObservability feature gate is enabled, once a status collector reports alertAgents for a node, later updates may not remove it. The field remains optional to tolerate collector versions that predate alert-agent tracking.",
       "type": "object",
       "required": [
         "conditions",
@@ -17013,8 +17336,19 @@
           },
           "x-kubernetes-list-type": "atomic"
         },
+        "alertAgents": {
+          "description": "alertAgents contains the status of pacemaker alert agents tracked for this node. Unlike resources, an alert agent is not managed by pacemaker: it is a script registered in the CIB's <alerts> section, delivered to this node independently by MCO. Valid alert agent names are \"TaintAlertAgent\" and \"UntaintAlertAgent\". Names must be unique within this array. This field is optional. When omitted, alert agent status is not reported for this node. This field is available only when the TNFObservability feature gate is enabled. When present, the array must contain exactly 2 items: one TaintAlertAgent and one UntaintAlertAgent.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.etcd.v1.PacemakerClusterAlertAgentStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "conditions": {
-          "description": "conditions represent the observations of the node's current state. Known condition types are: \"Healthy\", \"Online\", \"InService\", \"Active\", \"Ready\", \"Clean\", \"Member\", \"FencingAvailable\", \"FencingHealthy\". The \"Healthy\" condition is an aggregate that tracks the overall health of the node. The \"Online\" condition tracks whether the node is online. The \"InService\" condition tracks whether the node is in service (not in maintenance mode). The \"Active\" condition tracks whether the node is active (not in standby mode). The \"Ready\" condition tracks whether the node is ready (not in a pending state). The \"Clean\" condition tracks whether the node is in a clean (status known) state. The \"Member\" condition tracks whether the node is a member of the cluster. The \"FencingAvailable\" condition tracks whether this node can be fenced by at least one healthy agent. The \"FencingHealthy\" condition tracks whether all fencing agents for this node are healthy. Each of these conditions is required, so the array must contain at least 9 items.",
+          "description": "conditions represent the observations of the node's current state. Known condition types are: \"Healthy\", \"Online\", \"InService\", \"Active\", \"Ready\", \"Clean\", \"Member\", \"FencingAvailable\", \"FencingHealthy\". The \"Healthy\" condition is an aggregate that tracks the overall health of the node. The \"Online\" condition tracks whether the node is online. The \"InService\" condition tracks whether the node is in service (not in maintenance mode). The \"Active\" condition tracks whether the node is active (not in standby mode). The \"Ready\" condition tracks whether the node is ready (not in a pending state). The \"Clean\" condition tracks whether the node is in a clean (status known) state. The \"Member\" condition tracks whether the node is a member of the cluster. The \"FencingAvailable\" condition tracks whether this node can be fenced by at least one healthy agent. The \"FencingHealthy\" condition tracks whether all fencing agents for this node are healthy. Each of these conditions is required, so the array must contain at least 9 items. An optional \"AlertAgentsHealthy\" condition (see NodeAlertAgentsHealthyConditionType) may also be reported when the TNFObservability feature gate is enabled; it is not one of the required 9 and its absence does not affect validation. When reported as Unknown with reason \"Pending\", \"AlertAgentsHealthy\" means the health of the tracked alert agents has not yet been determined.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
@@ -17091,7 +17425,7 @@
       ],
       "properties": {
         "conditions": {
-          "description": "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these conditions is required, so the array must contain at least 3 items.",
+          "description": "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\", \"FencingEnabled\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. The \"FencingEnabled\" condition tracks whether STONITH (fencing) is enabled in the cluster. The \"Healthy\", \"InService\", and \"NodeCountAsExpected\" conditions are required, so the array must contain at least 3 items. The \"FencingEnabled\" condition is optional and is omitted when the status collector has not yet observed the stonith-enabled property, for example immediately after an upgrade from a version that does not report it. The \"FencingEnabled\" condition is only reported when the TNFObservability feature gate is enabled. When the gate is enabled and the condition is present, its reason must be one of \"FencingEnabled\", \"FencingDisabled\", or \"Pending\".",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
@@ -17326,7 +17660,7 @@
       ],
       "properties": {
         "conditions": {
-          "description": "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these conditions is required, so the array must contain at least 3 items.",
+          "description": "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\", \"FencingEnabled\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. The \"FencingEnabled\" condition tracks whether STONITH (fencing) is enabled in the cluster. The \"Healthy\", \"InService\", and \"NodeCountAsExpected\" conditions are required, so the array must contain at least 3 items. The \"FencingEnabled\" condition is optional and is omitted when the status collector has not yet observed the stonith-enabled property, for example immediately after an upgrade from a version that does not report it. The \"FencingEnabled\" condition is only reported when the TNFObservability feature gate is enabled. When the gate is enabled and the condition is present, its reason must be one of \"FencingEnabled\", \"FencingDisabled\", or \"Pending\".",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
@@ -17589,6 +17923,10 @@
           "type": "integer",
           "format": "int32",
           "default": 8
+        },
+        "openShiftReleaseVersion": {
+          "description": "openShiftReleaseVersion demonstrates how to validate an OpenShift release version using the isSemver CEL function. Valid values are semantic versions, which includes stable releases (e.g. 4.22.20), early candidates (e.g. 4.23.0-ec.1), release candidates (e.g. 4.22.0-rc.5), nightly builds (e.g. 4.20.0-0.nightly-2026-10-28-054721), ci builds (e.g. 4.21.0-0.ci-2026-10-28-124831), and assembly builds (e.g. 4.16.23-assembly.art12586). The validation performed on this field matches exactly the validation performed by the Cluster Version Operator's validating webhook on the desiredUpdate field. When empty, no release version is specified. The maximum length of 128 is arbitrary and should be adjusted upwards if it is ever found to be insufficient. The minimum length of 5 is the length of the shortest valid semantic version (0.0.0).",
+          "type": "string"
         },
         "optionalImmutableField": {
           "description": "optionalImmutableField is a field that is immutable once set. It is optional but may not be changed once set.",
@@ -19413,7 +19751,7 @@
       ],
       "properties": {
         "advisorURI": {
-          "description": "advisorURI is required field that provides the URL link to the Insights Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+          "description": "advisorURI is a required field that provides the URL link to the Red Hat Lightspeed Advisor UI. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
           "type": "string"
         },
         "description": {
@@ -19749,7 +20087,7 @@
       ],
       "properties": {
         "advisorURI": {
-          "description": "advisorURI is required field that provides the URL link to the Insights Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+          "description": "advisorURI is a required field that provides the URL link to the Red Hat Lightspeed Advisor UI. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
           "type": "string",
           "default": ""
         },
@@ -19759,7 +20097,7 @@
           "default": ""
         },
         "state": {
-          "description": "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
+          "description": "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Red Hat Lightspeed Advisor UI.",
           "type": "string",
           "default": ""
         },
@@ -20121,7 +20459,7 @@
       ],
       "properties": {
         "advisorURI": {
-          "description": "advisorURI is required field that provides the URL link to the Insights Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+          "description": "advisorURI is a required field that provides the URL link to the Red Hat Lightspeed Advisor UI. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
           "type": "string",
           "default": ""
         },
@@ -33274,7 +33612,7 @@
       ],
       "properties": {
         "advisorURI": {
-          "description": "advisorURI provides the URL link to the Insights Advisor.",
+          "description": "advisorURI provides the URL link to the Red Hat Lightspeed Advisor UI.",
           "type": "string",
           "default": ""
         },
@@ -33284,7 +33622,7 @@
           "default": ""
         },
         "state": {
-          "description": "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
+          "description": "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Red Hat Lightspeed Advisor UI.",
           "type": "string",
           "default": ""
         },
@@ -34318,8 +34656,7 @@
         "nodeName",
         "keyID",
         "status",
-        "lastCheckedTime",
-        "remoteKeyID"
+        "lastCheckedTime"
       ],
       "properties": {
         "detail": {
@@ -34339,11 +34676,11 @@
           "type": "string"
         },
         "remoteKeyID": {
-          "description": "remoteKeyID refers to the remote key identifier from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the KEK. The value must be between 1 and 1024 characters.",
+          "description": "remoteKeyID refers to the remote key identifier from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the KEK. When omitted, no remote key identifier is available. This is expected when status is Unhealthy or Error, for example when the plugin reports that it is not healthy or could not be reached. When status is Healthy, remoteKeyID is required. When set, the value must be between 1 and 1024 characters.",
           "type": "string"
         },
         "status": {
-          "description": "status contains a health indicator for the respective KMS plugin The field can have three states: healthy, unhealthy, error. With error and unhealthy containing additional information in Detail.",
+          "description": "status contains a health indicator for the respective KMS plugin. status is required and must be one of Healthy, Unhealthy or Error. When set to Healthy, the plugin responded successfully to the KMS v2 Status call and remoteKeyID is set. When set to Unhealthy, the plugin responded but reported that it is not healthy. When set to Error, the Status call failed or returned no response, for example because the plugin was unreachable. Unhealthy and Error may include additional information in detail.",
           "type": "string"
         }
       }

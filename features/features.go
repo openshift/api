@@ -1089,7 +1089,7 @@ var (
 					contactPerson("haircommander").
 					productScope(ocpSpecific).
 					enhancementPR("https://github.com/openshift/enhancements/pull/2047").
-					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
 	FeatureGateVSpherePerComponentScopedCreds = newFeatureGate("VSpherePerComponentScopedCredsInstall").

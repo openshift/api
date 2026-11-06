@@ -179,9 +179,6 @@
                         "name": "IngressComponentRouteLabels"
                     },
                     {
-                        "name": "IngressControllerLBSecurityGroupsAWS"
-                    },
-                    {
                         "name": "KarpenterOperator"
                     },
                     {
@@ -365,6 +362,9 @@
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
+                    },
+                    {
+                        "name": "IngressControllerLBSecurityGroupsAWS"
                     },
                     {
                         "name": "IngressControllerMultipleHAProxyVersions"

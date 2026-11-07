@@ -74,7 +74,7 @@ type HelmChartRepositorySpec struct {
 type ConnectionConfig struct {
 
 	// Chart repository URL
-	// +kubebuilder:validation:Pattern=`^https?:\/\/`
+	// +kubebuilder:validation:Pattern=`^(https?|oci):\/\/`
 	// +kubebuilder:validation:MaxLength=2048
 	URL string `json:"url"`
 

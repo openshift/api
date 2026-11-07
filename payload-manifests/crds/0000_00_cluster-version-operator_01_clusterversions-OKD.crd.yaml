@@ -96,6 +96,7 @@ spec:
                       - Ingress
                       - CloudControllerManager
                       - OperatorLifecycleManagerV1
+                      - CompatibilityRequirements
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic
@@ -347,6 +348,7 @@ spec:
                       - Ingress
                       - CloudControllerManager
                       - OperatorLifecycleManagerV1
+                      - CompatibilityRequirements
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic
@@ -374,6 +376,7 @@ spec:
                       - Ingress
                       - CloudControllerManager
                       - OperatorLifecycleManagerV1
+                      - CompatibilityRequirements
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic

@@ -116,6 +116,45 @@ type DNSSpec struct {
 	// 30 seconds or as noted in the respective Corefile for your version of OpenShift.
 	// +optional
 	Cache DNSCache `json:"cache,omitempty"`
+
+	// template is an optional configuration for custom DNS query handling via the CoreDNS template plugin.
+	// The template defines how to handle queries matching specific zones and query types.
+	//
+	// The template applies to all domains (custom domains from spec.servers and the cluster domain)
+	// to ensure consistent DNS resolution across all paths.
+	//
+	// When this field is not set, no template plugin configuration is added to CoreDNS.
+	//
+	// +optional
+	// +openshift:enable:FeatureGate=DNSTemplatePlugin
+	Template DNSTemplate `json:"template,omitzero"`
+
+	// responseRules is an optional list of rules that configure CoreDNS to
+	// return custom A, CNAME, or NXDOMAIN responses for specific DNS names.
+	//
+	// Rules are evaluated independently; an exact-name rule always takes
+	// precedence over a wildcard rule for the same query, and among
+	// wildcard rules the most specific match wins. Queries that do not
+	// match any rule continue through normal CoreDNS resolution.
+	//
+	// responseRules apply only to the default server block; they do not
+	// affect spec.servers or spec.template.
+	//
+	// When this field is not set, no response rule configuration is added
+	// to CoreDNS.
+	// At most 100 rules may be configured. Each query name may appear only
+	// once. An exact A rule cannot overlap a wildcard CNAME rule because
+	// the wildcard would also answer AAAA and CNAME queries for that name.
+	//
+	// +optional
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MinItems=0
+	// +kubebuilder:validation:MaxItems=100
+	// +kubebuilder:validation:XValidation:rule="self.all(r, self.exists_one(other, r.query.name == other.query.name))",message="responseRules must have distinct query names"
+	// +kubebuilder:validation:XValidation:rule="self.all(a, a.action.type != 'A' || a.query.name.startsWith('*.') || self.all(c, c.action.type != 'CNAME' || !c.query.name.startsWith('*.') || !(a.query.name.endsWith(c.query.name.substring(1)) && !a.query.name.substring(0, size(a.query.name) - size(c.query.name) + 1).contains('.'))))",message="an exact A rule must not overlap a wildcard CNAME rule"
+	// +openshift:enable:FeatureGate=DNSTemplatePlugin
+	ResponseRules []DNSResponseRule `json:"responseRules,omitempty"`
 }
 
 // DNSCache defines the fields for configuring DNS caching.
@@ -466,6 +505,258 @@ const (
 	// Available indicates the DNS controller daemonset is available.
 	DNSAvailable = "Available"
 )
+
+// QueryType represents DNS query types supported by templates.
+// +kubebuilder:validation:Enum=AAAA
+type QueryType string
+
+const (
+	// QueryTypeAAAA represents IPv6 address records (AAAA).
+	QueryTypeAAAA QueryType = "AAAA"
+)
+
+// QueryClass represents DNS query classes supported by templates.
+// Valid value is "IN".
+// +kubebuilder:validation:Enum=IN
+type QueryClass string
+
+const (
+	// QueryClassIN represents the Internet class.
+	QueryClassIN QueryClass = "IN"
+)
+
+// ResponseCode represents DNS response codes.
+// +kubebuilder:validation:Enum=NOERROR
+type ResponseCode string
+
+const (
+	// ResponseCodeNOERROR indicates a successful DNS query with or without answer records.
+	ResponseCodeNOERROR ResponseCode = "NOERROR"
+)
+
+// Zone is a DNS zone name. It must be either "." (catch-all) or a valid RFC1123 subdomain.
+// Valid RFC1123 subdomains consist of lowercase alphanumeric characters, hyphens, and dots.
+// Labels cannot start or end with hyphens and must be 1-63 characters each.
+// The entire value must be 1-253 characters long.
+// +kubebuilder:validation:MinLength=1
+// +kubebuilder:validation:MaxLength=253
+// +kubebuilder:validation:XValidation:rule="self == '.' || !format.dns1123Subdomain().validate(self).hasValue()",message="zone must be '.' or a valid lowercase DNS subdomain"
+// +kubebuilder:validation:XValidation:rule="self.split('.').all(label, size(label) <= 63)",message="each DNS label must be at most 63 characters"
+type Zone string
+
+// DNSTemplate defines a template for custom DNS query handling via the CoreDNS template plugin.
+// DNSTemplate enables filtering or custom responses for DNS queries matching specific zones and query types.
+type DNSTemplate struct {
+	// zones specifies the DNS zones this template applies to.
+	// Each zone must be a valid DNS name as defined in RFC 1123.
+	// The special zone "." matches all domains (catch-all).
+	// Multiple zones can be specified to apply the same template actions to multiple domains.
+	// At least 1 and at most 15 zones may be specified.
+	//
+	// Note: root zone (".") includes cluster domain (cluster.local); use specific zones to avoid impacting IPv6 queries in IPv6 or dual-stack clusters.
+	//
+	// Examples:
+	// - ["."] matches all domains (catch-all for global AAAA filtering)
+	// - ["example.com"] matches only example.com and its subdomains
+	// - ["example.com", "test.com"] matches both domains and their subdomains
+	//
+	// +listType=set
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=15
+	// +required
+	Zones []Zone `json:"zones,omitempty"`
+
+	// queryType specifies the DNS query type to match.
+	// Valid values are "AAAA".
+	//
+	// +required
+	QueryType QueryType `json:"queryType,omitempty"`
+
+	// queryClass specifies the DNS query class to match.
+	// Valid values are "IN".
+	//
+	// +required
+	QueryClass QueryClass `json:"queryClass,omitempty"`
+
+	// action defines how to handle queries matching this template's zones and query type.
+	// The action builds a single DNS response by specifying the response code and may be
+	// extended by additional fields in the future.
+	//
+	// +required
+	Action DNSTemplateAction `json:"action,omitzero"`
+}
+
+// DNSTemplateAction defines how to construct a DNS response for queries matching the template.
+type DNSTemplateAction struct {
+	// rcode is the DNS response code to return.
+	// Valid values are "NOERROR".
+	//
+	// The template returns a response with no answer records. For AAAA filtering,
+	// this means IPv6 address queries return successfully but with no IPv6 addresses,
+	// causing clients to fall back to IPv4 (A record) queries.
+	//
+	// +required
+	Rcode ResponseCode `json:"rcode,omitempty"`
+}
+
+// DNSResponseRuleName identifies a DNSResponseRule within spec.responseRules.
+// It must be 1-63 lowercase alphanumeric characters or hyphens, beginning
+// and ending with an alphanumeric character.
+// +kubebuilder:validation:MinLength=1
+// +kubebuilder:validation:MaxLength=63
+// +kubebuilder:validation:XValidation:rule="self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')",message="rule name must be a lowercase DNS label"
+type DNSResponseRuleName string
+
+// DNSResponseRule configures CoreDNS to return a custom A, CNAME, or
+// NXDOMAIN response for queries matching query.name.
+// An exact-name CNAME cannot target itself because CoreDNS would repeatedly
+// resolve the same name.
+//
+// +kubebuilder:validation:XValidation:rule="self.action.type == 'NXDOMAIN' ? !self.query.name.startsWith('*.') : true",message="nxdomain is only valid when query.name is an exact name, not a wildcard"
+// +kubebuilder:validation:XValidation:rule="!has(self.action.cname) || self.query.name.startsWith('*.') || self.action.cname.target != self.query.name",message="an exact-name CNAME rule must not target its own query name"
+type DNSResponseRule struct {
+	// name uniquely identifies this rule within spec.responseRules.
+	//
+	// +required
+	Name DNSResponseRuleName `json:"name,omitempty"`
+
+	// query selects the DNS name this rule answers: an exact name, or a
+	// name with exactly one leading wildcard label (e.g. "*.example.com").
+	//
+	// +required
+	Query DNSResponseQuery `json:"query,omitzero"`
+
+	// ttlSeconds is the TTL, in seconds, included in synthesized answers.
+	//
+	// When omitted, this means no opinion and the platform chooses a
+	// reasonable default, which is subject to change over time. The
+	// current default is 60. Valid values are 30-3600.
+	//
+	// +optional
+	// +kubebuilder:validation:Minimum=30
+	// +kubebuilder:validation:Maximum=3600
+	// +default=60
+	TTLSeconds int32 `json:"ttlSeconds,omitempty"`
+
+	// action specifies how matching queries are answered. Exactly one of
+	// a, cname, or nxdomain is set, as indicated by action.type.
+	//
+	// +required
+	Action DNSResponseAction `json:"action,omitzero"`
+}
+
+// DNSResponseQuery selects the DNS name a DNSResponseRule answers.
+type DNSResponseQuery struct {
+	// name is the DNS name this rule matches: either an exact name, or a
+	// name with exactly one leading wildcard label replacing the first
+	// name segment (e.g. "*.example.com"). It must be a lowercase DNS name
+	// with at least two labels, at most 253 characters overall, and at most
+	// 63 characters per label. It must not include a trailing dot.
+	// Rules cannot cover cluster.local, in-addr.arpa, or ip6.arpa, including
+	// a wildcard that matches one of those zones.
+	//
+	// +required
+	// +kubebuilder:validation:MinLength=3
+	// +kubebuilder:validation:MaxLength=253
+	// +kubebuilder:validation:XValidation:rule="self.startsWith('*.') ? size(self.split('.')) >= 3 && !format.dns1123Subdomain().validate(self.substring(2)).hasValue() : size(self.split('.')) >= 2 && !format.dns1123Subdomain().validate(self).hasValue()",message="query name must be a lowercase DNS name with an optional single leading wildcard label"
+	// +kubebuilder:validation:XValidation:rule="self.split('.').all(label, size(label) <= 63)",message="each DNS label must be at most 63 characters"
+	// +kubebuilder:validation:XValidation:rule="!(self == 'cluster.local' || self.endsWith('.cluster.local') || self == '*.local' || self == 'in-addr.arpa' || self.endsWith('.in-addr.arpa') || self == 'ip6.arpa' || self.endsWith('.ip6.arpa') || self == '*.arpa')",message="response rules must not cover cluster.local or reverse DNS zones"
+	Name string `json:"name,omitempty"`
+}
+
+// DNSResponseActionType specifies which kind of synthesized response a
+// DNSResponseRule produces.
+// +kubebuilder:validation:Enum=A;CNAME;NXDOMAIN
+type DNSResponseActionType string
+
+const (
+	// DNSResponseActionTypeA indicates that the rule synthesizes an A response.
+	DNSResponseActionTypeA DNSResponseActionType = "A"
+
+	// DNSResponseActionTypeCNAME indicates that the rule synthesizes a CNAME response.
+	DNSResponseActionTypeCNAME DNSResponseActionType = "CNAME"
+
+	// DNSResponseActionTypeNXDOMAIN indicates that the rule synthesizes an NXDOMAIN response.
+	DNSResponseActionTypeNXDOMAIN DNSResponseActionType = "NXDOMAIN"
+)
+
+// DNSResponseAction specifies how CoreDNS answers a query matching a
+// DNSResponseRule's query. Exactly one of a, cname, or nxdomain is set,
+// as indicated by type.
+//
+// +union
+// +kubebuilder:validation:XValidation:rule="self.type == 'A' ? has(self.a) : !has(self.a)",message="a must be set if type is 'A', but remain unset otherwise"
+// +kubebuilder:validation:XValidation:rule="self.type == 'CNAME' ? has(self.cname) : !has(self.cname)",message="cname must be set if type is 'CNAME', but remain unset otherwise"
+// +kubebuilder:validation:XValidation:rule="self.type == 'NXDOMAIN' ? has(self.nxdomain) : !has(self.nxdomain)",message="nxdomain must be set if type is 'NXDOMAIN', but remain unset otherwise"
+type DNSResponseAction struct {
+	// type specifies which kind of response this rule synthesizes.
+	// Valid values are "A", "CNAME", and "NXDOMAIN".
+	//
+	// +unionDiscriminator
+	// +required
+	Type DNSResponseActionType `json:"type,omitempty"`
+
+	// a configures a synthesized A response. Required when type is A,
+	// forbidden otherwise.
+	//
+	// +unionMember
+	// +optional
+	A DNSResponseActionA `json:"a,omitzero"`
+
+	// cname configures a synthesized CNAME response. Required when type
+	// is CNAME, forbidden otherwise.
+	//
+	// +unionMember
+	// +optional
+	CNAME DNSResponseActionCNAME `json:"cname,omitzero"`
+
+	// nxdomain configures a synthesized NXDOMAIN response. Required when
+	// type is NXDOMAIN, forbidden otherwise. nxdomain is only valid when
+	// the rule's query.name is an exact name, not a wildcard.
+	//
+	// +unionMember
+	// +optional
+	//nolint:kubeapilinter // NXDOMAIN deliberately has an empty object payload.
+	NXDOMAIN *DNSResponseActionNXDOMAIN `json:"nxdomain,omitzero"`
+}
+
+// IPv4Address is an IPv4 address in dotted-decimal notation, with four
+// decimal octets from 0 to 255 and no leading zeroes in multi-digit octets.
+// It must be 7-15 characters long.
+// +kubebuilder:validation:MinLength=7
+// +kubebuilder:validation:MaxLength=15
+// +kubebuilder:validation:XValidation:rule="isIP(self) && ip(self).family() == 4 && ip.isCanonical(self)",message="address must be an IPv4 address in dotted-decimal notation"
+type IPv4Address string
+
+// DNSResponseActionA configures a synthesized A response.
+type DNSResponseActionA struct {
+	// addresses is the list of IPv4 addresses returned in the synthesized
+	// answer. At least 1 and at most 10 addresses may be specified.
+	//
+	// +required
+	// +listType=set
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=10
+	Addresses []IPv4Address `json:"addresses,omitempty"`
+}
+
+// DNSResponseActionCNAME configures a synthesized CNAME response.
+type DNSResponseActionCNAME struct {
+	// target is the lowercase DNS name the CNAME response points to. It must
+	// have at least two labels, at most 253 characters overall, and at most
+	// 63 characters per label. It must not include a trailing dot.
+	//
+	// +required
+	// +kubebuilder:validation:MinLength=3
+	// +kubebuilder:validation:MaxLength=253
+	// +kubebuilder:validation:XValidation:rule="size(self.split('.')) >= 2 && !format.dns1123Subdomain().validate(self).hasValue()",message="CNAME target must be a lowercase DNS name"
+	// +kubebuilder:validation:XValidation:rule="self.split('.').all(label, size(label) <= 63)",message="each DNS label must be at most 63 characters"
+	Target string `json:"target,omitempty"`
+}
+
+// DNSResponseActionNXDOMAIN configures a synthesized NXDOMAIN response.
+type DNSResponseActionNXDOMAIN struct {
+}
 
 // DNSStatus defines the observed status of the DNS.
 type DNSStatus struct {

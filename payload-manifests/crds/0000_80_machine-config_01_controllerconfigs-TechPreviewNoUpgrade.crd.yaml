@@ -1435,6 +1435,17 @@ spec:
                           optionally a port (defaulting to 443).  apiServerURL can be used by components like the web console
                           to tell users where to find the Kubernetes API.
                         type: string
+                      bridgeTopology:
+                        default: Disabled
+                        description: |-
+                          bridgeTopology specifies how the br-ex bridge for OVNKubernetes will be created by NMState.
+                          Valid values are "Disabled" and "Standard".
+                          The default is 'Disabled' which means br-ex will be managed by configure-ovs.sh instead of NMState.
+                          'Standard' will create a standard br-ex, similar to what would be done by configure-ovs.sh.
+                        enum:
+                        - Disabled
+                        - Standard
+                        type: string
                       controlPlaneTopology:
                         default: HighlyAvailable
                         description: |-

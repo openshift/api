@@ -4,6 +4,7 @@ metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/1453
     api.openshift.io/merged-by-featuregates: "true"
+    include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
     release.openshift.io/feature-set: CustomNoUpgrade
   labels:
@@ -1476,6 +1477,17 @@ spec:
                           apiServerURL is a valid URI with scheme 'https', address and
                           optionally a port (defaulting to 443).  apiServerURL can be used by components like the web console
                           to tell users where to find the Kubernetes API.
+                        type: string
+                      bridgeTopology:
+                        default: Disabled
+                        description: |-
+                          bridgeTopology specifies how the br-ex bridge for OVNKubernetes will be created by NMState.
+                          Valid values are "Disabled" and "Standard".
+                          The default is 'Disabled' which means br-ex will be managed by configure-ovs.sh instead of NMState.
+                          'Standard' will create a standard br-ex, similar to what would be done by configure-ovs.sh.
+                        enum:
+                        - Disabled
+                        - Standard
                         type: string
                       controlPlaneTopology:
                         default: HighlyAvailable

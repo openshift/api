@@ -1026,7 +1026,7 @@ var (
 							contactPerson("miciah").
 							productScope(ocpSpecific).
 							enhancementPR("https://github.com/openshift/enhancements/pull/2037").
-							enable(inDefault(), inOKD(), inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+							enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 							mustRegister()
 
 	FeatureGateTLSAdherence = newFeatureGate("TLSAdherence").

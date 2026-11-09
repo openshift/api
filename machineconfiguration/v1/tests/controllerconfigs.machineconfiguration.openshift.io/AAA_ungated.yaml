@@ -217,3 +217,134 @@ tests:
             namespace: openshift-config
           releaseImage: ""
           rootCAData: Y2VydGlmaWNhdGUK
+    - name: Should be able to create a ControllerConfig for vSphere with single vcenter (ungated)
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ControllerConfig
+        spec:
+          additionalTrustBundle: Y2VydGlmaWNhdGUK
+          baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+          baseOSExtensionsContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+          cloudProviderCAData: null
+          cloudProviderConfig: ""
+          clusterDNSIP: 10.0.0.1
+          dns:
+            apiVersion: config.openshift.io/v1
+            kind: DNS
+            spec:
+              baseDomain: test.example.com
+          images:
+            machineConfigOperator: example.com/example/openshift-release-dev@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
+          infra:
+            apiVersion: config.openshift.io/v1
+            kind: Infrastructure
+            spec:
+              cloudConfig:
+                key: config
+                name: cloud-provider-config
+              platformSpec:
+                type: VSphere
+                vsphere:
+                  vcenters:
+                  - datacenters:
+                    - DC1
+                    port: 443
+                    server: vcenter1.example.com
+                  failureDomains:
+                  - name: fd1
+                    region: region1
+                    server: vcenter1.example.com
+                    topology:
+                      computeCluster: /DC1/host/cluster1
+                      datacenter: DC1
+                      datastore: /DC1/datastore/ds1
+                      networks:
+                      - network1
+                      resourcePool: /DC1/host/cluster1/Resources
+                    zone: zone1
+            status:
+              apiServerURL: https://api.test.example.com:6443
+              cpuPartitioning: "None"
+              controlPlaneTopology: HighlyAvailable
+              infrastructureName: test-cluster
+              infrastructureTopology: HighlyAvailable
+              platform: VSphere
+              platformStatus:
+                type: VSphere
+          ipFamilies: IPv4
+          kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+          network: null
+          networkType: OVNKubernetes
+          osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
+          platform: vsphere
+          proxy: null
+          pullSecret:
+            name: pull-secret
+            namespace: openshift-config
+          releaseImage: ""
+          rootCAData: Y2VydGlmaWNhdGUK
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ControllerConfig
+        spec:
+          additionalTrustBundle: Y2VydGlmaWNhdGUK
+          baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+          baseOSExtensionsContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+          cloudProviderCAData: null
+          cloudProviderConfig: ""
+          clusterDNSIP: 10.0.0.1
+          dns:
+            apiVersion: config.openshift.io/v1
+            kind: DNS
+            spec:
+              baseDomain: test.example.com
+          images:
+            machineConfigOperator: example.com/example/openshift-release-dev@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
+          infra:
+            apiVersion: config.openshift.io/v1
+            kind: Infrastructure
+            spec:
+              cloudConfig:
+                key: config
+                name: cloud-provider-config
+              platformSpec:
+                type: VSphere
+                vsphere:
+                  vcenters:
+                  - datacenters:
+                    - DC1
+                    port: 443
+                    server: vcenter1.example.com
+                  failureDomains:
+                  - name: fd1
+                    region: region1
+                    server: vcenter1.example.com
+                    topology:
+                      computeCluster: /DC1/host/cluster1
+                      datacenter: DC1
+                      datastore: /DC1/datastore/ds1
+                      networks:
+                      - network1
+                      resourcePool: /DC1/host/cluster1/Resources
+                    zone: zone1
+            status:
+              apiServerURL: https://api.test.example.com:6443
+              cpuPartitioning: "None"
+              controlPlaneTopology: HighlyAvailable
+              infrastructureName: test-cluster
+              infrastructureTopology: HighlyAvailable
+              platform: VSphere
+              platformStatus:
+                type: VSphere
+          ipFamilies: IPv4
+          kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+          network: null
+          networkType: OVNKubernetes
+          osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
+          platform: vsphere
+          proxy: null
+          pullSecret:
+            name: pull-secret
+            namespace: openshift-config
+          releaseImage: ""
+          rootCAData: Y2VydGlmaWNhdGUK

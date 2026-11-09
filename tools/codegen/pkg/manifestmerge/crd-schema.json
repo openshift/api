@@ -727,12 +727,7 @@
               "default": {}
             },
             "type": "array",
-            "x-kubernetes-list-map-keys": [
-              "rule"
-            ],
-            "x-kubernetes-list-type": "map",
-            "x-kubernetes-patch-merge-key": "rule",
-            "x-kubernetes-patch-strategy": "merge"
+            "x-kubernetes-list-type": "atomic"
           }
         },
         "type": "object"

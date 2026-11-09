@@ -1236,6 +1236,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1.IngressControllerCaptureHTTPCookieUnion{}.OpenAPIModelName():                schema_openshift_api_operator_v1_IngressControllerCaptureHTTPCookieUnion(ref),
 		operatorv1.IngressControllerCaptureHTTPHeader{}.OpenAPIModelName():                     schema_openshift_api_operator_v1_IngressControllerCaptureHTTPHeader(ref),
 		operatorv1.IngressControllerCaptureHTTPHeaders{}.OpenAPIModelName():                    schema_openshift_api_operator_v1_IngressControllerCaptureHTTPHeaders(ref),
+		operatorv1.IngressControllerContainerResource{}.OpenAPIModelName():                     schema_openshift_api_operator_v1_IngressControllerContainerResource(ref),
 		operatorv1.IngressControllerHTTPHeader{}.OpenAPIModelName():                            schema_openshift_api_operator_v1_IngressControllerHTTPHeader(ref),
 		operatorv1.IngressControllerHTTPHeaderActionUnion{}.OpenAPIModelName():                 schema_openshift_api_operator_v1_IngressControllerHTTPHeaderActionUnion(ref),
 		operatorv1.IngressControllerHTTPHeaderActions{}.OpenAPIModelName():                     schema_openshift_api_operator_v1_IngressControllerHTTPHeaderActions(ref),
@@ -1243,6 +1244,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1.IngressControllerHTTPUniqueIdHeaderPolicy{}.OpenAPIModelName():              schema_openshift_api_operator_v1_IngressControllerHTTPUniqueIdHeaderPolicy(ref),
 		operatorv1.IngressControllerList{}.OpenAPIModelName():                                  schema_openshift_api_operator_v1_IngressControllerList(ref),
 		operatorv1.IngressControllerLogging{}.OpenAPIModelName():                               schema_openshift_api_operator_v1_IngressControllerLogging(ref),
+		operatorv1.IngressControllerResources{}.OpenAPIModelName():                             schema_openshift_api_operator_v1_IngressControllerResources(ref),
 		operatorv1.IngressControllerSetHTTPHeader{}.OpenAPIModelName():                         schema_openshift_api_operator_v1_IngressControllerSetHTTPHeader(ref),
 		operatorv1.IngressControllerSpec{}.OpenAPIModelName():                                  schema_openshift_api_operator_v1_IngressControllerSpec(ref),
 		operatorv1.IngressControllerStatus{}.OpenAPIModelName():                                schema_openshift_api_operator_v1_IngressControllerStatus(ref),
@@ -59186,6 +59188,41 @@ func schema_openshift_api_operator_v1_IngressControllerCaptureHTTPHeaders(ref co
 	}
 }
 
+func schema_openshift_api_operator_v1_IngressControllerContainerResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressControllerContainerResource defines an override for one resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is required and identifies cpu, memory, ephemeral-storage, hugepages-<size>, or a domain-qualified extended resource such as example.com/device. It must be a Kubernetes qualified name of 1 to 253 characters: an optional lowercase DNS subdomain and slash followed by an alphanumeric name of at most 63 characters, with '-', '_' and '.' allowed internally. Extended resource domains must not be kubernetes.io or its subdomains, and names must not start with 'requests.'. Hugepage sizes must be valid quantities of 1 to 20 characters representing a positive, whole number of bytes.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"request": {
+						SchemaProps: spec.SchemaProps{
+							Description: "request optionally sets the minimum amount of this resource per replica. It must be a valid, positive, non-zero quantity of 1 to 20 characters and must not exceed limit. Extended resources and hugepages require an equal limit; extended resource values must be whole numbers, and hugepage values must be whole multiples of the page size. When omitted with a limit, the operator uses that limit as the effective request, without defaulting this API field. When there is no entry for a resource, the platform default request applies.",
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
+						},
+					},
+					"limit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "limit optionally sets the maximum amount of this resource per replica. Limits are not validated against the workload's needs; a misconfiguration is not supported and the cluster administrator is responsible for the value. It must be a valid, positive, non-zero quantity of 1 to 20 characters and must not be less than request. Extended resource values must be whole numbers; hugepage values must be whole multiples of the page size. For extended resources and hugepages, an explicit request must equal limit. When request is omitted, the operator uses limit as the effective request, without defaulting the API field. When limit is omitted, the platform default applies (currently no limit), unless a LimitRange in the router namespace applies one.",
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			resource.Quantity{}.OpenAPIModelName()},
+	}
+}
+
 func schema_openshift_api_operator_v1_IngressControllerHTTPHeader(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -59468,6 +59505,63 @@ func schema_openshift_api_operator_v1_IngressControllerLogging(ref common.Refere
 	}
 }
 
+func schema_openshift_api_operator_v1_IngressControllerResources(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressControllerResources configures per-replica resources for ingress containers.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"router": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "router optionally configures resources for the controller that watches routes and generates HAProxy configuration. When specified, it must be a list of 1 to 8 resource overrides with unique names. Removing an entry restores the platform default for that resource. When omitted, the platform applies its default for the router container, as described on the spec.resources field.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(operatorv1.IngressControllerContainerResource{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"haproxy": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "haproxy optionally configures resources for the proxy that handles ingress traffic. It runs as a restartable init sidecar in the router pod. When specified, it must be a list of 1 to 8 resource overrides with unique names. Removing an entry restores the platform default for that resource. When omitted, the platform applies its default for the haproxy container, as described on the spec.resources field.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(operatorv1.IngressControllerContainerResource{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.IngressControllerContainerResource{}.OpenAPIModelName()},
+	}
+}
+
 func schema_openshift_api_operator_v1_IngressControllerSetHTTPHeader(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -59546,6 +59640,13 @@ func schema_openshift_api_operator_v1_IngressControllerSpec(ref common.Reference
 						SchemaProps: spec.SchemaProps{
 							Description: "nodePlacement enables explicit control over the scheduling of the ingress controller.\n\nIf unset, defaults are used. See NodePlacement for more details.",
 							Ref:         ref(operatorv1.NodePlacement{}.OpenAPIModelName()),
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resources optionally configures per-replica resources for the router and haproxy containers independently. At least one container must be configured. When omitted, the platform is left to choose reasonable defaults, which are subject to change over time. The current defaults are requests of 25m CPU and 64Mi memory for router, requests of 100m CPU and 256Mi memory for haproxy, and no limits for either container.\n\nThe values set here are not validated against what the workload needs, and Red Hat does not support issues caused by a misconfiguration of this field; the cluster administrator is responsible for choosing appropriate values.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.IngressControllerResources{}.OpenAPIModelName()),
 						},
 					},
 					"tlsSecurityProfile": {
@@ -59633,7 +59734,7 @@ func schema_openshift_api_operator_v1_IngressControllerSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			configv1.ConfigMapNameReference{}.OpenAPIModelName(), configv1.TLSSecurityProfile{}.OpenAPIModelName(), operatorv1.ClientTLS{}.OpenAPIModelName(), operatorv1.EndpointPublishingStrategy{}.OpenAPIModelName(), operatorv1.HTTPCompressionPolicy{}.OpenAPIModelName(), operatorv1.IngressControllerHTTPHeaders{}.OpenAPIModelName(), operatorv1.IngressControllerLogging{}.OpenAPIModelName(), operatorv1.IngressControllerTuningOptions{}.OpenAPIModelName(), operatorv1.NodePlacement{}.OpenAPIModelName(), operatorv1.RouteAdmissionPolicy{}.OpenAPIModelName(), corev1.LocalObjectReference{}.OpenAPIModelName(), metav1.LabelSelector{}.OpenAPIModelName(), runtime.RawExtension{}.OpenAPIModelName()},
+			configv1.ConfigMapNameReference{}.OpenAPIModelName(), configv1.TLSSecurityProfile{}.OpenAPIModelName(), operatorv1.ClientTLS{}.OpenAPIModelName(), operatorv1.EndpointPublishingStrategy{}.OpenAPIModelName(), operatorv1.HTTPCompressionPolicy{}.OpenAPIModelName(), operatorv1.IngressControllerHTTPHeaders{}.OpenAPIModelName(), operatorv1.IngressControllerLogging{}.OpenAPIModelName(), operatorv1.IngressControllerResources{}.OpenAPIModelName(), operatorv1.IngressControllerTuningOptions{}.OpenAPIModelName(), operatorv1.NodePlacement{}.OpenAPIModelName(), operatorv1.RouteAdmissionPolicy{}.OpenAPIModelName(), corev1.LocalObjectReference{}.OpenAPIModelName(), metav1.LabelSelector{}.OpenAPIModelName(), runtime.RawExtension{}.OpenAPIModelName()},
 	}
 }
 

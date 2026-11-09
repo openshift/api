@@ -1983,6 +1983,281 @@ spec:
                   These defaults are subject to change.
                 format: int32
                 type: integer
+              resources:
+                description: |-
+                  resources optionally configures per-replica resources for the router and
+                  haproxy containers independently. At least one container must be configured.
+                  When omitted, the platform is left to choose reasonable defaults, which
+                  are subject to change over time. The current defaults are requests of 25m
+                  CPU and 64Mi memory for router, requests of 100m CPU and 256Mi memory for
+                  haproxy, and no limits for either container.
+
+                  The values set here are not validated against what the workload needs, and
+                  Red Hat does not support issues caused by a misconfiguration of this field;
+                  the cluster administrator is responsible for choosing appropriate values.
+                minProperties: 1
+                properties:
+                  haproxy:
+                    description: |-
+                      haproxy optionally configures resources for the proxy that handles ingress
+                      traffic. It runs as a restartable init sidecar in the router pod. When
+                      specified, it must be a list of 1 to 8 resource overrides with unique
+                      names. Removing an entry restores the platform default for that resource.
+                      When omitted, the platform applies its default for the haproxy container,
+                      as described on the spec.resources field.
+                    items:
+                      description: IngressControllerContainerResource defines an override
+                        for one resource.
+                      properties:
+                        limit:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          description: |-
+                            limit optionally sets the maximum amount of this resource per replica.
+                            Limits are not validated against the workload's needs; a misconfiguration
+                            is not supported and the cluster administrator is responsible for the value.
+                            It must be a valid, positive, non-zero quantity of 1 to 20 characters and
+                            must not be less than request. Extended resource values must be whole
+                            numbers; hugepage values must be whole multiples of the page size. For
+                            extended resources and hugepages, an explicit request must equal limit.
+                            When request is omitted, the operator uses limit as the effective request,
+                            without defaulting the API field. When limit is omitted, the platform
+                            default applies (currently no limit), unless a LimitRange in the router
+                            namespace applies one.
+                          maxLength: 20
+                          minLength: 1
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                          x-kubernetes-validations:
+                          - message: limit must be a positive, non-zero quantity
+                            rule: 'type(self) == int ? self > 0 : isQuantity(self)
+                              && quantity(self).isGreaterThan(quantity(''0''))'
+                        name:
+                          description: |-
+                            name is required and identifies cpu, memory, ephemeral-storage, hugepages-<size>,
+                            or a domain-qualified extended resource such as example.com/device.
+                            It must be a Kubernetes qualified name of 1 to 253 characters: an optional
+                            lowercase DNS subdomain and slash followed by an alphanumeric name of at most
+                            63 characters, with '-', '_' and '.' allowed internally. Extended resource
+                            domains must not be kubernetes.io or its subdomains, and names must not
+                            start with 'requests.'. Hugepage sizes must be valid quantities of 1 to 20
+                            characters representing a positive, whole number of bytes.
+                          maxLength: 253
+                          minLength: 1
+                          type: string
+                          x-kubernetes-validations:
+                          - message: name must be a valid Kubernetes qualified name
+                            rule: '!format.qualifiedName().validate(self).hasValue()'
+                          - message: name must be cpu, memory, ephemeral-storage,
+                              hugepages-<size>, or an extended resource
+                            rule: self in ['cpu', 'memory', 'ephemeral-storage'] ||
+                              self.startsWith('hugepages-') || self.contains('/')
+                          - message: extended resource names must not use the reserved
+                              kubernetes.io domain
+                            rule: '!self.contains(''/'') || !(self.split(''/'')[0]
+                              == ''kubernetes.io'' || self.split(''/'')[0].endsWith(''.kubernetes.io''))'
+                          - message: resource names must not start with 'requests.'
+                            rule: '!self.startsWith(''requests.'')'
+                          - message: hugepage size must be a positive whole-byte quantity
+                              of at most 20 characters
+                            rule: '!self.startsWith(''hugepages-'') || (self.substring(10).size()
+                              <= 20 && isQuantity(self.substring(10)) && quantity(self.substring(10)).isInteger()
+                              && quantity(self.substring(10)).isGreaterThan(quantity(''0'')))'
+                        request:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          description: |-
+                            request optionally sets the minimum amount of this resource per replica.
+                            It must be a valid, positive, non-zero quantity of 1 to 20 characters and
+                            must not exceed limit. Extended resources and hugepages require an equal
+                            limit; extended resource values must be whole numbers, and hugepage values
+                            must be whole multiples of the page size. When omitted with a limit, the
+                            operator uses that limit as the effective request, without defaulting this
+                            API field. When there is no entry for a resource, the platform default
+                            request applies.
+                          maxLength: 20
+                          minLength: 1
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                          x-kubernetes-validations:
+                          - message: request must be a positive, non-zero quantity
+                            rule: 'type(self) == int ? self > 0 : isQuantity(self)
+                              && quantity(self).isGreaterThan(quantity(''0''))'
+                      required:
+                      - name
+                      type: object
+                      x-kubernetes-validations:
+                      - message: at least one of request or limit must be set
+                        rule: has(self.request) || has(self.limit)
+                      - message: limit must be greater than or equal to request
+                        rule: '!has(self.request) || !has(self.limit) || (type(self.request)
+                          == int ? quantity(''0'').add(self.request) : quantity(self.request)).compareTo((type(self.limit)
+                          == int ? quantity(''0'').add(self.limit) : quantity(self.limit)))
+                          <= 0'
+                      - message: extended resources and hugepages requests require
+                          a limit
+                        rule: '!(self.name.contains(''/'') || self.name.startsWith(''hugepages-''))
+                          || !has(self.request) || has(self.limit)'
+                      - message: extended resources and hugepages request must equal
+                          limit
+                        rule: '!(self.name.contains(''/'') || self.name.startsWith(''hugepages-''))
+                          || !has(self.request) || !has(self.limit) || (type(self.request)
+                          == int ? quantity(''0'').add(self.request) : quantity(self.request)).compareTo((type(self.limit)
+                          == int ? quantity(''0'').add(self.limit) : quantity(self.limit)))
+                          == 0'
+                      - message: extended resource limit must be a whole number
+                        rule: '!self.name.contains(''/'') || !has(self.limit) || !(type(self.limit)
+                          == int || isQuantity(self.limit)) || (type(self.limit) ==
+                          int ? quantity(''0'').add(self.limit) : quantity(self.limit)).isInteger()'
+                      - message: hugepages limit must be a whole multiple of the page
+                          size
+                        rule: '!self.name.startsWith(''hugepages-'') || !has(self.limit)
+                          || !(type(self.limit) == int || isQuantity(self.limit))
+                          || !isQuantity(self.name.substring(10)) || !quantity(self.name.substring(10)).isInteger()
+                          || !quantity(self.name.substring(10)).isGreaterThan(quantity(''0''))
+                          || ((type(self.limit) == int ? quantity(''0'').add(self.limit)
+                          : quantity(self.limit)).isInteger() && (type(self.limit)
+                          == int ? quantity(''0'').add(self.limit) : quantity(self.limit)).asInteger()
+                          % quantity(self.name.substring(10)).asInteger() == 0)'
+                    maxItems: 8
+                    minItems: 1
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
+                  router:
+                    description: |-
+                      router optionally configures resources for the controller that watches
+                      routes and generates HAProxy configuration. When specified, it must be a
+                      list of 1 to 8 resource overrides with unique names. Removing an entry
+                      restores the platform default for that resource. When omitted, the
+                      platform applies its default for the router container, as described on
+                      the spec.resources field.
+                    items:
+                      description: IngressControllerContainerResource defines an override
+                        for one resource.
+                      properties:
+                        limit:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          description: |-
+                            limit optionally sets the maximum amount of this resource per replica.
+                            Limits are not validated against the workload's needs; a misconfiguration
+                            is not supported and the cluster administrator is responsible for the value.
+                            It must be a valid, positive, non-zero quantity of 1 to 20 characters and
+                            must not be less than request. Extended resource values must be whole
+                            numbers; hugepage values must be whole multiples of the page size. For
+                            extended resources and hugepages, an explicit request must equal limit.
+                            When request is omitted, the operator uses limit as the effective request,
+                            without defaulting the API field. When limit is omitted, the platform
+                            default applies (currently no limit), unless a LimitRange in the router
+                            namespace applies one.
+                          maxLength: 20
+                          minLength: 1
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                          x-kubernetes-validations:
+                          - message: limit must be a positive, non-zero quantity
+                            rule: 'type(self) == int ? self > 0 : isQuantity(self)
+                              && quantity(self).isGreaterThan(quantity(''0''))'
+                        name:
+                          description: |-
+                            name is required and identifies cpu, memory, ephemeral-storage, hugepages-<size>,
+                            or a domain-qualified extended resource such as example.com/device.
+                            It must be a Kubernetes qualified name of 1 to 253 characters: an optional
+                            lowercase DNS subdomain and slash followed by an alphanumeric name of at most
+                            63 characters, with '-', '_' and '.' allowed internally. Extended resource
+                            domains must not be kubernetes.io or its subdomains, and names must not
+                            start with 'requests.'. Hugepage sizes must be valid quantities of 1 to 20
+                            characters representing a positive, whole number of bytes.
+                          maxLength: 253
+                          minLength: 1
+                          type: string
+                          x-kubernetes-validations:
+                          - message: name must be a valid Kubernetes qualified name
+                            rule: '!format.qualifiedName().validate(self).hasValue()'
+                          - message: name must be cpu, memory, ephemeral-storage,
+                              hugepages-<size>, or an extended resource
+                            rule: self in ['cpu', 'memory', 'ephemeral-storage'] ||
+                              self.startsWith('hugepages-') || self.contains('/')
+                          - message: extended resource names must not use the reserved
+                              kubernetes.io domain
+                            rule: '!self.contains(''/'') || !(self.split(''/'')[0]
+                              == ''kubernetes.io'' || self.split(''/'')[0].endsWith(''.kubernetes.io''))'
+                          - message: resource names must not start with 'requests.'
+                            rule: '!self.startsWith(''requests.'')'
+                          - message: hugepage size must be a positive whole-byte quantity
+                              of at most 20 characters
+                            rule: '!self.startsWith(''hugepages-'') || (self.substring(10).size()
+                              <= 20 && isQuantity(self.substring(10)) && quantity(self.substring(10)).isInteger()
+                              && quantity(self.substring(10)).isGreaterThan(quantity(''0'')))'
+                        request:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          description: |-
+                            request optionally sets the minimum amount of this resource per replica.
+                            It must be a valid, positive, non-zero quantity of 1 to 20 characters and
+                            must not exceed limit. Extended resources and hugepages require an equal
+                            limit; extended resource values must be whole numbers, and hugepage values
+                            must be whole multiples of the page size. When omitted with a limit, the
+                            operator uses that limit as the effective request, without defaulting this
+                            API field. When there is no entry for a resource, the platform default
+                            request applies.
+                          maxLength: 20
+                          minLength: 1
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                          x-kubernetes-validations:
+                          - message: request must be a positive, non-zero quantity
+                            rule: 'type(self) == int ? self > 0 : isQuantity(self)
+                              && quantity(self).isGreaterThan(quantity(''0''))'
+                      required:
+                      - name
+                      type: object
+                      x-kubernetes-validations:
+                      - message: at least one of request or limit must be set
+                        rule: has(self.request) || has(self.limit)
+                      - message: limit must be greater than or equal to request
+                        rule: '!has(self.request) || !has(self.limit) || (type(self.request)
+                          == int ? quantity(''0'').add(self.request) : quantity(self.request)).compareTo((type(self.limit)
+                          == int ? quantity(''0'').add(self.limit) : quantity(self.limit)))
+                          <= 0'
+                      - message: extended resources and hugepages requests require
+                          a limit
+                        rule: '!(self.name.contains(''/'') || self.name.startsWith(''hugepages-''))
+                          || !has(self.request) || has(self.limit)'
+                      - message: extended resources and hugepages request must equal
+                          limit
+                        rule: '!(self.name.contains(''/'') || self.name.startsWith(''hugepages-''))
+                          || !has(self.request) || !has(self.limit) || (type(self.request)
+                          == int ? quantity(''0'').add(self.request) : quantity(self.request)).compareTo((type(self.limit)
+                          == int ? quantity(''0'').add(self.limit) : quantity(self.limit)))
+                          == 0'
+                      - message: extended resource limit must be a whole number
+                        rule: '!self.name.contains(''/'') || !has(self.limit) || !(type(self.limit)
+                          == int || isQuantity(self.limit)) || (type(self.limit) ==
+                          int ? quantity(''0'').add(self.limit) : quantity(self.limit)).isInteger()'
+                      - message: hugepages limit must be a whole multiple of the page
+                          size
+                        rule: '!self.name.startsWith(''hugepages-'') || !has(self.limit)
+                          || !(type(self.limit) == int || isQuantity(self.limit))
+                          || !isQuantity(self.name.substring(10)) || !quantity(self.name.substring(10)).isInteger()
+                          || !quantity(self.name.substring(10)).isGreaterThan(quantity(''0''))
+                          || ((type(self.limit) == int ? quantity(''0'').add(self.limit)
+                          : quantity(self.limit)).isInteger() && (type(self.limit)
+                          == int ? quantity(''0'').add(self.limit) : quantity(self.limit)).asInteger()
+                          % quantity(self.name.substring(10)).asInteger() == 0)'
+                    maxItems: 8
+                    minItems: 1
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
+                type: object
               routeAdmission:
                 description: |-
                   routeAdmission defines a policy for handling new route claims (for example,

@@ -62,6 +62,9 @@
                         "name": "Example2"
                     },
                     {
+                        "name": "IngressControllerResourceConfiguration"
+                    },
+                    {
                         "name": "KarpenterOperator"
                     },
                     {

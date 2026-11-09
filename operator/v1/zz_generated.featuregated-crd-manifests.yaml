@@ -206,6 +206,7 @@ ingresscontrollers.operator.openshift.io:
   - IngressControllerDynamicConfigurationManager
   - IngressControllerLBSecurityGroupsAWS
   - IngressControllerMultipleHAProxyVersions
+  - IngressControllerResourceConfiguration
   - TLSGroupPreferences
   FilenameOperatorName: ingress
   FilenameOperatorOrdering: "00"

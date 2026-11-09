@@ -3,7 +3,6 @@ name: "Infrastructure"
 crdName: infrastructures.config.openshift.io
 featureGates:
   - -AWSClusterHostedDNS
-  - -VSphereMultiVCenterDay2
 tests:
   onCreate:
     - name: Should be able to create a minimal Infrastructure
@@ -1884,6 +1883,8 @@ tests:
       initialCRDPatches:
         - op: remove
           path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/properties/vcenters/minItems
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/x-kubernetes-validations/0
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure

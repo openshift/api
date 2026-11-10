@@ -1428,10 +1428,10 @@ type BodySizeEnforcementCustomConfig struct {
 	// If a scraped target's body response is larger than the limit, the scrape will fail.
 	// This helps protect Prometheus from targets that return excessively large responses.
 	// The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB).
-	// Minimum value is 10240 (10kB).
+	// Minimum value is 1048576 (1MiB).
 	// Maximum value is 1073741824 (1GB).
 	// This field is required.
-	// +kubebuilder:validation:Minimum=10240
+	// +kubebuilder:validation:Minimum=1048576
 	// +kubebuilder:validation:Maximum=1073741824
 	// +required
 	MaxSizeBytes int64 `json:"maxSizeBytes,omitempty"`

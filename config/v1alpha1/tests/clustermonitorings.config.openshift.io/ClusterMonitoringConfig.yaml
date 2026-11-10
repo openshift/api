@@ -3608,7 +3608,7 @@ tests:
             bodySizeEnforcement:
               mode: Custom
               custom:
-                maxSizeBytes: 10240
+                maxSizeBytes: 1048576
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -3619,7 +3619,7 @@ tests:
             bodySizeEnforcement:
               mode: Custom
               custom:
-                maxSizeBytes: 10240
+                maxSizeBytes: 1048576
     - name: Should accept Custom with maximum for scrape body size enforcement
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -3754,8 +3754,8 @@ tests:
             bodySizeEnforcement:
               mode: Custom
               custom:
-                maxSizeBytes: 10239
-      expectedError: "greater than or equal to 10240"
+                maxSizeBytes: 1048575
+      expectedError: "greater than or equal to 1048576"
     - name: Should reject Custom above maximum for scrape body size enforcement
       initial: |
         apiVersion: config.openshift.io/v1alpha1

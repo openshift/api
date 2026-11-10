@@ -215,7 +215,7 @@ var (
 					contactPerson("hasbro17").
 					productScope(ocpSpecific).
 					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					enable(inDefault(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
 	FeatureGateMachineAPIOperatorDisableMachineHealthCheckController = newFeatureGate("MachineAPIOperatorDisableMachineHealthCheckController").

@@ -377,9 +377,6 @@
                         "name": "StoragePerformantSecurityPolicy"
                     },
                     {
-                        "name": "UpgradeStatus"
-                    },
-                    {
                         "name": "VSphereHostVMGroupZonal"
                     },
                     {

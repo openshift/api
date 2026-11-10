@@ -179,6 +179,9 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
+                        "name": "IngressControllerLBSecurityGroupsAWS"
+                    },
+                    {
                         "name": "KarpenterOperator"
                     },
                     {
@@ -367,16 +370,10 @@
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
-                        "name": "ImageStreamImportMode"
-                    },
-                    {
                         "name": "IngressComponentRouteLabels"
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
-                    },
-                    {
-                        "name": "IngressControllerLBSecurityGroupsAWS"
                     },
                     {
                         "name": "IngressControllerMultipleHAProxyVersions"

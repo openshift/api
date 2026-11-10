@@ -174,6 +174,9 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
+                        "name": "IngressControllerLBSecurityGroupsAWS"
+                    },
+                    {
                         "name": "KarpenterOperator"
                     },
                     {
@@ -356,16 +359,10 @@
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {
-                        "name": "ImageStreamImportMode"
-                    },
-                    {
                         "name": "IngressComponentRouteLabels"
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
-                    },
-                    {
-                        "name": "IngressControllerLBSecurityGroupsAWS"
                     },
                     {
                         "name": "IngressControllerMultipleHAProxyVersions"

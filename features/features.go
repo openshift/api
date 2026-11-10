@@ -658,14 +658,6 @@ var (
 						enhancementPR(legacyFeatureGateWithoutEnhancement).
 						mustRegister()
 
-	FeatureGateImageStreamImportMode = newFeatureGate("ImageStreamImportMode").
-						reportProblemsToJiraComponent("Multi-Arch").
-						contactPerson("psundara").
-						productScope(ocpSpecific).
-						enhancementPR(legacyFeatureGateWithoutEnhancement).
-						enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-						mustRegister()
-
 	FeatureGateIngressControllerDynamicConfigurationManager = newFeatureGate("IngressControllerDynamicConfigurationManager").
 								reportProblemsToJiraComponent("Networking/router").
 								contactPerson("miciah").
@@ -1034,7 +1026,7 @@ var (
 							contactPerson("miciah").
 							productScope(ocpSpecific).
 							enhancementPR("https://github.com/openshift/enhancements/pull/2037").
-							enable(inDefault(), inOKD(), inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+							enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 							mustRegister()
 
 	FeatureGateTLSAdherence = newFeatureGate("TLSAdherence").

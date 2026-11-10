@@ -93,7 +93,7 @@ func (BodySizeEnforcement) SwaggerDoc() map[string]string {
 
 var map_BodySizeEnforcementCustomConfig = map[string]string{
 	"":             "BodySizeEnforcementCustomConfig defines a fixed scrape response size limit.",
-	"maxSizeBytes": "maxSizeBytes defines the maximum size in bytes of the response body accepted from a scraped target. If a scraped target's body response is larger than the limit, the scrape will fail. This helps protect Prometheus from targets that return excessively large responses. The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB). Minimum value is 10240 (10kB). Maximum value is 1073741824 (1GB). This field is required.",
+	"maxSizeBytes": "maxSizeBytes defines the maximum size in bytes of the response body accepted from a scraped target. If a scraped target's body response is larger than the limit, the scrape will fail. This helps protect Prometheus from targets that return excessively large responses. The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB). Minimum value is 1048576 (1MiB). Maximum value is 1073741824 (1GB). This field is required.",
 }
 
 func (BodySizeEnforcementCustomConfig) SwaggerDoc() map[string]string {

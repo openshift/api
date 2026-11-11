@@ -640,7 +640,7 @@ var (
 					contactPerson("mdbooth").
 					productScope(ocpSpecific).
 					enhancementPR("https://github.com/openshift/enhancements/pull/2149").
-					enable(inClusterProfile(SelfManaged), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					enable(inClusterProfile(SelfManaged), inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
 	FeatureGateClusterMonitoringConfig = newFeatureGate("ClusterMonitoringConfig").

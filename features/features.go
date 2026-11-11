@@ -1155,4 +1155,12 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/2118").
 					enable(inDevPreviewNoUpgrade()).
 					mustRegister()
+
+	FeatureGateNMStateOptIn = newFeatureGate("NMStateOptIn").
+					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+					contactPerson("bnemec").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1963").
+					enable(inTechPreviewNoUpgrade()).
+					mustRegister()
 )

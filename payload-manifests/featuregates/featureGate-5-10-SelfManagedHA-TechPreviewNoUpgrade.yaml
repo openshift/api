@@ -343,6 +343,9 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "NMStateOptIn"
+                    },
+                    {
                         "name": "NetworkObservabilityInstall"
                     },
                     {

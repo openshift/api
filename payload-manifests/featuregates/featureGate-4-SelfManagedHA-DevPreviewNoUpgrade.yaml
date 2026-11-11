@@ -50,6 +50,9 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
+                        "name": "NMStateOptIn"
+                    },
+                    {
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {

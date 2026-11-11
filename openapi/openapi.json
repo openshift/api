@@ -9023,6 +9023,11 @@
           "type": "string",
           "default": ""
         },
+        "bridgeTopology": {
+          "description": "bridgeTopology specifies how the br-ex bridge for OVNKubernetes will be created by NMState. Valid values are \"Disabled\" and \"Standard\". The default is 'Disabled' which means br-ex will be managed by configure-ovs.sh instead of NMState. 'Standard' will create a standard br-ex, similar to what would be done by configure-ovs.sh.",
+          "type": "string",
+          "default": "Disabled"
+        },
         "controlPlaneTopology": {
           "description": "controlPlaneTopology expresses the expectations for operands that normally run on control nodes. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation The 'DualReplica' mode is used in two-node deployments with fencing. The 'External' mode indicates that the control plane is hosted externally to the cluster and that its components are not visible within the cluster. The 'HighlyAvailableArbiter' mode indicates that the control plane will consist of 2 control-plane nodes that run conventional services and 1 smaller sized arbiter node that runs a bare minimum of services to maintain quorum.",
           "type": "string",

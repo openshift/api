@@ -38,6 +38,7 @@ controllerconfigs.machineconfiguration.openshift.io:
   - DyanmicServiceEndpointIBMCloud
   - GCPSovereignCloudInstall
   - MutableTopology
+  - NMStateOptIn
   - NutanixMultiSubnets
   - OnPremDNSRecords
   - OpenStackMaxAllowedAddressPairs

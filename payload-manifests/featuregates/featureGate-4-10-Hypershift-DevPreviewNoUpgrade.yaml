@@ -65,6 +65,9 @@
                         "name": "MutableTopology"
                     },
                     {
+                        "name": "NMStateOptIn"
+                    },
+                    {
                         "name": "NewOLM"
                     },
                     {

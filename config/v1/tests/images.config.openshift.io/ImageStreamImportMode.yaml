@@ -40,81 +40,15 @@ tests:
         kind: Image
         spec:
           imageStreamImportMode: InvalidValue
-      expectedError: 'spec.imageStreamImportMode: Unsupported value: "InvalidValue": supported values: "Legacy", "PreserveOriginal"'
-    - name: Should not be able to configure imageStreamImportMode to empty string
+      expectedError: 'spec.imageStreamImportMode: Unsupported value: "InvalidValue": supported values: "", "Legacy", "PreserveOriginal"'
+    - name: Should be able to configure imageStreamImportMode to empty string
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Image
         spec:
           imageStreamImportMode: ""
-      expectedError: 'spec.imageStreamImportMode: Unsupported value: "": supported values: "Legacy", "PreserveOriginal"'
-  onUpdate:
-    - name: Should allow updating other fields with a persisted empty imageStreamImportMode
-      initialCRDPatches:
-        - op: remove
-          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/imageStreamImportMode/enum
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Image
-        spec:
-          imageStreamImportMode: ""
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Image
-        spec:
-          imageStreamImportMode: ""
-          externalRegistryHostnames: ["test"]
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Image
         spec:
           imageStreamImportMode: ""
-          externalRegistryHostnames: ["test"]
-    - name: Should allow removing a persisted empty imageStreamImportMode
-      initialCRDPatches:
-        - op: remove
-          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/imageStreamImportMode/enum
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Image
-        spec:
-          imageStreamImportMode: ""
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Image
-        spec: {}
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: Image
-        spec: {}
-    - name: Should allow changing a persisted empty imageStreamImportMode to a valid value
-      initialCRDPatches:
-        - op: remove
-          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/imageStreamImportMode/enum
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Image
-        spec:
-          imageStreamImportMode: ""
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Image
-        spec:
-          imageStreamImportMode: PreserveOriginal
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: Image
-        spec:
-          imageStreamImportMode: PreserveOriginal
-    - name: Should not allow changing a valid imageStreamImportMode to empty string
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Image
-        spec:
-          imageStreamImportMode: Legacy
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Image
-        spec:
-          imageStreamImportMode: ""
-      expectedError: 'spec.imageStreamImportMode: Unsupported value: "": supported values: "Legacy", "PreserveOriginal"'

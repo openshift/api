@@ -44,6 +44,9 @@
                         "name": "BGPBasedVIPManagement"
                     },
                     {
+                        "name": "BareMetalHostV1Beta1"
+                    },
+                    {
                         "name": "BootcNodeManagement"
                     },
                     {

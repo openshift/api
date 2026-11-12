@@ -1,0 +1,71 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "ClusterImagePolicy"
+crdName: clusterimagepolicies.config.openshift.io
+featureGates:
+- ImagePolicyDenyByDefault
+tests:
+  onCreate:
+    - name: Should allow a cluster default Reject policy
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterImagePolicy
+        spec:
+          appliesTo: Default
+          policy:
+            rootOfTrust:
+              policyType: Reject
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterImagePolicy
+        spec:
+          appliesTo: Default
+          policy:
+            rootOfTrust:
+              policyType: Reject
+    - name: Should allow a scoped policy when appliesTo is omitted
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterImagePolicy
+        spec:
+          scopes:
+          - example.com
+          policy:
+            rootOfTrust:
+              policyType: PublicKey
+              publicKey:
+                keyData: LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFK0tpN0I3K2tpTFdPSmRQWXBZanRqUmtXVnBxRgpuNHl1TjU2VjZHaGdLRm5SZjJqemlweEFWR084cm0vWUVQU3d2clBORHJqdnA0YlpoNm5NR0Z0NzhBPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterImagePolicy
+        spec:
+          scopes:
+          - example.com
+          policy:
+            rootOfTrust:
+              policyType: PublicKey
+              publicKey:
+                keyData: LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFK0tpN0I3K2tpTFdPSmRQWXBZanRqUmtXVnBxRgpuNHl1TjU2VjZHaGdLRm5SZjJqemlweEFWR084cm0vWUVQU3d2clBORHJqdnA0YlpoNm5NR0Z0NzhBPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t
+    - name: Should reject scopes on a cluster default policy
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterImagePolicy
+        spec:
+          appliesTo: Default
+          scopes:
+          - example.com
+          policy:
+            rootOfTrust:
+              policyType: Reject
+      expectedError: 'scopes must be empty when appliesTo is Default'
+    - name: Should reject a non-Reject cluster default policy
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterImagePolicy
+        spec:
+          appliesTo: Default
+          policy:
+            rootOfTrust:
+              policyType: PublicKey
+              publicKey:
+                keyData: LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFK0tpN0I3K2tpTFdPSmRQWXBZanRqUmtXVnBxRgpuNHl1TjU2VjZHaGdLRm5SZjJqemlweEFWR084cm0vWUVQU3d2clBORHJqdnA0YlpoNm5NR0Z0NzhBPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t
+      expectedError: 'appliesTo Default requires policyType Reject'

@@ -1106,7 +1106,7 @@ var (
 						contactPerson("jdobson").
 						productScope(ocpSpecific).
 						enhancementPR("https://github.com/openshift/enhancements/pull/2095").
-						enable(inClusterProfile(SelfManaged), inDevPreviewNoUpgrade()).
+						enable(inClusterProfile(SelfManaged), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 
 	FeatureGateGenericWorkload = newFeatureGate("GenericWorkload").

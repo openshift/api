@@ -44,9 +44,6 @@
                         "name": "ConfidentialCluster"
                     },
                     {
-                        "name": "ControllerManagerConfig"
-                    },
-                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -200,6 +197,9 @@
                     },
                     {
                         "name": "ConfigurablePKI"
+                    },
+                    {
+                        "name": "ControllerManagerConfig"
                     },
                     {
                         "name": "DNSNameResolver"

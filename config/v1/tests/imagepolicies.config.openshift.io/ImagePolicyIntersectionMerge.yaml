@@ -1,0 +1,44 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "ImagePolicy"
+crdName: imagepolicies.config.openshift.io
+featureGates:
+- ImagePolicyIntersectionMerge
+tests:
+  onCreate:
+    - name: Should allow intersection merge for a scoped ImagePolicy
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ImagePolicy
+        spec:
+          intersectionMerge: Enabled
+          scopes:
+          - example.com
+          policy:
+            rootOfTrust:
+              policyType: PublicKey
+              publicKey:
+                keyData: LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFK0tpN0I3K2tpTFdPSmRQWXBZanRqUmtXVnBxRgpuNHl1TjU2VjZHaGdLRm5SZjJqemlweEFWR084cm0vWUVQU3d2clBORHJqdnA0YlpoNm5NR0Z0NzhBPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ImagePolicy
+        spec:
+          intersectionMerge: Enabled
+          scopes:
+          - example.com
+          policy:
+            rootOfTrust:
+              policyType: PublicKey
+              publicKey:
+                keyData: LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFK0tpN0I3K2tpTFdPSmRQWXBZanRqUmtXVnBxRgpuNHl1TjU2VjZHaGdLRm5SZjJqemlweEFWR084cm0vWUVQU3d2clBORHJqdnA0YlpoNm5NR0Z0NzhBPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t
+    - name: Should reject intersection merge without scopes
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ImagePolicy
+        spec:
+          intersectionMerge: Enabled
+          policy:
+            rootOfTrust:
+              policyType: PublicKey
+              publicKey:
+                keyData: LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFK0tpN0I3K2tpTFdPSmRQWXBZanRqUmtXVnBxRgpuNHl1TjU2VjZHaGdLRm5SZjJqemlweEFWR084cm0vWUVQU3d2clBORHJqdnA0YlpoNm5NR0Z0NzhBPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t
+      expectedError: 'intersectionMerge requires at least one scope'

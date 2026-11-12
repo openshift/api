@@ -30,42 +30,92 @@ type ImagePolicy struct {
 	Status ImagePolicyStatus `json:"status"`
 }
 
+// PolicyAppliesTo defines whether a policy applies to images that do not match any registry-specific policy.
+// +kubebuilder:validation:Enum=Default
+type PolicyAppliesTo string
+
+const (
+	// PolicyAppliesToDefault configures the policy as a default for images that do not match any registry-specific policy.
+	PolicyAppliesToDefault PolicyAppliesTo = "Default"
+)
+
+// IntersectionMergePolicy defines how ImagePolicy and ClusterImagePolicy scope requirements are combined for a namespace.
+// +kubebuilder:validation:Enum=Enabled
+type IntersectionMergePolicy string
+
+const (
+	// IntersectionMergeEnabled combines namespace and cluster scope requirements.
+	IntersectionMergeEnabled IntersectionMergePolicy = "Enabled"
+)
+
 // ImagePolicySpec is the specification of the ImagePolicy CRD.
+// +openshift:validation:FeatureGateAwareXValidation:featureGate="",rule="self.policy.rootOfTrust.policyType == 'Reject' || (has(self.scopes) && size(self.scopes) > 0)",message="scopes must be specified unless policyType is Reject"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ImagePolicyDenyByDefault,rule="self.policy.rootOfTrust.policyType != 'Reject' || has(self.appliesTo)",message="policyType Reject requires appliesTo Default"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ImagePolicyDenyByDefault,rule="!has(self.appliesTo) || self.appliesTo != 'Default' || self.policy.rootOfTrust.policyType == 'Reject'",message="appliesTo Default requires policyType Reject"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ImagePolicyDenyByDefault,rule="!has(self.appliesTo) || self.appliesTo != 'Default' || !has(self.scopes)",message="scopes must be empty when appliesTo is Default"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ImagePolicyIntersectionMerge,rule="!has(self.intersectionMerge) || (has(self.scopes) && size(self.scopes) > 0)",message="intersectionMerge requires at least one scope"
+// +openshift:validation:FeatureGateAwareXValidation:requiredFeatureGate=ImagePolicyDenyByDefault;ImagePolicyIntersectionMerge,rule="!has(self.intersectionMerge) || !has(self.appliesTo) || self.appliesTo != 'Default'",message="intersectionMerge is not supported with appliesTo Default"
 type ImagePolicySpec struct {
-	// scopes is a required field that defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the "Docker Registry HTTP API V2".
+	// appliesTo specifies whether this policy applies to images that do not match any registry-specific policy.
+	// The only supported value is "Default".
+	// The "Default" value is available only when the ImagePolicyDenyByDefault feature gate is enabled.
+	// When omitted, the policy applies to the registry scopes listed in scopes.
+	// When set to "Default", scopes must be omitted and policyType must be "Reject".
+	// +optional
+	// +openshift:enable:FeatureGate=ImagePolicyDenyByDefault
+	AppliesTo PolicyAppliesTo `json:"appliesTo,omitempty"`
+	// scopes is an optional field that defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the "Docker Registry HTTP API V2".
 	// Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest).
 	// More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository
 	// namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number).
 	// Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not.
-	// This support no more than 256 scopes in one object. If multiple scopes match a given image, only the policy requirements for the most specific scope apply. The policy requirements for more general scopes are ignored.
+	// This supports no more than 256 scopes in one object. If multiple scopes match a given image, only the policy requirements for the most specific scope apply. The policy requirements for more general scopes are ignored unless intersection merging is enabled.
 	// In addition to setting a policy appropriate for your own deployed applications, make sure that a policy on the OpenShift image repositories
 	// quay.io/openshift-release-dev/ocp-release, quay.io/openshift-release-dev/ocp-v4.0-art-dev (or on a more general scope) allows deployment of the OpenShift images required for cluster operation.
-	// If a scope is configured in both the ClusterImagePolicy and the ImagePolicy, or if the scope in ImagePolicy is nested under one of the scopes from the ClusterImagePolicy, only the policy from the ClusterImagePolicy will be applied.
+	// If a scope is configured in both the ClusterImagePolicy and the ImagePolicy, or if the scope in ImagePolicy is nested under one of the scopes from the ClusterImagePolicy, only the policy from the ClusterImagePolicy will be applied unless intersection merging is enabled in the namespace.
+	// When specified, scopes must contain between 1 and 256 items. At least one scope is required when appliesTo is omitted; scopes must be omitted when appliesTo is "Default".
 	// For additional details about the format, please refer to the document explaining the docker transport field,
 	// which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker
-	// +required
+	// +optional
+	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=256
 	// +listType=set
-	Scopes []ImageScope `json:"scopes"`
+	Scopes []ImageScope `json:"scopes,omitempty"`
+	// intersectionMerge enables namespace-level intersection merging.
+	// Valid value is "Enabled".
+	// When enabled in any ImagePolicy in a namespace, intersection merging applies to all ImagePolicies in that namespace.
+	// Requirements from overlapping ImagePolicy and ClusterImagePolicy scopes are combined and all requirements must be satisfied.
+	// When omitted, an ImagePolicy scope that equals or is nested inside a registry-scoped ClusterImagePolicy scope is not applied,
+	// and non-conflicting scopes remain applied.
+	// intersectionMerge requires at least one scope and cannot be combined with appliesTo "Default".
+	// Default policies configured with appliesTo are not registry scopes and are not combined by intersection merging.
+	// This field is available only when the ImagePolicyIntersectionMerge feature gate is enabled.
+	// +optional
+	// +openshift:enable:FeatureGate=ImagePolicyIntersectionMerge
+	IntersectionMerge IntersectionMergePolicy `json:"intersectionMerge,omitempty"`
 	// policy is a required field that contains configuration to allow scopes to be verified, and defines how
 	// images not matching the verification policy will be treated.
 	// +required
 	Policy ImageSigstoreVerificationPolicy `json:"policy"`
 }
 
+// ImageScope is a container image scope. It must contain between 1 and 512 characters.
 // +kubebuilder:validation:XValidation:rule="size(self.split('/')[0].split('.')) == 1 ? self.split('/')[0].split('.')[0].split(':')[0] == 'localhost' : true",message="invalid image scope format, scope must contain a fully qualified domain name or 'localhost'"
 // +kubebuilder:validation:XValidation:rule=`self.contains('*') ? self.matches('^\\*(?:\\.(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]))+$') : true`,message="invalid image scope with wildcard, a wildcard can only be at the start of the domain and is only supported for subdomain matching, not path matching"
 // +kubebuilder:validation:XValidation:rule=`!self.contains('*') ? self.matches('^((((?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])(?:\\.(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]))+(?::[0-9]+)?)|(localhost(?::[0-9]+)?))(?:(?:/[a-z0-9]+(?:(?:(?:[._]|__|[-]*)[a-z0-9]+)+)?)+)?)(?::([\\w][\\w.-]{0,127}))?(?:@([A-Za-z][A-Za-z0-9]*(?:[-_+.][A-Za-z][A-Za-z0-9]*)*[:][[:xdigit:]]{32,}))?$') : true`,message="invalid repository namespace or image specification in the image scope"
+// +kubebuilder:validation:MinLength=1
 // +kubebuilder:validation:MaxLength=512
 type ImageScope string
 
 // ImageSigstoreVerificationPolicy defines the verification policy for the items in the scopes list.
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ImagePolicyDenyByDefault,rule="self.rootOfTrust.policyType != 'Reject' || !has(self.signedIdentity)",message="signedIdentity must not be set when policyType is Reject"
 type ImageSigstoreVerificationPolicy struct {
 	// rootOfTrust is a required field that defines the root of trust for verifying image signatures during retrieval.
 	// This allows image consumers to specify policyType and corresponding configuration of the policy, matching how the policy was generated.
 	// +required
 	RootOfTrust PolicyRootOfTrust `json:"rootOfTrust"`
 	// signedIdentity is an optional field specifies what image identity the signature claims about the image. This is useful when the image identity in the signature differs from the original image spec, such as when mirror registry is configured for the image scope, the signature from the mirror registry contains the image identity of the mirror instead of the original scope.
+	// It must not be specified when policyType is Reject.
 	// The required matchPolicy field specifies the approach used in the verification process to verify the identity in the signature and the actual image identity, the default matchPolicy is "MatchRepoDigestOrExact".
 	// +optional
 	SignedIdentity *PolicyIdentity `json:"signedIdentity,omitempty"`
@@ -78,10 +128,12 @@ type ImageSigstoreVerificationPolicy struct {
 // +kubebuilder:validation:XValidation:rule="has(self.policyType) && self.policyType == 'PKI' ? has(self.pki) : !has(self.pki)",message="pki is required when policyType is PKI, and forbidden otherwise"
 type PolicyRootOfTrust struct {
 	// policyType is a required field specifies the type of the policy for verification. This field must correspond to how the policy was generated.
-	// Allowed values are "PublicKey", "FulcioCAWithRekor", and "PKI".
+	// Allowed values are "PublicKey", "FulcioCAWithRekor", "PKI", and "Reject".
+	// The "Reject" value is available only when the ImagePolicyDenyByDefault feature gate is enabled.
 	// When set to "PublicKey", the policy relies on a sigstore publicKey and may optionally use a Rekor verification.
 	// When set to "FulcioCAWithRekor", the policy is based on the Fulcio certification and incorporates a Rekor verification.
 	// When set to "PKI", the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI).
+	// When set to "Reject", appliesTo must be "Default" and images not matching any registry-specific policy are rejected.
 	// +unionDiscriminator
 	// +required
 	PolicyType PolicyType `json:"policyType"`
@@ -101,13 +153,16 @@ type PolicyRootOfTrust struct {
 	PKI *ImagePolicyPKIRootOfTrust `json:"pki,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=PublicKey;FulcioCAWithRekor;PKI
+// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum=PublicKey;FulcioCAWithRekor;PKI
+// +openshift:validation:FeatureGateAwareEnum:featureGate=ImagePolicyDenyByDefault,enum=PublicKey;FulcioCAWithRekor;PKI;Reject
 type PolicyType string
 
 const (
 	PublicKeyRootOfTrust         PolicyType = "PublicKey"
 	FulcioCAWithRekorRootOfTrust PolicyType = "FulcioCAWithRekor"
 	PKIRootOfTrust               PolicyType = "PKI"
+	// +openshift:enable:FeatureGate=ImagePolicyDenyByDefault
+	RejectPolicyType PolicyType = "Reject"
 )
 
 // ImagePolicyPublicKeyRootOfTrust defines the root of trust based on a sigstore public key.

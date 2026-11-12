@@ -1164,4 +1164,19 @@ var (
 					enhancementPR("https://github.com/metal3-io/metal3-docs/pull/332").
 					enable(inDevPreviewNoUpgrade()).
 					mustRegister()
+	FeatureGateImagePolicyDenyByDefault = newFeatureGate("ImagePolicyDenyByDefault").
+						reportProblemsToJiraComponent("node").
+						contactPerson("QiWang19").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/2139").
+						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						mustRegister()
+
+	FeatureGateImagePolicyIntersectionMerge = newFeatureGate("ImagePolicyIntersectionMerge").
+						reportProblemsToJiraComponent("node").
+						contactPerson("QiWang19").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/2139").
+						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						mustRegister()
 )

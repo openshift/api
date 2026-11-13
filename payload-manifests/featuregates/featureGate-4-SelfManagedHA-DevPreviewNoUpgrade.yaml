@@ -253,6 +253,9 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
+                        "name": "IngressCanaryNodePlacement"
+                    },
+                    {
                         "name": "IngressComponentRouteLabels"
                     },
                     {

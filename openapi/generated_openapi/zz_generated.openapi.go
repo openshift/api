@@ -1182,8 +1182,16 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1.DNSList{}.OpenAPIModelName():                                                schema_openshift_api_operator_v1_DNSList(ref),
 		operatorv1.DNSNodePlacement{}.OpenAPIModelName():                                       schema_openshift_api_operator_v1_DNSNodePlacement(ref),
 		operatorv1.DNSOverTLSConfig{}.OpenAPIModelName():                                       schema_openshift_api_operator_v1_DNSOverTLSConfig(ref),
+		operatorv1.DNSResponseAction{}.OpenAPIModelName():                                      schema_openshift_api_operator_v1_DNSResponseAction(ref),
+		operatorv1.DNSResponseActionA{}.OpenAPIModelName():                                     schema_openshift_api_operator_v1_DNSResponseActionA(ref),
+		operatorv1.DNSResponseActionCNAME{}.OpenAPIModelName():                                 schema_openshift_api_operator_v1_DNSResponseActionCNAME(ref),
+		operatorv1.DNSResponseActionNXDOMAIN{}.OpenAPIModelName():                              schema_openshift_api_operator_v1_DNSResponseActionNXDOMAIN(ref),
+		operatorv1.DNSResponseQuery{}.OpenAPIModelName():                                       schema_openshift_api_operator_v1_DNSResponseQuery(ref),
+		operatorv1.DNSResponseRule{}.OpenAPIModelName():                                        schema_openshift_api_operator_v1_DNSResponseRule(ref),
 		operatorv1.DNSSpec{}.OpenAPIModelName():                                                schema_openshift_api_operator_v1_DNSSpec(ref),
 		operatorv1.DNSStatus{}.OpenAPIModelName():                                              schema_openshift_api_operator_v1_DNSStatus(ref),
+		operatorv1.DNSTemplate{}.OpenAPIModelName():                                            schema_openshift_api_operator_v1_DNSTemplate(ref),
+		operatorv1.DNSTemplateAction{}.OpenAPIModelName():                                      schema_openshift_api_operator_v1_DNSTemplateAction(ref),
 		operatorv1.DNSTransportConfig{}.OpenAPIModelName():                                     schema_openshift_api_operator_v1_DNSTransportConfig(ref),
 		operatorv1.DefaultNetworkDefinition{}.OpenAPIModelName():                               schema_openshift_api_operator_v1_DefaultNetworkDefinition(ref),
 		operatorv1.DeveloperConsoleCatalogCategory{}.OpenAPIModelName():                        schema_openshift_api_operator_v1_DeveloperConsoleCatalogCategory(ref),
@@ -56931,6 +56939,194 @@ func schema_openshift_api_operator_v1_DNSOverTLSConfig(ref common.ReferenceCallb
 	}
 }
 
+func schema_openshift_api_operator_v1_DNSResponseAction(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSResponseAction specifies how CoreDNS answers a query matching a DNSResponseRule's query. Exactly one of a, cname, or nxdomain is set, as indicated by type.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type specifies which kind of response this rule synthesizes. Valid values are \"A\", \"CNAME\", and \"NXDOMAIN\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"a": {
+						SchemaProps: spec.SchemaProps{
+							Description: "a configures a synthesized A response. Required when type is A, forbidden otherwise.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.DNSResponseActionA{}.OpenAPIModelName()),
+						},
+					},
+					"cname": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cname configures a synthesized CNAME response. Required when type is CNAME, forbidden otherwise.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.DNSResponseActionCNAME{}.OpenAPIModelName()),
+						},
+					},
+					"nxdomain": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nxdomain configures a synthesized NXDOMAIN response. Required when type is NXDOMAIN, forbidden otherwise. nxdomain is only valid when the rule's query.name is an exact name, not a wildcard.",
+							Ref:         ref(operatorv1.DNSResponseActionNXDOMAIN{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"a":        "A",
+								"cname":    "CNAME",
+								"nxdomain": "NXDOMAIN",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.DNSResponseActionA{}.OpenAPIModelName(), operatorv1.DNSResponseActionCNAME{}.OpenAPIModelName(), operatorv1.DNSResponseActionNXDOMAIN{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1_DNSResponseActionA(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSResponseActionA configures a synthesized A response.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"addresses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "addresses is the list of IPv4 addresses returned in the synthesized answer. At least 1 and at most 8 addresses may be specified, so that the answer fits in a 512-byte UDP response.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"addresses"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1_DNSResponseActionCNAME(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSResponseActionCNAME configures a synthesized CNAME response.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Description: "target is the lowercase DNS name the CNAME response points to. It must have at least two labels, at most 253 characters overall, and at most 63 characters per label. It must not include a trailing dot.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"target"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1_DNSResponseActionNXDOMAIN(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSResponseActionNXDOMAIN configures a synthesized NXDOMAIN response.",
+				Type:        []string{"object"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1_DNSResponseQuery(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSResponseQuery selects the DNS name a DNSResponseRule answers.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the DNS name this rule matches: either an exact name, or a name with exactly one leading wildcard label replacing the first name segment (e.g. \"*.example.com\"). It must be a lowercase DNS name with at least two labels, at most 253 characters overall, and at most 63 characters per label. It must not include a trailing dot. Rules cannot cover cluster.local, in-addr.arpa, or ip6.arpa, including a wildcard that matches one of those zones.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1_DNSResponseRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSResponseRule configures CoreDNS to return a custom A, CNAME, or NXDOMAIN response for queries matching query.name. An exact-name CNAME cannot target itself because CoreDNS would repeatedly resolve the same name.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name uniquely identifies this rule within spec.responseRules.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"query": {
+						SchemaProps: spec.SchemaProps{
+							Description: "query selects the DNS name this rule answers: an exact name, or a name with exactly one leading wildcard label (e.g. \"*.example.com\").",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.DNSResponseQuery{}.OpenAPIModelName()),
+						},
+					},
+					"ttlSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ttlSeconds is the TTL, in seconds, included in synthesized answers.\n\nWhen omitted, this means no opinion and the platform chooses a reasonable default, which is subject to change over time. The current default is 60. Valid values are 30-3600.",
+							Default:     60,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"action": {
+						SchemaProps: spec.SchemaProps{
+							Description: "action specifies how matching queries are answered. Exactly one of a, cname, or nxdomain is set, as indicated by action.type.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.DNSResponseAction{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"name", "query", "action"},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.DNSResponseAction{}.OpenAPIModelName(), operatorv1.DNSResponseQuery{}.OpenAPIModelName()},
+	}
+}
+
 func schema_openshift_api_operator_v1_DNSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -56993,11 +57189,39 @@ func schema_openshift_api_operator_v1_DNSSpec(ref common.ReferenceCallback) comm
 							Ref:         ref(operatorv1.DNSCache{}.OpenAPIModelName()),
 						},
 					},
+					"template": {
+						SchemaProps: spec.SchemaProps{
+							Description: "template is an optional configuration for custom DNS query handling via the CoreDNS template plugin. The template defines how to handle queries matching specific zones and query types.\n\nThe template applies to all domains (custom domains from spec.servers and the cluster domain) to ensure consistent DNS resolution across all paths.\n\nWhen this field is not set, no template plugin configuration is added to CoreDNS.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.DNSTemplate{}.OpenAPIModelName()),
+						},
+					},
+					"responseRules": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "responseRules is an optional list of rules that configure CoreDNS to return custom A, CNAME, or NXDOMAIN responses for specific DNS names.\n\nEach rule answers every query type for the names it matches: an A rule returns its addresses for A queries and an empty NOERROR response for other types, a CNAME rule returns the CNAME for every type, and an NXDOMAIN rule returns NXDOMAIN for every type.\n\nAn exact-name rule always takes precedence over a wildcard rule for the same query. A wildcard replaces exactly one leading label, so distinct wildcard patterns never match the same name. Queries that do not match any rule continue through normal CoreDNS resolution.\n\nresponseRules apply only to the default server block; they do not affect spec.servers or spec.template.\n\nWhen this field is not set, no response rule configuration is added to CoreDNS. At most 100 rules may be configured. Each query name may appear only once, regardless of action.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(operatorv1.DNSResponseRule{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			operatorv1.DNSCache{}.OpenAPIModelName(), operatorv1.DNSNodePlacement{}.OpenAPIModelName(), operatorv1.Server{}.OpenAPIModelName(), operatorv1.UpstreamResolvers{}.OpenAPIModelName()},
+			operatorv1.DNSCache{}.OpenAPIModelName(), operatorv1.DNSNodePlacement{}.OpenAPIModelName(), operatorv1.DNSResponseRule{}.OpenAPIModelName(), operatorv1.DNSTemplate{}.OpenAPIModelName(), operatorv1.Server{}.OpenAPIModelName(), operatorv1.UpstreamResolvers{}.OpenAPIModelName()},
 	}
 }
 
@@ -57049,6 +57273,83 @@ func schema_openshift_api_operator_v1_DNSStatus(ref common.ReferenceCallback) co
 		},
 		Dependencies: []string{
 			operatorv1.OperatorCondition{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1_DNSTemplate(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSTemplate defines a template for custom DNS query handling via the CoreDNS template plugin. DNSTemplate enables filtering or custom responses for DNS queries matching specific zones and query types.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"zones": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "zones specifies the DNS zones this template applies to. Each zone must be a valid DNS name as defined in RFC 1123. The special zone \".\" matches all domains (catch-all). Multiple zones can be specified to apply the same template actions to multiple domains. At least 1 and at most 15 zones may be specified.\n\nNote: root zone (\".\") includes cluster domain (cluster.local); use specific zones to avoid impacting IPv6 queries in IPv6 or dual-stack clusters.\n\nExamples: - [\".\"] matches all domains (catch-all for global AAAA filtering) - [\"example.com\"] matches only example.com and its subdomains - [\"example.com\", \"test.com\"] matches both domains and their subdomains",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"queryType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "queryType specifies the DNS query type to match. Valid values are \"AAAA\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"queryClass": {
+						SchemaProps: spec.SchemaProps{
+							Description: "queryClass specifies the DNS query class to match. Valid values are \"IN\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"action": {
+						SchemaProps: spec.SchemaProps{
+							Description: "action defines how to handle queries matching this template's zones and query type. The action builds a single DNS response by specifying the response code and may be extended by additional fields in the future.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.DNSTemplateAction{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"zones", "queryType", "queryClass", "action"},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.DNSTemplateAction{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1_DNSTemplateAction(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSTemplateAction defines how to construct a DNS response for queries matching the template.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"rcode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rcode is the DNS response code to return. Valid values are \"NOERROR\".\n\nThe template returns a response with no answer records. For AAAA filtering, this means IPv6 address queries return successfully but with no IPv6 addresses, causing clients to fall back to IPv4 (A record) queries.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"rcode"},
+			},
+		},
 	}
 }
 

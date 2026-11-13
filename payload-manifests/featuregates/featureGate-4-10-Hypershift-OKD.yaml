@@ -188,9 +188,6 @@
                         "name": "KarpenterOperator"
                     },
                     {
-                        "name": "MACSecurity"
-                    },
-                    {
                         "name": "MachineAPIMigration"
                     },
                     {
@@ -398,6 +395,9 @@
                     },
                     {
                         "name": "KMSv1"
+                    },
+                    {
+                        "name": "MACSecurity"
                     },
                     {
                         "name": "ManagedBootImagesCPMS"

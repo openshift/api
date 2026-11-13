@@ -11,7 +11,6 @@
 | MachineAPIOperatorDisableMachineHealthCheckController| | | | | | | |  |
 | MultiArchInstallAzure| | | | | | | |  |
 | ShortCertRotation| | | | | | | |  |
-| ControllerManagerConfig| | | | <span style="background-color: #519450">Enabled</span> | | | |  |
 | KarpenterOperator| | | | <span style="background-color: #519450">Enabled</span> | | | |  |
 | MutableTopology| | | | <span style="background-color: #519450">Enabled</span> | | | |  |
 | UnifiedClusterManagedDNSAndLB| | | | <span style="background-color: #519450">Enabled</span> | | | |  |
@@ -23,6 +22,7 @@
 | ClusterAPIOperator| | | | <span style="background-color: #519450">Enabled</span> | | | | <span style="background-color: #519450">Enabled</span>  |
 | ClusterUpdatePreflight| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | ConfidentialCluster| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
+| ControllerManagerConfig| | | | <span style="background-color: #519450">Enabled</span> | | | | <span style="background-color: #519450">Enabled</span>  |
 | Example2| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | MachineAPIMigrationVSphere| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | MetalEnrollmentAPI| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |

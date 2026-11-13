@@ -5,7 +5,7 @@ metadata:
     api-approved.openshift.io: https://github.com/openshift/api/pull/2668
     api.openshift.io/merged-by-featuregates: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
-    release.openshift.io/feature-set: CustomNoUpgrade,DevPreviewNoUpgrade
+    release.openshift.io/feature-set: CustomNoUpgrade,DevPreviewNoUpgrade,TechPreviewNoUpgrade
   name: controllermanagers.config.openshift.io
 spec:
   group: config.openshift.io

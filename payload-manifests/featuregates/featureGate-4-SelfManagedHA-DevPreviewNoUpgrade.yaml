@@ -313,6 +313,9 @@
                         "name": "MetalEnrollmentAPI"
                     },
                     {
+                        "name": "MetalHostClaimsAPI"
+                    },
+                    {
                         "name": "MetricsCollectionProfiles"
                     },
                     {

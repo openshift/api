@@ -83,6 +83,9 @@
                         "name": "MetalEnrollmentAPI"
                     },
                     {
+                        "name": "MetalHostClaimsAPI"
+                    },
+                    {
                         "name": "MultiArchInstallAzure"
                     },
                     {

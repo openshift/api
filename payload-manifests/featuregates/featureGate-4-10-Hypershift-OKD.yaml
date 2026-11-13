@@ -173,9 +173,6 @@
                         "name": "GenericWorkload"
                     },
                     {
-                        "name": "GomaxprocsInjection"
-                    },
-                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {
@@ -371,6 +368,9 @@
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
+                        "name": "GomaxprocsInjection"
                     },
                     {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"

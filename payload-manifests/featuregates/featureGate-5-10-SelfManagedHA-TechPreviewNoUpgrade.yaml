@@ -20,9 +20,6 @@
                         "name": "AuthenticationComponentProxyExternalOIDC"
                     },
                     {
-                        "name": "BGPBasedVIPManagement"
-                    },
-                    {
                         "name": "BareMetalHostV1Beta1"
                     },
                     {
@@ -140,6 +137,9 @@
                     },
                     {
                         "name": "AzureMultiDisk"
+                    },
+                    {
+                        "name": "BGPBasedVIPManagement"
                     },
                     {
                         "name": "BootcNodeManagement"

@@ -436,7 +436,7 @@ var (
 						reportProblemsToJiraComponent("olm").
 						contactPerson("pegoncal").
 						productScope(ocpSpecific).
-						enhancementPR("https://github.com/openshift/enhancements/pull/1890").
+						enhancementPR("https://github.com/openshift/enhancements/pull/2172").
 						enable(inClusterProfile(SelfManaged), inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 						mustRegister()
 

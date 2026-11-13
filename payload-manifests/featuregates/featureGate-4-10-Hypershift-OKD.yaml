@@ -346,9 +346,6 @@
                         "name": "CRDCompatibilityRequirementOperator"
                     },
                     {
-                        "name": "EVPN"
-                    },
-                    {
                         "name": "EtcdBackendQuota"
                     },
                     {

@@ -75,7 +75,7 @@ spec:
                             retrieving from the registry.
                             The path is required and must be between 1 and 256 characters long, begin with a forward slash,
                             and only contain the characters a-z, A-Z, 0-9, '/', '.', '_', and '-'.
-                            Consecutive forward slashes are not permitted.
+                            Consecutive forward slashes and '..' directory traversal components are not permitted.
                           maxLength: 256
                           minLength: 1
                           type: string
@@ -85,6 +85,8 @@ spec:
                             rule: self.matches('^/[a-zA-Z0-9/._-]+$')
                           - message: path must not contain consecutive forward slashes
                             rule: '!self.contains(''//'')'
+                          - message: path must not contain '..' components
+                            rule: self.split('/').filter(s, s == '..').size() == 0
                       required:
                       - path
                       type: object
@@ -119,7 +121,7 @@ spec:
                             retrieving from the registry.
                             The path is required and must be between 1 and 256 characters long, begin with a forward slash,
                             and only contain the characters a-z, A-Z, 0-9, '/', '.', '_', and '-'.
-                            Consecutive forward slashes are not permitted.
+                            Consecutive forward slashes and '..' directory traversal components are not permitted.
                           maxLength: 256
                           minLength: 1
                           type: string
@@ -129,6 +131,8 @@ spec:
                             rule: self.matches('^/[a-zA-Z0-9/._-]+$')
                           - message: path must not contain consecutive forward slashes
                             rule: '!self.contains(''//'')'
+                          - message: path must not contain '..' components
+                            rule: self.split('/').filter(s, s == '..').size() == 0
                       required:
                       - path
                       type: object
@@ -163,7 +167,7 @@ spec:
                             retrieving from the registry.
                             The path is required and must be between 1 and 256 characters long, begin with a forward slash,
                             and only contain the characters a-z, A-Z, 0-9, '/', '.', '_', and '-'.
-                            Consecutive forward slashes are not permitted.
+                            Consecutive forward slashes and '..' directory traversal components are not permitted.
                           maxLength: 256
                           minLength: 1
                           type: string
@@ -173,6 +177,8 @@ spec:
                             rule: self.matches('^/[a-zA-Z0-9/._-]+$')
                           - message: path must not contain consecutive forward slashes
                             rule: '!self.contains(''//'')'
+                          - message: path must not contain '..' components
+                            rule: self.split('/').filter(s, s == '..').size() == 0
                       required:
                       - path
                       type: object

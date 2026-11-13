@@ -225,6 +225,9 @@
                         "name": "MetalEnrollmentAPI"
                     },
                     {
+                        "name": "MetalHostClaimsAPI"
+                    },
+                    {
                         "name": "MinimumKubeletVersion"
                     },
                     {

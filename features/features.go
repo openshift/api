@@ -1164,4 +1164,14 @@ var (
 					enhancementPR("https://github.com/metal3-io/metal3-docs/pull/332").
 					enable(inDevPreviewNoUpgrade()).
 					mustRegister()
+
+	// TODO(dtantsur): using the upstream design proposal, we don't have a downstream artifact yet
+	// It will be updated when we start preparing a tech preview
+	FeatureGateMetalHostClaimsAPI = newFeatureGate("MetalHostClaimsAPI").
+					reportProblemsToJiraComponent("Bare Metal Hardware Provisioning / baremetal-operator").
+					contactPerson("dtantsur").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/metal3-io/metal3-docs/pull/408").
+					enable(inDevPreviewNoUpgrade()).
+					mustRegister()
 )

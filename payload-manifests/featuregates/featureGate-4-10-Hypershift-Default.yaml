@@ -177,6 +177,12 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
+                        "name": "ImagePolicyDenyByDefault"
+                    },
+                    {
+                        "name": "ImagePolicyIntersectionMerge"
+                    },
+                    {
                         "name": "IngressComponentRouteLabels"
                     },
                     {

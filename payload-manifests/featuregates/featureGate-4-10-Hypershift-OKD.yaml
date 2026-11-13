@@ -179,9 +179,6 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
-                        "name": "IngressComponentRouteLabels"
-                    },
-                    {
                         "name": "IngressControllerLBSecurityGroupsAWS"
                     },
                     {
@@ -377,6 +374,9 @@
                     },
                     {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
+                    },
+                    {
+                        "name": "IngressComponentRouteLabels"
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"

@@ -176,9 +176,6 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
-                        "name": "IngressComponentRouteLabels"
-                    },
-                    {
                         "name": "IngressControllerLBSecurityGroupsAWS"
                     },
                     {
@@ -368,6 +365,9 @@
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
+                        "name": "IngressComponentRouteLabels"
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"

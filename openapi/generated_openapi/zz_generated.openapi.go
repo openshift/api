@@ -13327,6 +13327,11 @@ func schema_openshift_api_config_v1_ComponentRouteStatus(ref common.ReferenceCal
 						},
 					},
 					"consumingUsers": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "consumingUsers is a slice of ServiceAccounts that need to have read permission on the servingCertKeyPairSecret secret.",
 							Type:        []string{"array"},
@@ -13341,6 +13346,11 @@ func schema_openshift_api_config_v1_ComponentRouteStatus(ref common.ReferenceCal
 						},
 					},
 					"currentHostnames": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "currentHostnames is the list of current names used by the route. Typically, this list should consist of a single hostname, but if multiple hostnames are supported by the route the operator may write multiple entries to this list.",
 							Type:        []string{"array"},
@@ -13376,6 +13386,11 @@ func schema_openshift_api_config_v1_ComponentRouteStatus(ref common.ReferenceCal
 						},
 					},
 					"relatedObjects": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "relatedObjects is a list of resources which are useful when debugging or inspecting how spec.componentRoutes is applied.",
 							Type:        []string{"array"},
@@ -17613,6 +17628,11 @@ func schema_openshift_api_config_v1_IngressSpec(ref common.ReferenceCallback) co
 						},
 					},
 					"requiredHSTSPolicies": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "requiredHSTSPolicies specifies HSTS policies that are required to be set on newly created  or updated routes matching the domainPattern/s and namespaceSelector/s that are specified in the policy. Each requiredHSTSPolicy must have at least a domainPattern and a maxAge to validate a route HSTS Policy route annotation, and affect route admission.\n\nA candidate route is checked for HSTS Policies if it has the HSTS Policy route annotation: \"haproxy.router.openshift.io/hsts_header\" E.g. haproxy.router.openshift.io/hsts_header: max-age=31536000;preload;includeSubDomains\n\n- For each candidate route, if it matches a requiredHSTSPolicy domainPattern and optional namespaceSelector, then the maxAge, preloadPolicy, and includeSubdomainsPolicy must be valid to be admitted.  Otherwise, the route is rejected. - The first match, by domainPattern and optional namespaceSelector, in the ordering of the RequiredHSTSPolicies determines the route's admission status. - If the candidate route doesn't match any requiredHSTSPolicy domainPattern and optional namespaceSelector, then it may use any HSTS Policy annotation.\n\nThe HSTS policy configuration may be changed after routes have already been created. An update to a previously admitted route may then fail if the updated route does not conform to the updated HSTS policy configuration. However, changing the HSTS policy configuration will not cause a route that is already admitted to stop working.\n\nNote that if there are no RequiredHSTSPolicies, any HSTS Policy annotation on the route is valid.",
 							Type:        []string{"array"},
@@ -22059,6 +22079,11 @@ func schema_openshift_api_config_v1_RequiredHSTSPolicy(ref common.ReferenceCallb
 						},
 					},
 					"domainPatterns": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "domainPatterns is a list of domains for which the desired HSTS annotations are required. If domainPatterns is specified and a route is created with a spec.host matching one of the domains, the route must specify the HSTS Policy components described in the matching RequiredHSTSPolicy.\n\nThe use of wildcards is allowed like this: *.foo.com matches everything under foo.com. foo.com only matches foo.com, so to cover foo.com and everything under it, you must specify *both*.",
 							Type:        []string{"array"},

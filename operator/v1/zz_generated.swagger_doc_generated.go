@@ -858,7 +858,7 @@ func (ForwardPlugin) SwaggerDoc() map[string]string {
 var map_Server = map[string]string{
 	"":              "Server defines the schema for a server that runs per instance of CoreDNS.",
 	"name":          "name is required and specifies a unique name for the server. Name must comply with the Service Name Syntax of rfc6335.",
-	"zones":         "zones is required and specifies the subdomains that Server is authoritative for. Zones must conform to the rfc1123 definition of a subdomain. Specifying the cluster domain (i.e., \"cluster.local\") is invalid.",
+	"zones":         "zones is required and specifies the subdomains that Server is authoritative for. Zones must conform to the rfc1123 definition of a subdomain. Specifying the cluster domain (i.e., \"cluster.local\") is invalid. Duplicate zones are not allowed.",
 	"forwardPlugin": "forwardPlugin defines a schema for configuring CoreDNS to proxy DNS messages to upstream resolvers.",
 }
 

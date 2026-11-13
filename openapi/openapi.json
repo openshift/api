@@ -37409,11 +37409,12 @@
           "default": ""
         },
         "zones": {
-          "description": "zones is required and specifies the subdomains that Server is authoritative for. Zones must conform to the rfc1123 definition of a subdomain. Specifying the cluster domain (i.e., \"cluster.local\") is invalid.",
+          "description": "zones is required and specifies the subdomains that Server is authoritative for. Zones must conform to the rfc1123 definition of a subdomain. Specifying the cluster domain (i.e., \"cluster.local\") is invalid. Duplicate zones are not allowed.",
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "set"
         }
       }
     },

@@ -93,9 +93,6 @@
                         "name": "ClusterAPIMachineManagementVSphere"
                     },
                     {
-                        "name": "ClusterAPIOperator"
-                    },
-                    {
                         "name": "ClusterMonitoringConfig"
                     },
                     {
@@ -336,6 +333,9 @@
                     },
                     {
                         "name": "CRIOCredentialProviderConfig"
+                    },
+                    {
+                        "name": "ClusterAPIOperator"
                     },
                     {
                         "name": "EVPN"

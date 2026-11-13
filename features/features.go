@@ -1068,7 +1068,6 @@ var (
 					enable(inClusterProfile(SelfManaged), inDevPreviewNoUpgrade()).
 					mustRegister()
 
-
 	FeatureGateKarpenterOperator = newFeatureGate("KarpenterOperator").
 					reportProblemsToJiraComponent("Karpenter").
 					contactPerson("maxcao13").
@@ -1153,6 +1152,16 @@ var (
 					contactPerson("dtantsur").
 					productScope(ocpSpecific).
 					enhancementPR("https://github.com/openshift/enhancements/pull/2118").
+					enable(inDevPreviewNoUpgrade()).
+					mustRegister()
+
+	// TODO(dtantsur): using the upstream design proposal, we don't have a downstream artifact yet
+	// It will be updated when we start preparing a tech preview
+	FeatureGateBareMetalHostV1Beta1 = newFeatureGate("BareMetalHostV1Beta1").
+					reportProblemsToJiraComponent("Bare Metal Hardware Provisioning / baremetal-operator").
+					contactPerson("dtantsur").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/metal3-io/metal3-docs/pull/332").
 					enable(inDevPreviewNoUpgrade()).
 					mustRegister()
 )

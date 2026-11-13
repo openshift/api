@@ -771,6 +771,56 @@ func (ControllerManagerSpec) SwaggerDoc() map[string]string {
 	return map_ControllerManagerSpec
 }
 
+var map_GlobalPullCredential = map[string]string{
+	"":         "GlobalPullCredential is a cluster-scoped resource declaring a single registry credential (one hostname per instance). A controller in machine-config-controller merges it into the controller-owned `openshift-config/pull-secret-merged` Secret without modifying the original `openshift-config/pull-secret`.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"spec":     "spec holds the registry credential contributed by this resource.",
+	"status":   "status holds observed values from the cluster. They may not be overridden by user input.",
+}
+
+func (GlobalPullCredential) SwaggerDoc() map[string]string {
+	return map_GlobalPullCredential
+}
+
+var map_GlobalPullCredentialList = map[string]string{
+	"":         "GlobalPullCredentialList is a collection of GlobalPullCredential resources.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"items":    "items is a list of GlobalPullCredential resources.",
+}
+
+func (GlobalPullCredentialList) SwaggerDoc() map[string]string {
+	return map_GlobalPullCredentialList
+}
+
+var map_GlobalPullCredentialSpec = map[string]string{
+	"":         "GlobalPullCredentialSpec holds the specification for a GlobalPullCredential resource.",
+	"hostname": "hostname is the registry host that this credential applies to, for example \"quay.io\" or \"registry.example.com:5000\". Each hostname may only be claimed by one GlobalPullCredential instance across the cluster.\n\nThe value must be a DNS hostname of one or more labels separated by dots. Each label must start and end with an alphanumeric character and may contain only alphanumeric characters or '-'. An optional numeric port may be appended as \":{port}\" and must be in the range 1 to 65535.",
+	"auth":     "auth holds the registry credential for this hostname.",
+}
+
+func (GlobalPullCredentialSpec) SwaggerDoc() map[string]string {
+	return map_GlobalPullCredentialSpec
+}
+
+var map_GlobalPullCredentialStatus = map[string]string{
+	"":           "GlobalPullCredentialStatus holds observed state for a GlobalPullCredential resource.",
+	"conditions": "conditions represent the latest available observations of this resource's state. The known condition type is \"Applied\". Applied=True means the controller merged the credential declared by this generation into openshift-config/pull-secret-merged. Applied=False means the credential was not merged. If the hostname overlaps with the baseline pull-secret, the reason is BaselinePrecedence and the baseline credential is used instead. Applied=Unknown or an absent condition means no reconciliation result is available. Applied does not indicate successful registry authentication or propagation to nodes. When omitted, no observations are available. When present, the list must contain one condition.",
+}
+
+func (GlobalPullCredentialStatus) SwaggerDoc() map[string]string {
+	return map_GlobalPullCredentialStatus
+}
+
+var map_RegistryAuth = map[string]string{
+	"":         "RegistryAuth holds the base64-encoded username and password for a single registry. The controller decodes these fields and constructs the Docker config.json auth value base64(\"username:password\") at reconcile time.",
+	"username": "username is the base64-encoded registry username. The decoded value must not contain a colon because the controller constructs \"username:password\". The encoded value is limited to 684 characters (512 decoded bytes).",
+	"password": "password is the base64-encoded registry password or token. The encoded value is limited to 684 characters (512 decoded bytes).",
+}
+
+func (RegistryAuth) SwaggerDoc() map[string]string {
+	return map_RegistryAuth
+}
+
 var map_GatherConfig = map[string]string{
 	"":                  "gatherConfig provides data gathering configuration options.",
 	"dataPolicy":        "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"None\" and \"ObfuscateNetworking\". When set to None the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",

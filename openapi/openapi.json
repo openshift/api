@@ -13610,6 +13610,105 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.GlobalPullCredential": {
+      "description": "GlobalPullCredential is a cluster-scoped resource declaring a single registry credential (one hostname per instance). A controller in machine-config-controller merges it into the controller-owned `openshift-config/pull-secret-merged` Secret without modifying the original `openshift-config/pull-secret`.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec holds the registry credential contributed by this resource.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.GlobalPullCredentialSpec"
+        },
+        "status": {
+          "description": "status holds observed values from the cluster. They may not be overridden by user input.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.GlobalPullCredentialStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.GlobalPullCredentialList": {
+      "description": "GlobalPullCredentialList is a collection of GlobalPullCredential resources.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of GlobalPullCredential resources.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.GlobalPullCredential"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.GlobalPullCredentialSpec": {
+      "description": "GlobalPullCredentialSpec holds the specification for a GlobalPullCredential resource.",
+      "type": "object",
+      "required": [
+        "hostname",
+        "auth"
+      ],
+      "properties": {
+        "auth": {
+          "description": "auth holds the registry credential for this hostname.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RegistryAuth"
+        },
+        "hostname": {
+          "description": "hostname is the registry host that this credential applies to, for example \"quay.io\" or \"registry.example.com:5000\". Each hostname may only be claimed by one GlobalPullCredential instance across the cluster.\n\nThe value must be a DNS hostname of one or more labels separated by dots. Each label must start and end with an alphanumeric character and may contain only alphanumeric characters or '-'. An optional numeric port may be appended as \":{port}\" and must be in the range 1 to 65535.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.GlobalPullCredentialStatus": {
+      "description": "GlobalPullCredentialStatus holds observed state for a GlobalPullCredential resource.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the latest available observations of this resource's state. The known condition type is \"Applied\". Applied=True means the controller merged the credential declared by this generation into openshift-config/pull-secret-merged. Applied=False means the credential was not merged. If the hostname overlaps with the baseline pull-secret, the reason is BaselinePrecedence and the baseline credential is used instead. Applied=Unknown or an absent condition means no reconciliation result is available. Applied does not indicate successful registry authentication or propagation to nodes. When omitted, no observations are available. When present, the list must contain one condition.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.HashModActionConfig": {
       "description": "HashModActionConfig configures the HashMod action. target_label is set to the modulus of a hash of the concatenated source_labels (target = hash % modulus).",
       "type": "object",
@@ -15112,6 +15211,26 @@
         "rateLimitedAction": {
           "description": "rateLimitedAction controls what to do when the remote write endpoint returns HTTP 429 (Too Many Requests). When omitted, no retries are performed on rate limit responses. When set to \"Retry\", Prometheus will retry such requests using the backoff settings above. Valid value when set is \"Retry\".",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.RegistryAuth": {
+      "description": "RegistryAuth holds the base64-encoded username and password for a single registry. The controller decodes these fields and constructs the Docker config.json auth value base64(\"username:password\") at reconcile time.",
+      "type": "object",
+      "required": [
+        "username",
+        "password"
+      ],
+      "properties": {
+        "password": {
+          "description": "password is the base64-encoded registry password or token. The encoded value is limited to 684 characters (512 decoded bytes).",
+          "type": "string",
+          "format": "byte"
+        },
+        "username": {
+          "description": "username is the base64-encoded registry username. The decoded value must not contain a colon because the controller constructs \"username:password\". The encoded value is limited to 684 characters (512 decoded bytes).",
+          "type": "string",
+          "format": "byte"
         }
       }
     },

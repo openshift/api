@@ -564,6 +564,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName():                                    schema_openshift_api_config_v1alpha1_CustomPKIPolicy(ref),
 		configv1alpha1.DropEqualActionConfig{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_DropEqualActionConfig(ref),
 		configv1alpha1.GatherConfig{}.OpenAPIModelName():                                       schema_openshift_api_config_v1alpha1_GatherConfig(ref),
+		configv1alpha1.GlobalPullCredential{}.OpenAPIModelName():                               schema_openshift_api_config_v1alpha1_GlobalPullCredential(ref),
+		configv1alpha1.GlobalPullCredentialList{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_GlobalPullCredentialList(ref),
+		configv1alpha1.GlobalPullCredentialSpec{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_GlobalPullCredentialSpec(ref),
+		configv1alpha1.GlobalPullCredentialStatus{}.OpenAPIModelName():                         schema_openshift_api_config_v1alpha1_GlobalPullCredentialStatus(ref),
 		configv1alpha1.HashModActionConfig{}.OpenAPIModelName():                                schema_openshift_api_config_v1alpha1_HashModActionConfig(ref),
 		configv1alpha1.InsightsDataGather{}.OpenAPIModelName():                                 schema_openshift_api_config_v1alpha1_InsightsDataGather(ref),
 		configv1alpha1.InsightsDataGatherList{}.OpenAPIModelName():                             schema_openshift_api_config_v1alpha1_InsightsDataGatherList(ref),
@@ -623,6 +627,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.PrometheusOperatorConfig{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_PrometheusOperatorConfig(ref),
 		configv1alpha1.PrometheusRemoteWriteHeader{}.OpenAPIModelName():                        schema_openshift_api_config_v1alpha1_PrometheusRemoteWriteHeader(ref),
 		configv1alpha1.QueueConfig{}.OpenAPIModelName():                                        schema_openshift_api_config_v1alpha1_QueueConfig(ref),
+		configv1alpha1.RegistryAuth{}.OpenAPIModelName():                                       schema_openshift_api_config_v1alpha1_RegistryAuth(ref),
 		configv1alpha1.RelabelActionConfig{}.OpenAPIModelName():                                schema_openshift_api_config_v1alpha1_RelabelActionConfig(ref),
 		configv1alpha1.RelabelConfig{}.OpenAPIModelName():                                      schema_openshift_api_config_v1alpha1_RelabelConfig(ref),
 		configv1alpha1.RemoteWriteAuthorization{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_RemoteWriteAuthorization(ref),
@@ -25222,6 +25227,175 @@ func schema_openshift_api_config_v1alpha1_GatherConfig(ref common.ReferenceCallb
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_GlobalPullCredential(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GlobalPullCredential is a cluster-scoped resource declaring a single registry credential (one hostname per instance). A controller in machine-config-controller merges it into the controller-owned `openshift-config/pull-secret-merged` Secret without modifying the original `openshift-config/pull-secret`.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec holds the registry credential contributed by this resource.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.GlobalPullCredentialSpec{}.OpenAPIModelName()),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status holds observed values from the cluster. They may not be overridden by user input.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.GlobalPullCredentialStatus{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.GlobalPullCredentialSpec{}.OpenAPIModelName(), configv1alpha1.GlobalPullCredentialStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_GlobalPullCredentialList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GlobalPullCredentialList is a collection of GlobalPullCredential resources.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ListMeta{}.OpenAPIModelName()),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is a list of GlobalPullCredential resources.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(configv1alpha1.GlobalPullCredential{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.GlobalPullCredential{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_GlobalPullCredentialSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GlobalPullCredentialSpec holds the specification for a GlobalPullCredential resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"hostname": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostname is the registry host that this credential applies to, for example \"quay.io\" or \"registry.example.com:5000\". Each hostname may only be claimed by one GlobalPullCredential instance across the cluster.\n\nThe value must be a DNS hostname of one or more labels separated by dots. Each label must start and end with an alphanumeric character and may contain only alphanumeric characters or '-'. An optional numeric port may be appended as \":{port}\" and must be in the range 1 to 65535.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"auth": {
+						SchemaProps: spec.SchemaProps{
+							Description: "auth holds the registry credential for this hostname.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.RegistryAuth{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"hostname", "auth"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.RegistryAuth{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_GlobalPullCredentialStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GlobalPullCredentialStatus holds observed state for a GlobalPullCredential resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the latest available observations of this resource's state. The known condition type is \"Applied\". Applied=True means the controller merged the credential declared by this generation into openshift-config/pull-secret-merged. Applied=False means the credential was not merged. If the hostname overlaps with the baseline pull-secret, the reason is BaselinePrecedence and the baseline credential is used instead. Applied=Unknown or an absent condition means no reconciliation result is available. Applied does not indicate successful registry authentication or propagation to nodes. When omitted, no observations are available. When present, the list must contain one condition.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			metav1.Condition{}.OpenAPIModelName()},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_HashModActionConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27745,6 +27919,34 @@ func schema_openshift_api_config_v1alpha1_QueueConfig(ref common.ReferenceCallba
 						},
 					},
 				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_RegistryAuth(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RegistryAuth holds the base64-encoded username and password for a single registry. The controller decodes these fields and constructs the Docker config.json auth value base64(\"username:password\") at reconcile time.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"username": {
+						SchemaProps: spec.SchemaProps{
+							Description: "username is the base64-encoded registry username. The decoded value must not contain a colon because the controller constructs \"username:password\". The encoded value is limited to 684 characters (512 decoded bytes).",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"password": {
+						SchemaProps: spec.SchemaProps{
+							Description: "password is the base64-encoded registry password or token. The encoded value is limited to 684 characters (512 decoded bytes).",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+				},
+				Required: []string{"username", "password"},
 			},
 		},
 	}

@@ -1,0 +1,1345 @@
+apiVersion: apiextensions.k8s.io/v1
+name: IngressController
+crdName: ingresscontrollers.operator.openshift.io
+featureGates:
+- IngressControllerResourceConfiguration
+tests:
+  onCreate:
+  - name: Should be able to set router request and limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+              limit: 500m
+            - name: memory
+              request: 128Mi
+              limit: 256Mi
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+              limit: 500m
+            - name: memory
+              request: 128Mi
+              limit: 256Mi
+  - name: Should be able to set haproxy request and limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          haproxy:
+            - name: cpu
+              request: 100m
+              limit: 500m
+            - name: memory
+              request: 128Mi
+              limit: 256Mi
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          haproxy:
+            - name: cpu
+              request: 100m
+              limit: 500m
+            - name: memory
+              request: 128Mi
+              limit: 256Mi
+  - name: Should be able to set only a router request
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+  - name: Should not default the API request for a router limit only
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              limit: '4'
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: cpu
+              limit: '4'
+  - name: Should be able to set integer JSON quantities
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: 1
+              limit: '2'
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: cpu
+              request: 1
+              limit: '2'
+  - name: Should be able to set equivalent extended resource quantities
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: example.com/device
+              request: '1e0'
+              limit: '1'
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: example.com/device
+              request: '1e0'
+              limit: '1'
+  - name: Should be able to set only an extended resource limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: example.com/device
+              limit: '1'
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: example.com/device
+              limit: '1'
+  - name: Should be able to set aligned hugepage resources
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: hugepages-2Mi
+              request: 4Mi
+              limit: '4194304'
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: hugepages-2Mi
+              request: 4Mi
+              limit: '4194304'
+  - name: Should be able to set only a hugepage limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: hugepages-1Gi
+              limit: 2Gi
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: hugepages-1Gi
+              limit: 2Gi
+  - name: Should be able to set ephemeral-storage resources
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: ephemeral-storage
+              request: 1Gi
+              limit: 2Gi
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: ephemeral-storage
+              request: 1Gi
+              limit: 2Gi
+  - name: Should be able to set the maximum number of resources
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: example.com/device0
+              limit: '1'
+            - name: example.com/device1
+              limit: '1'
+            - name: example.com/device2
+              limit: '1'
+            - name: example.com/device3
+              limit: '1'
+            - name: example.com/device4
+              limit: '1'
+            - name: example.com/device5
+              limit: '1'
+            - name: example.com/device6
+              limit: '1'
+            - name: example.com/device7
+              limit: '1'
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: example.com/device0
+              limit: '1'
+            - name: example.com/device1
+              limit: '1'
+            - name: example.com/device2
+              limit: '1'
+            - name: example.com/device3
+              limit: '1'
+            - name: example.com/device4
+              limit: '1'
+            - name: example.com/device5
+              limit: '1'
+            - name: example.com/device6
+              limit: '1'
+            - name: example.com/device7
+              limit: '1'
+  - name: Should not allow an empty router list
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router: []
+    expectedError: should have at least 1 items
+  - name: Should not allow resources above the maximum
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: example.com/device0
+              limit: '1'
+            - name: example.com/device1
+              limit: '1'
+            - name: example.com/device2
+              limit: '1'
+            - name: example.com/device3
+              limit: '1'
+            - name: example.com/device4
+              limit: '1'
+            - name: example.com/device5
+              limit: '1'
+            - name: example.com/device6
+              limit: '1'
+            - name: example.com/device7
+              limit: '1'
+            - name: example.com/device8
+              limit: '1'
+    expectedError: must have at most 8 items
+  - name: Should not allow duplicate resource names
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              limit: '1'
+            - name: cpu
+              limit: '2'
+    expectedError: Duplicate value
+  - name: Should not allow a resource entry without a request or limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+    expectedError: at least one of request or limit
+  - name: Should not allow a resource entry without a name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - limit: '1'
+    expectedError: 'name: Required value'
+  - name: Should not allow an invalid qualified resource name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: example.com/bad+name
+              limit: '1'
+    expectedError: valid Kubernetes qualified name
+  - name: Should not allow a qualified name component over 63 characters
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: example.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              limit: '1'
+    expectedError: valid Kubernetes qualified name
+  - name: Should not allow an unsupported native resource
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: storage
+              limit: 1Gi
+    expectedError: name must be cpu
+  - name: Should not allow the reserved kubernetes.io domain
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: kubernetes.io/device
+              limit: '1'
+    expectedError: reserved kubernetes.io domain
+  - name: Should not allow a kubernetes.io subdomain
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: node.kubernetes.io/device
+              limit: '1'
+    expectedError: reserved kubernetes.io domain
+  - name: Should not allow a 'requests.' prefix
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: requests.example.com/device
+              limit: '1'
+    expectedError: must not start with 'requests.'
+  - name: Should not allow a request greater than the limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: '2'
+              limit: '1'
+    expectedError: limit must be greater than or equal to request
+  - name: Should not allow a precise request greater than the limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: memory
+              request: '9007199254740993'
+              limit: '9007199254740992'
+    expectedError: limit must be greater than or equal to request
+  - name: Should not allow an extended resource request without a limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: example.com/device
+              request: '1'
+    expectedError: requests require a limit
+  - name: Should not allow an unequal extended resource request and limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: example.com/device
+              request: '1'
+              limit: '2'
+    expectedError: request must equal limit
+  - name: Should not allow a fractional extended resource request
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: example.com/device
+              request: '0.5'
+              limit: '1'
+    expectedError: request must equal limit
+  - name: Should not allow a fractional extended resource limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: example.com/device
+              limit: '0.5'
+    expectedError: limit must be a whole number
+  - name: Should not allow an invalid hugepage size
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: hugepages-invalid
+              limit: 2Mi
+    expectedError: hugepage size must be a positive
+  - name: Should not allow an invalid haproxy hugepage size
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          haproxy:
+            - name: hugepages-invalid
+              limit: 2Mi
+    expectedError: hugepage size must be a positive
+  - name: Should not allow a zero hugepage size
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: hugepages-0
+              limit: 2Mi
+    expectedError: hugepage size must be a positive
+  - name: Should not allow a negative hugepage size
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: hugepages--2Mi
+              limit: 2Mi
+    expectedError: hugepage size must be a positive
+  - name: Should not allow a fractional hugepage size
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: hugepages-1m
+              limit: 2Mi
+    expectedError: hugepage size must be a positive
+  - name: Should not allow a hugepage request without a limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: hugepages-2Mi
+              request: 2Mi
+    expectedError: requests require a limit
+  - name: Should not allow an unequal hugepage request and limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: hugepages-2Mi
+              request: 2Mi
+              limit: 4Mi
+    expectedError: request must equal limit
+  - name: Should not allow a hugepage request not aligned to the page size
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: hugepages-2Mi
+              request: 3Mi
+              limit: 3Mi
+    expectedError: limit must be a whole multiple
+  - name: Should not allow a hugepage limit not aligned to the page size
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: hugepages-2Mi
+              limit: 3Mi
+    expectedError: limit must be a whole multiple
+  - name: Should not allow a negative integer request
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: -1
+    expectedError: positive, non-zero
+  - name: Should not allow a negative request
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: '-1'
+    expectedError: positive, non-zero
+  - name: Should not allow a zero request
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: '0'
+    expectedError: positive, non-zero
+  - name: Should not allow an invalid request
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: invalid
+    expectedError: positive, non-zero
+  - name: Should not allow a negative integer limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              limit: -1
+    expectedError: positive, non-zero
+  - name: Should not allow a negative limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              limit: '-1'
+    expectedError: positive, non-zero
+  - name: Should not allow a zero limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              limit: '0'
+    expectedError: positive, non-zero
+  - name: Should not allow an invalid limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              limit: invalid
+    expectedError: positive, non-zero
+  - name: Should be able to set a request of 20 characters
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: '1234567890123456789m'
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: cpu
+              request: '1234567890123456789m'
+  - name: Should not allow a request longer than 20 characters
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: '12345678901234567890m'
+    expectedError: Too long
+  - name: Should be able to set a limit of 20 characters
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              limit: '1234567890123456789m'
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: cpu
+              limit: '1234567890123456789m'
+  - name: Should not allow a limit longer than 20 characters
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              limit: '12345678901234567890m'
+    expectedError: Too long
+  - name: Should be able to set a hugepage size of 20 characters
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: hugepages-000000000000000001Gi
+              limit: '1Gi'
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: hugepages-000000000000000001Gi
+              limit: '1Gi'
+  - name: Should not allow a hugepage size longer than 20 characters
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: hugepages-0000000000000000001Gi
+              limit: '1Gi'
+    expectedError: at most 20 characters
+  - name: Should be able to set both request and limit as integers
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: 1
+              limit: 2
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: cpu
+              request: 1
+              limit: 2
+  - name: Should be able to mix an integer limit and a string request
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: '1'
+              limit: 2
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: cpu
+              request: '1'
+              limit: 2
+  - name: Should not allow a precise integer request greater than a string limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: memory
+              request: 9007199254740993
+              limit: '9007199254740992'
+    expectedError: limit must be greater than or equal to request
+  - name: Should not allow a precise string request greater than an integer limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: memory
+              request: '9007199254740993'
+              limit: 9007199254740992
+    expectedError: limit must be greater than or equal to request
+  - name: Should be able to set the maximum integer quantity
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: memory
+              request: 9223372036854775807
+              limit: '9223372036854775807'
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: memory
+              request: 9223372036854775807
+              limit: '9223372036854775807'
+  - name: Should be able to set an integer hugepage quantity
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: hugepages-2Mi
+              request: 4194304
+              limit: 4Mi
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: hugepages-2Mi
+              request: 4194304
+              limit: 4Mi
+  - name: Should not allow empty resources
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources: {}
+    expectedError: should have at least 1 properties
+  - name: Should not allow a router object instead of a list
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router: {}
+    expectedError: must be of type array
+  - name: Should be able to configure router and haproxy independently
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+              limit: 500m
+          haproxy:
+            - name: memory
+              request: 256Mi
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+              limit: 500m
+          haproxy:
+            - name: memory
+              request: 256Mi
+  - name: Should be able to omit resources
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec: {}
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+  onUpdate:
+  - name: Should be able to add a router resource entry
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+              limit: 500m
+          haproxy:
+            - name: memory
+              request: 256Mi
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+              limit: 500m
+            - name: memory
+              request: 128Mi
+              limit: 256Mi
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+              limit: 500m
+            - name: memory
+              request: 128Mi
+              limit: 256Mi
+  - name: Should be able to remove a router resource entry
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+              limit: 500m
+            - name: memory
+              request: 128Mi
+              limit: 256Mi
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+              limit: 500m
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+              limit: 500m
+  - name: Should be able to remove a container and a limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+              limit: 500m
+          haproxy:
+            - name: memory
+              request: 256Mi
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+  - name: Should be able to remove a request while keeping its limit
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+              limit: 500m
+          haproxy:
+            - name: memory
+              request: 256Mi
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              limit: '4'
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue
+        resources:
+          router:
+            - name: cpu
+              limit: '4'
+  - name: Should be able to remove the resources field
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        resources:
+          router:
+            - name: cpu
+              request: 100m
+              limit: 500m
+          haproxy:
+            - name: memory
+              request: 256Mi
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec: {}
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: IngressController
+      metadata:
+        name: default
+        namespace: openshift-ingress-operator
+      spec:
+        httpEmptyRequestsPolicy: Respond
+        idleConnectionTerminationPolicy: Immediate
+        closedClientConnectionPolicy: Continue

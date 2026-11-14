@@ -1145,6 +1145,17 @@ func (IngressControllerCaptureHTTPHeaders) SwaggerDoc() map[string]string {
 	return map_IngressControllerCaptureHTTPHeaders
 }
 
+var map_IngressControllerContainerResource = map[string]string{
+	"":        "IngressControllerContainerResource defines an override for one resource.",
+	"name":    "name is required and identifies cpu, memory, ephemeral-storage, hugepages-<size>, or a domain-qualified extended resource such as example.com/device. It must be a Kubernetes qualified name of 1 to 253 characters: an optional lowercase DNS subdomain and slash followed by an alphanumeric name of at most 63 characters, with '-', '_' and '.' allowed internally. Extended resource domains must not be kubernetes.io or its subdomains, and names must not start with 'requests.'. Hugepage sizes must be valid quantities of 1 to 20 characters representing a positive, whole number of bytes.",
+	"request": "request optionally sets the minimum amount of this resource per replica. It must be a valid, positive, non-zero quantity of 1 to 20 characters and must not exceed limit. Extended resources and hugepages require an equal limit; extended resource values must be whole numbers, and hugepage values must be whole multiples of the page size. When omitted with a limit, the operator uses that limit as the effective request, without defaulting this API field. When there is no entry for a resource, the platform default request applies.",
+	"limit":   "limit optionally sets the maximum amount of this resource per replica. Limits are not validated against the workload's needs; a misconfiguration is not supported and the cluster administrator is responsible for the value. It must be a valid, positive, non-zero quantity of 1 to 20 characters and must not be less than request. Extended resource values must be whole numbers; hugepage values must be whole multiples of the page size. For extended resources and hugepages, an explicit request must equal limit. When request is omitted, the operator uses limit as the effective request, without defaulting the API field. When limit is omitted, the platform default applies (currently no limit), unless a LimitRange in the router namespace applies one.",
+}
+
+func (IngressControllerContainerResource) SwaggerDoc() map[string]string {
+	return map_IngressControllerContainerResource
+}
+
 var map_IngressControllerHTTPHeader = map[string]string{
 	"":       "IngressControllerHTTPHeader specifies configuration for setting or deleting an HTTP header.",
 	"name":   "name specifies the name of a header on which to perform an action. Its value must be a valid HTTP header name as defined in RFC 2616 section 4.2. The name must consist only of alphanumeric and the following special characters, \"-!#$%&'*+.^_`\". The following header names are reserved and may not be modified via this API: Strict-Transport-Security, Proxy, Host, Cookie, Set-Cookie. It must be no more than 255 characters in length. Header name must be unique.",
@@ -1215,6 +1226,16 @@ func (IngressControllerLogging) SwaggerDoc() map[string]string {
 	return map_IngressControllerLogging
 }
 
+var map_IngressControllerResources = map[string]string{
+	"":        "IngressControllerResources configures per-replica resources for ingress containers.",
+	"router":  "router optionally configures resources for the controller that watches routes and generates HAProxy configuration. When specified, it must be a list of 1 to 8 resource overrides with unique names. Removing an entry restores the platform default for that resource. When omitted, the platform applies its default for the router container, as described on the spec.resources field.",
+	"haproxy": "haproxy optionally configures resources for the proxy that handles ingress traffic. It runs as a restartable init sidecar in the router pod. When specified, it must be a list of 1 to 8 resource overrides with unique names. Removing an entry restores the platform default for that resource. When omitted, the platform applies its default for the haproxy container, as described on the spec.resources field.",
+}
+
+func (IngressControllerResources) SwaggerDoc() map[string]string {
+	return map_IngressControllerResources
+}
+
 var map_IngressControllerSetHTTPHeader = map[string]string{
 	"":      "IngressControllerSetHTTPHeader defines the value which needs to be set on an HTTP header.",
 	"value": "value specifies a header value. Dynamic values can be added. The value will be interpreted as an HAProxy format string as defined in http://cbonte.github.io/haproxy-dconv/2.6/configuration.html#8.2.6  and may use HAProxy's %[] syntax and otherwise must be a valid HTTP header value as defined in https://datatracker.ietf.org/doc/html/rfc7230#section-3.2. The value of this field must be no more than 16384 characters in length. Note that the total size of all net added headers *after* interpolating dynamic values must not exceed the value of spec.tuningOptions.headerBufferMaxRewriteBytes on the IngressController. ",
@@ -1234,6 +1255,7 @@ var map_IngressControllerSpec = map[string]string{
 	"namespaceSelector":               "namespaceSelector is used to filter the set of namespaces serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
 	"routeSelector":                   "routeSelector is used to filter the set of Routes serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
 	"nodePlacement":                   "nodePlacement enables explicit control over the scheduling of the ingress controller.\n\nIf unset, defaults are used. See NodePlacement for more details.",
+	"resources":                       "resources optionally configures per-replica resources for the router and haproxy containers independently. At least one container must be configured. When omitted, the platform is left to choose reasonable defaults, which are subject to change over time. The current defaults are requests of 25m CPU and 64Mi memory for router, requests of 100m CPU and 256Mi memory for haproxy, and no limits for either container.\n\nThe values set here are not validated against what the workload needs, and Red Hat does not support issues caused by a misconfiguration of this field; the cluster administrator is responsible for choosing appropriate values.",
 	"tlsSecurityProfile":              "tlsSecurityProfile specifies settings for TLS connections for ingresscontrollers.\n\nIf unset, the default is based on the apiservers.config.openshift.io/cluster resource.\n\nNote that when using the Old, Intermediate, and Modern profile types, the effective profile configuration is subject to change between releases. For example, given a specification to use the Intermediate profile deployed on release X.Y.Z, an upgrade to release X.Y.Z+1 may cause a new profile configuration to be applied to the ingress controller, resulting in a rollout.",
 	"clientTLS":                       "clientTLS specifies settings for requesting and verifying client certificates, which can be used to enable mutual TLS for edge-terminated and reencrypt routes.",
 	"routeAdmission":                  "routeAdmission defines a policy for handling new route claims (for example, to allow or deny claims across namespaces).\n\nIf empty, defaults will be applied. See specific routeAdmission fields for details about their defaults.",

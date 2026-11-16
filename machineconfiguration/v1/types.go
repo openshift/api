@@ -31,6 +31,7 @@ const KubeletConfigRoleLabelPrefix = "pools.operator.machineconfiguration.opensh
 //
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=BGPBasedVIPManagement,rule="!has(oldSelf.spec) || !has(oldSelf.spec.infra) || !has(oldSelf.spec.infra.status) || !has(oldSelf.spec.infra.status.platformStatus) || !has(oldSelf.spec.infra.status.platformStatus.baremetal) || !has(oldSelf.spec.infra.status.platformStatus.baremetal.vipManagement) || (has(self.spec) && has(self.spec.infra) && has(self.spec.infra.status) && has(self.spec.infra.status.platformStatus) && has(self.spec.infra.status.platformStatus.baremetal) && has(self.spec.infra.status.platformStatus.baremetal.vipManagement))",message="spec.infra.status.platformStatus.baremetal.vipManagement may not be removed once set"
 type ControllerConfig struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -150,6 +151,8 @@ type ControllerConfigSpec struct {
 	Proxy *configv1.ProxyStatus `json:"proxy"`
 
 	// infra holds the infrastructure details
+	// Once infra.status.platformStatus.baremetal.vipManagement is set, neither
+	// that field nor any of its enclosing objects may be removed or set to null.
 	// +kubebuilder:validation:EmbeddedResource
 	// +required
 	// +nullable

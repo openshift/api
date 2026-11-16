@@ -19,6 +19,7 @@ import (
 // +kubebuilder:resource:path=infrastructures,scope=Cluster
 // +kubebuilder:subresource:status
 // +kubebuilder:metadata:annotations=release.openshift.io/bootstrap-required=true
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=BGPBasedVIPManagement,rule="!has(oldSelf.status) || !has(oldSelf.status.platformStatus) || !has(oldSelf.status.platformStatus.baremetal) || !has(oldSelf.status.platformStatus.baremetal.vipManagement) || (has(self.status) && has(self.status.platformStatus) && has(self.status.platformStatus.baremetal) && has(self.status.platformStatus.baremetal.vipManagement))",message="status.platformStatus.baremetal.vipManagement may not be removed once set"
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=MutableTopology,rule="!has(self.spec.controlPlaneTopology) || (has(oldSelf.spec.controlPlaneTopology) && self.spec.controlPlaneTopology == oldSelf.spec.controlPlaneTopology) || (has(self.status.controlPlaneTopology) && self.spec.controlPlaneTopology == self.status.controlPlaneTopology) || (has(self.status.controlPlaneTopology) && self.status.controlPlaneTopology == 'SingleReplica' && self.spec.controlPlaneTopology == 'HighlyAvailable')",message="spec.controlPlaneTopology must match status.controlPlaneTopology or be set to HighlyAvailable when status.controlPlaneTopology is SingleReplica"
 type Infrastructure struct {
 	metav1.TypeMeta `json:",inline"`
@@ -472,7 +473,6 @@ type ExternalPlatformStatus struct {
 // PlatformStatus holds the current status specific to the underlying infrastructure provider
 // of the current cluster. Since these are used at status-level for the underlying cluster, it
 // is supposed that only one of the status structs is set.
-// +openshift:validation:FeatureGateAwareXValidation:featureGate=BGPBasedVIPManagement,rule="!has(oldSelf.baremetal) || !has(oldSelf.baremetal.vipManagement) || (has(self.baremetal) && has(self.baremetal.vipManagement))",message="baremetal.vipManagement may not be removed once set"
 type PlatformStatus struct {
 	// type is the underlying infrastructure provider for the cluster. This
 	// value controls whether infrastructure automation such as service load
@@ -1151,7 +1151,7 @@ type BareMetalPlatformStatus struct {
 	// on this cluster.
 	// Allowed values are `Keepalived`, `BGP`, and omitted.
 	// Once set to a non-empty value, this field is immutable and may not be removed.
-	// The enclosing baremetal object may not be removed either.
+	// The enclosing baremetal, platformStatus, and status objects may not be removed either.
 	// When set to `BGP`, kube-vip (Routing Table Mode) and frr-k8s are
 	// deployed as static pods to advertise VIPs via BGP, replacing the
 	// default keepalived/VRRP mechanism.

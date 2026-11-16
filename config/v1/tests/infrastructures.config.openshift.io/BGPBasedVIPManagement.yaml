@@ -5,6 +5,38 @@ featureGates:
 - BGPBasedVIPManagement
 tests:
   onUpdate:
+    - name: Should reject removing platformStatus after BGP is set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: BareMetal
+            baremetal:
+              vipManagement: BGP
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status: {}
+      expectedStatusError: "vipManagement may not be removed once set"
+    - name: Should reject removing platformStatus after Keepalived is set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: BareMetal
+            baremetal:
+              vipManagement: Keepalived
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status: {}
+      expectedStatusError: "vipManagement may not be removed once set"
     - name: Should allow updating baremetal while preserving vipManagement
       initial: |
         apiVersion: config.openshift.io/v1

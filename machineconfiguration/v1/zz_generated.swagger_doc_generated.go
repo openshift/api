@@ -169,7 +169,7 @@ var map_ControllerConfigSpec = map[string]string{
 	"osImageURL":                     "osImageURL is the old-format container image that contains the OS update payload.",
 	"releaseImage":                   "releaseImage is the image used when installing the cluster",
 	"proxy":                          "proxy holds the current proxy configuration for the nodes",
-	"infra":                          "infra holds the infrastructure details",
+	"infra":                          "infra holds the infrastructure details Once infra.status.platformStatus.baremetal.vipManagement is set, neither that field nor any of its enclosing objects may be removed or set to null.",
 	"dns":                            "dns holds the cluster dns details",
 	"ipFamilies":                     "ipFamilies indicates the IP families in use by the cluster network",
 	"networkType":                    "networkType holds the type of network the cluster is using XXX: this is temporary and will be dropped as soon as possible in favor of a better support to start network related services the proper way. Nobody is also changing this once the cluster is up and running the first time, so, disallow regeneration if this changes.",

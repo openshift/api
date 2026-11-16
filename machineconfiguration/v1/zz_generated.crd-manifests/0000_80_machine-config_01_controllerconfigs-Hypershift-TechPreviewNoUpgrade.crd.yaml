@@ -316,7 +316,10 @@ spec:
                   to render templates under ./templates/
                 type: object
               infra:
-                description: infra holds the infrastructure details
+                description: |-
+                  infra holds the infrastructure details
+                  Once infra.status.platformStatus.baremetal.vipManagement is set, neither
+                  that field nor any of its enclosing objects may be removed or set to null.
                 nullable: true
                 properties:
                   apiVersion:
@@ -2119,7 +2122,7 @@ spec:
                                   on this cluster.
                                   Allowed values are `Keepalived`, `BGP`, and omitted.
                                   Once set to a non-empty value, this field is immutable and may not be removed.
-                                  The enclosing baremetal object may not be removed either.
+                                  The enclosing baremetal, platformStatus, and status objects may not be removed either.
                                   When set to `BGP`, kube-vip (Routing Table Mode) and frr-k8s are
                                   deployed as static pods to advertise VIPs via BGP, replacing the
                                   default keepalived/VRRP mechanism.
@@ -3165,16 +3168,18 @@ spec:
                                 == ''Internal'' || (has(self.loadBalancer) && self.loadBalancer.type
                                 == ''UserManaged'')'
                         type: object
-                        x-kubernetes-validations:
-                        - message: baremetal.vipManagement may not be removed once
-                            set
-                          rule: '!has(oldSelf.baremetal) || !has(oldSelf.baremetal.vipManagement)
-                            || (has(self.baremetal) && has(self.baremetal.vipManagement))'
                     type: object
                 required:
                 - spec
                 type: object
                 x-kubernetes-embedded-resource: true
+                x-kubernetes-validations:
+                - message: status.platformStatus.baremetal.vipManagement may not be
+                    removed once set
+                  rule: '!has(oldSelf.status) || !has(oldSelf.status.platformStatus)
+                    || !has(oldSelf.status.platformStatus.baremetal) || !has(oldSelf.status.platformStatus.baremetal.vipManagement)
+                    || (has(self.status) && has(self.status.platformStatus) && has(self.status.platformStatus.baremetal)
+                    && has(self.status.platformStatus.baremetal.vipManagement))'
               internalRegistryPullSecret:
                 description: |-
                   internalRegistryPullSecret is the pull secret for the internal registry, used by
@@ -3414,6 +3419,15 @@ spec:
         required:
         - spec
         type: object
+        x-kubernetes-validations:
+        - message: spec.infra.status.platformStatus.baremetal.vipManagement may not
+            be removed once set
+          rule: '!has(oldSelf.spec) || !has(oldSelf.spec.infra) || !has(oldSelf.spec.infra.status)
+            || !has(oldSelf.spec.infra.status.platformStatus) || !has(oldSelf.spec.infra.status.platformStatus.baremetal)
+            || !has(oldSelf.spec.infra.status.platformStatus.baremetal.vipManagement)
+            || (has(self.spec) && has(self.spec.infra) && has(self.spec.infra.status)
+            && has(self.spec.infra.status.platformStatus) && has(self.spec.infra.status.platformStatus.baremetal)
+            && has(self.spec.infra.status.platformStatus.baremetal.vipManagement))'
     served: true
     storage: true
     subresources:

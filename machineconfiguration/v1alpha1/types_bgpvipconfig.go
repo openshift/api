@@ -80,16 +80,16 @@ type BGPVIPConfigSpec struct {
 	Communities []BGPCommunity `json:"communities,omitempty"`
 
 	// hostOverrides replaces (does not merge with) defaultPeers for the
-	// named nodes. Only the per-node peer file rendered by the
+	// named control plane nodes. Only the per-node peer file rendered by the
 	// machine-config-operator consumes overrides; the cluster-wide session
 	// configuration rendered by the cluster-network-operator uses
 	// defaultPeers. When omitted, all nodes use defaultPeers; when set, must
-	// have at least 1 entry and must not exceed 256 entries, unique by
+	// have at least 1 entry and must not exceed 16 entries, unique by
 	// hostname.
 	// +listType=map
 	// +listMapKey=hostname
 	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:MaxItems=256
+	// +kubebuilder:validation:MaxItems=16
 	// +optional
 	HostOverrides []BGPVIPHostPeers `json:"hostOverrides,omitempty"`
 }

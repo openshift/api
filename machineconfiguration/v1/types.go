@@ -113,16 +113,18 @@ type ControllerConfigSpec struct {
 	// +required
 	Images map[string]string `json:"images"`
 
-	// bgpVIPPeersJSON carries the BGP VIP peer configuration (the config.json
-	// payload of the bgp-vip-config ConfigMap) for rendering the frr-k8s
-	// static pod peer file on control plane nodes. Only set when BGP-based
-	// VIP management is enabled.
+	// bgpVIPPeersJSON carries the JSON-serialized BGP VIP peer configuration
+	// derived by the machine-config-operator from the BGPVIPConfig spec and
+	// the cluster API and Ingress VIPs. It contains references to password
+	// Secrets in openshift-config, not plaintext passwords. The references
+	// are resolved when rendering the frr-k8s static pod peer file on control
+	// plane nodes. Only set when BGP-based VIP management is enabled.
 	// When omitted, BGP-based VIP management is not configured and no
 	// frr-k8s peer file is rendered.
-	// When set, the value must be between 1 and 65536 characters long.
+	// When set, the value must be between 1 and 262144 characters long.
 	// +openshift:enable:FeatureGate=BGPBasedVIPManagement
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=65536
+	// +kubebuilder:validation:MaxLength=262144
 	// +optional
 	BGPVIPPeersJSON string `json:"bgpVIPPeersJSON,omitempty"`
 

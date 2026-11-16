@@ -4,6 +4,65 @@ crdName: bgpvipconfigs.machineconfiguration.openshift.io
 featureGate: BGPBasedVIPManagement
 tests:
   onCreate:
+  - name: Should accept 16 host overrides
+    initial: &sixteenOverrides |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+        hostOverrides:
+        - {hostname: master-0, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-1, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-2, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-3, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-4, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-5, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-6, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-7, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-8, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-9, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-10, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-11, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-12, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-13, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-14, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-15, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+    expected: *sixteenOverrides
+  - name: Should reject 17 host overrides
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+        hostOverrides:
+        - {hostname: master-0, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-1, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-2, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-3, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-4, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-5, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-6, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-7, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-8, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-9, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-10, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-11, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-12, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-13, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-14, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-15, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+        - {hostname: master-16, peers: [{peerAddress: 192.168.111.1, peerASN: 64513}]}
+    expectedError: "must have at most 16 items"
   - name: Should be able to create a minimal BGPVIPConfig
     initial: |
       apiVersion: machineconfiguration.openshift.io/v1alpha1

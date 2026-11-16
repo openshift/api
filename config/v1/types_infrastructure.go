@@ -472,6 +472,7 @@ type ExternalPlatformStatus struct {
 // PlatformStatus holds the current status specific to the underlying infrastructure provider
 // of the current cluster. Since these are used at status-level for the underlying cluster, it
 // is supposed that only one of the status structs is set.
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=BGPBasedVIPManagement,rule="!has(oldSelf.baremetal) || !has(oldSelf.baremetal.vipManagement) || (has(self.baremetal) && has(self.baremetal.vipManagement))",message="baremetal.vipManagement may not be removed once set"
 type PlatformStatus struct {
 	// type is the underlying infrastructure provider for the cluster. This
 	// value controls whether infrastructure automation such as service load
@@ -1149,7 +1150,8 @@ type BareMetalPlatformStatus struct {
 	// vipManagement indicates which VIP management mechanism is active
 	// on this cluster.
 	// Allowed values are `Keepalived`, `BGP`, and omitted.
-	// Once set to a non-empty value, this field is immutable.
+	// Once set to a non-empty value, this field is immutable and may not be removed.
+	// The enclosing baremetal object may not be removed either.
 	// When set to `BGP`, kube-vip (Routing Table Mode) and frr-k8s are
 	// deployed as static pods to advertise VIPs via BGP, replacing the
 	// default keepalived/VRRP mechanism.

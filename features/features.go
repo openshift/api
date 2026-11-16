@@ -199,7 +199,7 @@ var (
 				contactPerson("jcaamano").
 				productScope(ocpSpecific).
 				enhancementPR("https://github.com/ovn-kubernetes/ovn-kubernetes/pull/6528").
-				enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+				enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 				mustRegister()
 
 	FeatureGateBackendQuotaGiB = newFeatureGate("EtcdBackendQuota").

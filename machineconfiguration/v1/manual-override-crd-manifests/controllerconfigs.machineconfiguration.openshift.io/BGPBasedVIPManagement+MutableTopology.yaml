@@ -14,6 +14,26 @@ spec:
           spec:
             properties:
               infra:
+                properties:
+                  spec:
+                    properties:
+                      controlPlaneTopology:
+                        type: string
+                    type: object
+                  status:
+                    properties:
+                      controlPlaneTopology:
+                        type: string
+                      platformStatus:
+                        properties:
+                          baremetal:
+                            properties:
+                              vipManagement:
+                                type: string
+                            type: object
+                        type: object
+                    type: object
+                type: object
                 x-kubernetes-validations:
                 - message: status.platformStatus.baremetal.vipManagement may not be
                     removed once set
@@ -30,3 +50,5 @@ spec:
                     == self.status.controlPlaneTopology) || (has(self.status.controlPlaneTopology)
                     && self.status.controlPlaneTopology == ''SingleReplica'' && self.spec.controlPlaneTopology
                     == ''HighlyAvailable'')'
+            type: object
+        type: object

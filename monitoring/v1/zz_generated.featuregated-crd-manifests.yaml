@@ -19,7 +19,6 @@ alertrelabelconfigs.monitoring.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 alertingrules.monitoring.openshift.io:
   Annotations:
     description: OpenShift Monitoring alerting rules
@@ -41,4 +40,3 @@ alertingrules.monitoring.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-

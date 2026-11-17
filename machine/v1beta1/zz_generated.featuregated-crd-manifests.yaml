@@ -56,7 +56,6 @@ machines.machine.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1beta1
-
 machinehealthchecks.machine.openshift.io:
   Annotations:
     exclude.release.openshift.io/internal-openshift-hosted: "true"
@@ -93,7 +92,6 @@ machinehealthchecks.machine.openshift.io:
   - mhcs
   TopLevelFeatureGates: []
   Version: v1beta1
-
 machinesets.machine.openshift.io:
   Annotations:
     exclude.release.openshift.io/internal-openshift-hosted: "true"
@@ -137,4 +135,3 @@ machinesets.machine.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1beta1
-

@@ -28,4 +28,3 @@ datagathers.insights.openshift.io:
   TopLevelFeatureGates:
   - InsightsOnDemandDataGather
   Version: v1alpha2
-

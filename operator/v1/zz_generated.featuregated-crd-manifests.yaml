@@ -19,7 +19,6 @@ authentications.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 csisnapshotcontrollers.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/562
@@ -40,7 +39,6 @@ csisnapshotcontrollers.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 cloudcredentials.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/692
@@ -61,7 +59,6 @@ cloudcredentials.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 clustercsidrivers.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/701
@@ -84,7 +81,6 @@ clustercsidrivers.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 configs.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/612
@@ -105,7 +101,6 @@ configs.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 consoles.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/486
@@ -126,7 +121,6 @@ consoles.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 dnses.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/475
@@ -147,7 +141,6 @@ dnses.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 etcds.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/752
@@ -169,7 +162,6 @@ etcds.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 ingresscontrollers.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/616
@@ -191,7 +183,6 @@ ingresscontrollers.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 insightsoperators.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/1237
@@ -212,7 +203,6 @@ insightsoperators.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 kubeapiservers.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/475
@@ -234,7 +224,6 @@ kubeapiservers.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 kubecontrollermanagers.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/475
@@ -255,7 +244,6 @@ kubecontrollermanagers.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 kubeschedulers.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/475
@@ -276,7 +264,6 @@ kubeschedulers.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 kubestorageversionmigrators.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/503
@@ -297,7 +284,6 @@ kubestorageversionmigrators.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 machineconfigurations.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/1453
@@ -321,7 +307,6 @@ machineconfigurations.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 networks.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/475
@@ -343,7 +328,6 @@ networks.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 olms.operator.openshift.io:
   Annotations:
     include.release.openshift.io/ibm-cloud-managed: "false"
@@ -368,7 +352,6 @@ olms.operator.openshift.io:
   TopLevelFeatureGates:
   - NewOLM
   Version: v1
-
 openshiftapiservers.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/475
@@ -389,7 +372,6 @@ openshiftapiservers.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 openshiftcontrollermanagers.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/475
@@ -410,7 +392,6 @@ openshiftcontrollermanagers.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 servicecas.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/475
@@ -431,7 +412,6 @@ servicecas.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 storages.operator.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/670
@@ -452,4 +432,3 @@ storages.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-

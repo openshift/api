@@ -20,7 +20,6 @@ sharedconfigmaps.sharedresource.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1alpha1
-
 sharedsecrets.sharedresource.openshift.io:
   Annotations:
     description: Extension for sharing Secrets across Namespaces
@@ -43,4 +42,3 @@ sharedsecrets.sharedresource.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1alpha1
-

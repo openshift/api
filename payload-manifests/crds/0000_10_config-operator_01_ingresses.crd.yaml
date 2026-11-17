@@ -7,7 +7,6 @@ metadata:
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
     release.openshift.io/bootstrap-required: "true"
-    release.openshift.io/feature-set: TechPreviewNoUpgrade
   name: ingresses.config.openshift.io
 spec:
   group: config.openshift.io
@@ -293,6 +292,7 @@ spec:
                         type: string
                       minItems: 1
                       type: array
+                      x-kubernetes-list-type: atomic
                     includeSubDomainsPolicy:
                       description: |-
                         includeSubDomainsPolicy means the HSTS Policy should apply to any subdomains of the host's
@@ -396,6 +396,7 @@ spec:
                   - domainPatterns
                   type: object
                 type: array
+                x-kubernetes-list-type: atomic
             type: object
           status:
             description: status holds observed values from the cluster. They may not
@@ -495,6 +496,7 @@ spec:
                         type: string
                       maxItems: 5
                       type: array
+                      x-kubernetes-list-type: atomic
                     currentHostnames:
                       description: |-
                         currentHostnames is the list of current names used by the route. Typically, this list should consist of a single
@@ -505,6 +507,7 @@ spec:
                         type: string
                       minItems: 1
                       type: array
+                      x-kubernetes-list-type: atomic
                     defaultHostname:
                       description: defaultHostname is the hostname of this route prior
                         to customization.
@@ -558,6 +561,7 @@ spec:
                         type: object
                       minItems: 1
                       type: array
+                      x-kubernetes-list-type: atomic
                   required:
                   - defaultHostname
                   - name

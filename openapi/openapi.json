@@ -6673,14 +6673,16 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "currentHostnames": {
           "description": "currentHostnames is the list of current names used by the route. Typically, this list should consist of a single hostname, but if multiple hostnames are supported by the route the operator may write multiple entries to this list.",
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "defaultHostname": {
           "description": "defaultHostname is the hostname of this route prior to customization.",
@@ -6702,7 +6704,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/com.github.openshift.api.config.v1.ObjectReference"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -9186,7 +9189,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/com.github.openshift.api.config.v1.RequiredHSTSPolicy"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -11737,7 +11741,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "includeSubDomainsPolicy": {
           "description": "includeSubDomainsPolicy means the HSTS Policy should apply to any subdomains of the host's domain name.  Thus, for the host bar.foo.com, if includeSubDomainsPolicy was set to RequireIncludeSubDomains: - the host app.bar.foo.com would inherit the HSTS Policy of bar.foo.com - the host bar.foo.com would inherit the HSTS Policy of bar.foo.com - the host foo.com would NOT inherit the HSTS Policy of bar.foo.com - the host def.foo.com would NOT inherit the HSTS Policy of bar.foo.com",

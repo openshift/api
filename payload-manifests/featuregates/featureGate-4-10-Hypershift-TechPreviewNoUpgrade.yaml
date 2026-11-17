@@ -23,6 +23,9 @@
                         "name": "AuthenticationComponentProxyExternalOIDC"
                     },
                     {
+                        "name": "AutomatedEtcdBackup"
+                    },
+                    {
                         "name": "BGPBasedVIPManagement"
                     },
                     {
@@ -161,9 +164,6 @@
                     },
                     {
                         "name": "AdditionalStorageConfig"
-                    },
-                    {
-                        "name": "AutomatedEtcdBackup"
                     },
                     {
                         "name": "AzureDedicatedHosts"

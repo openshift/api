@@ -28,8 +28,8 @@ import (
 )
 
 const (
-	dependentRequiredTagName  = "k8s:dependentRequired"
-	dependentForbiddenTagName = "k8s:dependentForbidden"
+	dependentRequiredTagName  = "dependentRequired"
+	dependentForbiddenTagName = "dependentForbidden"
 )
 
 var (
@@ -151,7 +151,7 @@ func (dtv dependencyTagValidator) GetValidations(context Context, tag codetags.T
 func (dtv dependencyTagValidator) Docs() TagDoc {
 	doc := TagDoc{
 		Tag:            dtv.TagName(),
-		StabilityLevel: TagStabilityLevelAlpha,
+		StabilityLevel: TagStabilityLevelBeta,
 		Scopes:         sets.List(dtv.ValidScopes()),
 		Args: []TagArgDoc{{
 			Description: "<sibling-field-json-name>",

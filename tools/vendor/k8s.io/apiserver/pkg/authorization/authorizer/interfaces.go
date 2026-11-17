@@ -119,7 +119,7 @@ type Authorizer interface {
 	// return authorizer.DecisionDeny, "", authorizer.ErrorConditionEvaluationNotSupported
 	//
 	// The context should only be used for timeouts/cancellation/tracing, and should not influence the
-	// evaluation outcome. Only the given decision and data may infuence the outcome. data must be non-nil.
+	// evaluation outcome. Only the given decision and data may influence the outcome. data must be non-nil.
 	EvaluateConditions(ctx context.Context, decision ConditionsAwareDecision, data ConditionsData) (authorized Decision, reason string, err error)
 }
 
@@ -333,8 +333,10 @@ type ConditionsData interface {
 	// could still be rejected by a subsequent validation step.
 	IsDryRun() bool
 	// GetObject is the object from the incoming request. Only populated for CREATE and UPDATE requests.
+	// The object should be versioned in the external version corresponding to GetKind().
 	GetObject() runtime.Object
 	// GetOldObject is the existing object in storage. Only populated for UPDATE and DELETE requests.
+	// The old object should be versioned in the external version corresponding to GetKind().
 	GetOldObject() runtime.Object
 	// GetKind is the type of object being manipulated. For example: Pod
 	GetKind() schema.GroupVersionKind

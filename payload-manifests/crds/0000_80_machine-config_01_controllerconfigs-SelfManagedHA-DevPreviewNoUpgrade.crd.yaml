@@ -3504,12 +3504,6 @@ spec:
                 type: object
                 x-kubernetes-embedded-resource: true
                 x-kubernetes-validations:
-                - message: status.platformStatus.baremetal.vipManagement may not be
-                    removed once set
-                  rule: '!has(oldSelf.status) || !has(oldSelf.status.platformStatus)
-                    || !has(oldSelf.status.platformStatus.baremetal) || !has(oldSelf.status.platformStatus.baremetal.vipManagement)
-                    || (has(self.status) && has(self.status.platformStatus) && has(self.status.platformStatus.baremetal)
-                    && has(self.status.platformStatus.baremetal.vipManagement))'
                 - message: spec.controlPlaneTopology must match status.controlPlaneTopology
                     or be set to HighlyAvailable when status.controlPlaneTopology
                     is SingleReplica

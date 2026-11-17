@@ -4,6 +4,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// Keep the root BGPBasedVIPManagement and MutableTopology validation rules below
+// in sync with manual-override-crd-manifests/infrastructures.config.openshift.io/BGPBasedVIPManagement+MutableTopology.yaml.
+// That override replaces the generated validation list when both gates are enabled.
+
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

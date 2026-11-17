@@ -20,4 +20,3 @@ dnsnameresolvers.network.openshift.io:
   TopLevelFeatureGates:
   - DNSNameResolver
   Version: v1alpha1
-

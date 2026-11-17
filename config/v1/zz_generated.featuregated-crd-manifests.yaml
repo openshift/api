@@ -22,7 +22,6 @@ apiservers.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 authentications.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -47,7 +46,6 @@ authentications.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 builds.config.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/470
@@ -68,7 +66,6 @@ builds.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 clusterimagepolicies.config.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/2310
@@ -92,7 +89,6 @@ clusterimagepolicies.config.openshift.io:
   TopLevelFeatureGates:
   - SigstoreImageVerification
   Version: v1
-
 clusteroperators.config.openshift.io:
   Annotations:
     include.release.openshift.io/self-managed-high-availability: "true"
@@ -135,7 +131,6 @@ clusteroperators.config.openshift.io:
   - co
   TopLevelFeatureGates: []
   Version: v1
-
 clusterversions.config.openshift.io:
   Annotations:
     include.release.openshift.io/self-managed-high-availability: "true"
@@ -176,7 +171,6 @@ clusterversions.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 consoles.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -198,7 +192,6 @@ consoles.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 dnses.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -221,7 +214,6 @@ dnses.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 featuregates.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -243,7 +235,6 @@ featuregates.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 images.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -266,7 +257,6 @@ images.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 imagecontentpolicies.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -288,7 +278,6 @@ imagecontentpolicies.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 imagedigestmirrorsets.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -311,7 +300,6 @@ imagedigestmirrorsets.config.openshift.io:
   - idms
   TopLevelFeatureGates: []
   Version: v1
-
 imagepolicies.config.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/2310
@@ -335,7 +323,6 @@ imagepolicies.config.openshift.io:
   TopLevelFeatureGates:
   - SigstoreImageVerification
   Version: v1
-
 imagetagmirrorsets.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -358,7 +345,6 @@ imagetagmirrorsets.config.openshift.io:
   - itms
   TopLevelFeatureGates: []
   Version: v1
-
 infrastructures.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -392,7 +378,6 @@ infrastructures.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 ingresses.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -414,7 +399,6 @@ ingresses.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 insightsdatagathers.config.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/2448
@@ -437,7 +421,6 @@ insightsdatagathers.config.openshift.io:
   TopLevelFeatureGates:
   - InsightsConfig
   Version: v1
-
 networks.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -459,7 +442,6 @@ networks.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 nodes.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -482,7 +464,6 @@ nodes.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 oauths.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -504,7 +485,6 @@ oauths.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 operatorhubs.config.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/470
@@ -525,7 +505,6 @@ operatorhubs.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 projects.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -547,7 +526,6 @@ projects.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 proxies.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -569,7 +547,6 @@ proxies.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 schedulers.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"
@@ -592,4 +569,3 @@ schedulers.config.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-

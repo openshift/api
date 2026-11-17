@@ -18,7 +18,6 @@ helmchartrepositories.helm.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1beta1
-
 projecthelmchartrepositories.helm.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/1084
@@ -39,4 +38,3 @@ projecthelmchartrepositories.helm.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1beta1
-

@@ -20,4 +20,3 @@ dnsrecords.ingress.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-

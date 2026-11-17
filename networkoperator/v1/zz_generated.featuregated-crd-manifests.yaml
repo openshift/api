@@ -26,4 +26,3 @@ egressrouters.network.operator.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-

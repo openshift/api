@@ -27,7 +27,6 @@ consoleclidownloads.console.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 consoleexternalloglinks.console.openshift.io:
   Annotations:
     description: ConsoleExternalLogLink is an extension for customizing OpenShift
@@ -60,7 +59,6 @@ consoleexternalloglinks.console.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 consolelinks.console.openshift.io:
   Annotations:
     description: Extension for customizing OpenShift web console links
@@ -95,7 +93,6 @@ consolelinks.console.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 consolenotifications.console.openshift.io:
   Annotations:
     description: Extension for configuring openshift web console notifications.
@@ -127,7 +124,6 @@ consolenotifications.console.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 consoleplugins.console.openshift.io:
   Annotations:
     description: Extension for configuring openshift web console plugins.
@@ -152,7 +148,6 @@ consoleplugins.console.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 consolequickstarts.console.openshift.io:
   Annotations:
     description: Extension for guiding user through various workflows in the OpenShift
@@ -176,7 +171,6 @@ consolequickstarts.console.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 consolesamples.console.openshift.io:
   Annotations:
     description: ConsoleSample is an extension to customizing OpenShift web console
@@ -200,7 +194,6 @@ consolesamples.console.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 consoleyamlsamples.console.openshift.io:
   Annotations:
     description: Extension for configuring openshift web console YAML samples.
@@ -223,4 +216,3 @@ consoleyamlsamples.console.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-

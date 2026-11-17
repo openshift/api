@@ -21,7 +21,6 @@ internalreleaseimages.machineconfiguration.openshift.io:
   TopLevelFeatureGates:
   - NoRegistryClusterInstall
   Version: v1alpha1
-
 osimagestreams.machineconfiguration.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/2555
@@ -45,4 +44,3 @@ osimagestreams.machineconfiguration.openshift.io:
   TopLevelFeatureGates:
   - OSStreams
   Version: v1alpha1
-

@@ -20,4 +20,3 @@ insightsdatagathers.config.openshift.io:
   TopLevelFeatureGates:
   - InsightsConfig
   Version: v1alpha2
-

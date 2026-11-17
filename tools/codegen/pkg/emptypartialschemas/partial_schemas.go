@@ -307,14 +307,18 @@ func (g *genFeatureGatedPartialSchemas) GenerateType(_ *generator.Context, t *ty
 	}
 	g.crdInfoTracker.crdNamesToFeatureGates[crdName] = crdInfo
 
-	toSerialize := map[string]*CRDInfo{
-		crdName: crdInfo,
-	}
-	content, err := yaml.Marshal(toSerialize)
+	return writeCRDInfoEntry(w, crdName, crdInfo)
+}
+
+// writeCRDInfoEntry writes one CRD entry of the zz_generated.featuregated-crd-manifests.yaml report.
+// yaml.Marshal output already ends with a single newline, so the entry is written as is:
+// the concatenation of all entries is a valid YAML mapping and the file ends with exactly one newline.
+func writeCRDInfoEntry(w io.Writer, crdName string, crdInfo *CRDInfo) error {
+	content, err := yaml.Marshal(map[string]*CRDInfo{crdName: crdInfo})
 	if err != nil {
 		return err
 	}
-	_, err = fmt.Fprintf(w, "%v\n", string(content))
+	_, err = w.Write(content)
 	return err
 }
 

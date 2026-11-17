@@ -20,7 +20,6 @@ backups.config.openshift.io:
   TopLevelFeatureGates:
   - AutomatedEtcdBackup
   Version: v1alpha1
-
 criocredentialproviderconfigs.config.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/2557
@@ -43,7 +42,6 @@ criocredentialproviderconfigs.config.openshift.io:
   TopLevelFeatureGates:
   - CRIOCredentialProviderConfig
   Version: v1alpha1
-
 clustermonitorings.config.openshift.io:
   Annotations:
     description: Cluster Monitoring Operators configuration API
@@ -67,7 +65,6 @@ clustermonitorings.config.openshift.io:
   TopLevelFeatureGates:
   - ClusterMonitoringConfig
   Version: v1alpha1
-
 insightsdatagathers.config.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/1245
@@ -90,7 +87,6 @@ insightsdatagathers.config.openshift.io:
   TopLevelFeatureGates:
   - InsightsConfig
   Version: v1alpha1
-
 pkis.config.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/2645
@@ -113,4 +109,3 @@ pkis.config.openshift.io:
   TopLevelFeatureGates:
   - ConfigurablePKI
   Version: v1alpha1
-

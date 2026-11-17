@@ -20,4 +20,3 @@ pacemakerclusters.etcd.openshift.io:
   TopLevelFeatureGates:
   - DualReplica
   Version: v1
-

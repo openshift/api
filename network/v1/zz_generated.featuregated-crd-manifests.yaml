@@ -30,7 +30,6 @@ clusternetworks.network.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 egressnetworkpolicies.network.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/527
@@ -51,7 +50,6 @@ egressnetworkpolicies.network.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 hostsubnets.network.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/527
@@ -94,7 +92,6 @@ hostsubnets.network.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 netnamespaces.network.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/527
@@ -123,4 +120,3 @@ netnamespaces.network.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-

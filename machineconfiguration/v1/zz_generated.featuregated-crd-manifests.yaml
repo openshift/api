@@ -21,7 +21,6 @@ containerruntimeconfigs.machineconfiguration.openshift.io:
   - ctrcfg
   TopLevelFeatureGates: []
   Version: v1
-
 controllerconfigs.machineconfiguration.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/1453
@@ -56,7 +55,6 @@ controllerconfigs.machineconfiguration.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 internalreleaseimages.machineconfiguration.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/2510
@@ -80,7 +78,6 @@ internalreleaseimages.machineconfiguration.openshift.io:
   TopLevelFeatureGates:
   - NoRegistryClusterInstall
   Version: v1
-
 kubeletconfigs.machineconfiguration.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/1453
@@ -102,7 +99,6 @@ kubeletconfigs.machineconfiguration.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 machineconfigs.machineconfiguration.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/1453
@@ -137,7 +133,6 @@ machineconfigs.machineconfiguration.openshift.io:
   - mc
   TopLevelFeatureGates: []
   Version: v1
-
 machineconfignodes.machineconfiguration.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/2255
@@ -217,7 +212,6 @@ machineconfignodes.machineconfiguration.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 machineconfigpools.machineconfiguration.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/1453
@@ -279,7 +273,6 @@ machineconfigpools.machineconfiguration.openshift.io:
   - mcp
   TopLevelFeatureGates: []
   Version: v1
-
 machineosbuilds.machineconfiguration.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/2090
@@ -319,7 +312,6 @@ machineosbuilds.machineconfiguration.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 machineosconfigs.machineconfiguration.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/2090
@@ -341,7 +333,6 @@ machineosconfigs.machineconfiguration.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-
 pinnedimagesets.machineconfiguration.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/2198
@@ -363,4 +354,3 @@ pinnedimagesets.machineconfiguration.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-

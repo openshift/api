@@ -20,4 +20,3 @@ notstableconfigtypes.example.openshift.io:
   TopLevelFeatureGates:
   - Example
   Version: v1alpha1
-

@@ -18,4 +18,3 @@ cloudprivateipconfigs.cloud.network.openshift.io:
   ShortNames: null
   TopLevelFeatureGates: []
   Version: v1
-

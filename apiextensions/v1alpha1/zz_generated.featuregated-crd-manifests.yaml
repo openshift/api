@@ -21,4 +21,3 @@ compatibilityrequirements.apiextensions.openshift.io:
   TopLevelFeatureGates:
   - CRDCompatibilityRequirementOperator
   Version: v1alpha1
-

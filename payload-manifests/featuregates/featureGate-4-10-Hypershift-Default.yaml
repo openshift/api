@@ -177,6 +177,9 @@
                         "name": "IngressControllerLBSecurityGroupsAWS"
                     },
                     {
+                        "name": "IngressControllerResourceConfiguration"
+                    },
+                    {
                         "name": "KarpenterOperator"
                     },
                     {

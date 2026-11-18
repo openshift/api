@@ -1,0 +1,88 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    feature-gate.release.openshift.io/CinderCSIDirectAttach: "true"
+  name: clustercsidrivers.operator.openshift.io
+spec:
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        properties:
+          metadata:
+            type: object
+          spec:
+            properties:
+              driverConfig:
+                properties:
+                  aws:
+                    type: object
+                  azure:
+                    type: object
+                  cinder:
+                    type: object
+                  driverType:
+                    type: string
+                  gcp:
+                    type: object
+                  ibmcloud:
+                    type: object
+                  secretsStore:
+                    properties:
+                      tokenRequests:
+                        properties:
+                          type:
+                            type: string
+                        type: object
+                    type: object
+                  vSphere:
+                    type: object
+                type: object
+                x-kubernetes-validations:
+                - message: cinder must be set if driverType is Cinder, but remain
+                    unset otherwise
+                  rule: 'has(self.driverType) && self.driverType == ''Cinder'' ? has(self.cinder)
+                    : !has(self.cinder)'
+                - message: other driver configuration must be unset when driverType
+                    is Cinder
+                  rule: 'has(self.driverType) && self.driverType == ''Cinder'' ? !has(self.aws)
+                    && !has(self.azure) && !has(self.gcp) && !has(self.ibmcloud) &&
+                    !has(self.vSphere) && !has(self.secretsStore) : true'
+                - message: ibmcloud must be set if driverType is 'IBMCloud', but remain
+                    unset otherwise
+                  rule: 'has(self.driverType) && self.driverType == ''IBMCloud'' ?
+                    has(self.ibmcloud) : !has(self.ibmcloud)'
+                - message: secretsStore must be set if driverType is 'SecretsStore',
+                    but remain unset otherwise
+                  rule: 'has(self.driverType) && self.driverType == ''SecretsStore''
+                    ? has(self.secretsStore) : !has(self.secretsStore)'
+            type: object
+          status:
+            properties:
+              cinder:
+                type: object
+            type: object
+        type: object
+        x-kubernetes-validations:
+        - message: driverType Cinder requires metadata.name cinder.csi.openstack.org
+          rule: 'self.spec.?driverConfig.?driverType.orValue('''') == ''Cinder'' ?
+            self.metadata.name == ''cinder.csi.openstack.org'' : true'
+        - message: the Cinder resource permits only omitted or Cinder driver configuration
+          rule: 'self.metadata.name == ''cinder.csi.openstack.org'' ? self.spec.?driverConfig.?driverType.orValue('''')
+            in ['''', ''Cinder''] : true'
+        - message: Cinder status is valid only on the Cinder resource
+          rule: 'self.?status.?cinder.hasValue() ? self.metadata.name == ''cinder.csi.openstack.org''
+            : true'
+        - message: driverType 'SecretsStore' requires metadata.name 'secrets-store.csi.k8s.io'
+          rule: 'self.spec.?driverConfig.driverType.orValue('''') == ''SecretsStore''
+            ? self.metadata.name == ''secrets-store.csi.k8s.io'' : true'
+        - message: metadata.name 'secrets-store.csi.k8s.io' requires driverType 'SecretsStore'
+          rule: 'self.metadata.name == ''secrets-store.csi.k8s.io'' ? (!has(self.spec.driverConfig)
+            || self.spec.driverConfig.driverType == ''SecretsStore'') : true'
+        - message: tokenRequests type cannot be changed from Managed
+          rule: oldSelf.spec.?driverConfig.?secretsStore.?tokenRequests.?type.orValue('')
+            != 'Managed' || self.spec.?driverConfig.?secretsStore.?tokenRequests.?type.orValue('')
+            == 'Managed'
+    subresources:
+      status: {}

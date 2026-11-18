@@ -24,6 +24,8 @@ spec:
           ClusterCSIDriver object allows management and configuration of a CSI driver operator
           installed by default in OpenShift. Name of the object must be name of the CSI driver
           it operates. See CSIDriverName type for list of allowed values.
+          With CinderCSIDirectAttach enabled, Cinder configuration and status are valid
+          only on cinder.csi.openstack.org, which permits only omitted or Cinder configuration.
 
           Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
         properties:
@@ -183,11 +185,102 @@ spec:
                         - subscriptionID
                         type: object
                     type: object
+                  cinder:
+                    description: |-
+                      cinder is required when driverType is Cinder and forbidden otherwise.
+                      Omission preserves Nova attachment unless the operator has locked Direct,
+                      in which case the operator rejects removal without changing the mode.
+                    properties:
+                      attachMode:
+                        description: |-
+                          attachMode is required. Valid values are Nova (Nova-mediated attachment)
+                          and Direct (worker-side os-brick attachment without Nova on all workers).
+                          The operator permits Direct only on self-managed OpenStack clusters before
+                          any Cinder use and when no Cinder PVCs or PVs exist.
+                          The operator locks Nova on first Cinder use and Direct on acceptance,
+                          before rollout. The lock survives rollout failures and resource recreation.
+                          The operator rejects changes or removal that would change the locked mode.
+                          HyperShift rejects Direct without changing workloads. These restrictions
+                          are enforced by the operator, not API admission.
+                        enum:
+                        - Nova
+                        - Direct
+                        type: string
+                      backendConfig:
+                        description: |-
+                          backendConfig optionally supplies up to 16 read-only Secret file sources
+                          to each os-brick sidecar. Source names must be unique; mount paths may be
+                          shared if filenames differ. Non-empty configuration requires Direct mode.
+                          Omission or an empty list mounts no additional files. Before rollout, the
+                          operator rejects missing or empty Secrets, unsafe filenames, and duplicate
+                          destination filenames. Sources may be updated without changing the mode.
+                        items:
+                          description: CinderBackendConfig projects a Secret's files
+                            at a supported sidecar directory.
+                          properties:
+                            mountPath:
+                              description: |-
+                                mountPath is required. The only supported value is /etc/ceph, the read-only
+                                sidecar directory for Ceph configuration and keyrings.
+                              enum:
+                              - /etc/ceph
+                              type: string
+                            name:
+                              description: |-
+                                name is required and uniquely identifies this source within backendConfig.
+                                It must contain 1 to 63 lowercase alphanumeric characters or hyphens,
+                                starting and ending with an alphanumeric character.
+                              maxLength: 63
+                              minLength: 1
+                              type: string
+                              x-kubernetes-validations:
+                              - message: name must be a DNS label
+                                rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
+                            secret:
+                              description: |-
+                                secret is required and names an administrator-managed Secret in
+                                openshift-cluster-csi-drivers. All data keys become read-only sidecar files.
+                                The operator validates the Secret's existence and contents.
+                              properties:
+                                name:
+                                  description: |-
+                                    name is required and identifies the Secret. It must contain 1 to 253
+                                    lowercase alphanumeric characters, hyphens, or dots. Each dot-separated
+                                    component must start and end with an alphanumeric character.
+                                  maxLength: 253
+                                  minLength: 1
+                                  type: string
+                                  x-kubernetes-validations:
+                                  - message: secret name must be a DNS subdomain of
+                                      1 to 253 characters
+                                    rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?([.][a-z0-9]([-a-z0-9]*[a-z0-9])?)*$')
+                              required:
+                              - name
+                              type: object
+                          required:
+                          - mountPath
+                          - name
+                          - secret
+                          type: object
+                        maxItems: 16
+                        minItems: 0
+                        type: array
+                        x-kubernetes-list-map-keys:
+                        - name
+                        x-kubernetes-list-type: map
+                    required:
+                    - attachMode
+                    type: object
+                    x-kubernetes-validations:
+                    - message: backendConfig is valid only in Direct mode
+                      rule: self.attachMode == 'Direct' || !has(self.backendConfig)
+                        || size(self.backendConfig) == 0
                   driverType:
                     description: |-
                       driverType indicates type of CSI driver for which the
                       driverConfig is being applied to.
-                      Valid values are: AWS, Azure, GCP, IBMCloud, vSphere, SecretsStore and omitted.
+                      Valid values are: AWS, Azure, GCP, IBMCloud, vSphere, SecretsStore and empty.
+                      Cinder is also valid when CinderCSIDirectAttach is enabled.
                       Consumers should treat unknown values as a NO-OP.
                     enum:
                     - ""
@@ -197,6 +290,7 @@ spec:
                     - IBMCloud
                     - vSphere
                     - SecretsStore
+                    - Cinder
                     type: string
                   gcp:
                     description: gcp is used to configure the GCP CSI driver.
@@ -450,6 +544,15 @@ spec:
                 - driverType
                 type: object
                 x-kubernetes-validations:
+                - message: cinder must be set if driverType is Cinder, but remain
+                    unset otherwise
+                  rule: 'has(self.driverType) && self.driverType == ''Cinder'' ? has(self.cinder)
+                    : !has(self.cinder)'
+                - message: other driver configuration must be unset when driverType
+                    is Cinder
+                  rule: 'has(self.driverType) && self.driverType == ''Cinder'' ? !has(self.aws)
+                    && !has(self.azure) && !has(self.gcp) && !has(self.ibmcloud) &&
+                    !has(self.vSphere) && !has(self.secretsStore) : true'
                 - message: ibmcloud must be set if driverType is 'IBMCloud', but remain
                     unset otherwise
                   rule: 'has(self.driverType) && self.driverType == ''IBMCloud'' ?
@@ -532,6 +635,26 @@ spec:
             description: status holds observed values from the cluster. They may not
               be overridden.
             properties:
+              cinder:
+                description: |-
+                  cinder optionally reports Cinder configuration on cinder.csi.openstack.org.
+                  When omitted, no completed Cinder rollout has been reported.
+                minProperties: 0
+                properties:
+                  observedAttachMode:
+                    description: |-
+                      observedAttachMode optionally reports the last successfully completed
+                      controller and node rollout. Valid values are Nova (Nova-mediated attachment)
+                      and Direct (worker-side os-brick attachment without Nova).
+                      Omission means no completed rollout has been observed. Pending, failed, or
+                      rejected changes retain the previous value. This is neither the mode lock
+                      nor proof that the current generation has rolled out; check conditions and
+                      observedGeneration.
+                    enum:
+                    - Nova
+                    - Direct
+                    type: string
+                type: object
               conditions:
                 description: conditions is a list of conditions and their status
                 items:
@@ -637,6 +760,15 @@ spec:
         - spec
         type: object
         x-kubernetes-validations:
+        - message: driverType Cinder requires metadata.name cinder.csi.openstack.org
+          rule: 'self.spec.?driverConfig.?driverType.orValue('''') == ''Cinder'' ?
+            self.metadata.name == ''cinder.csi.openstack.org'' : true'
+        - message: the Cinder resource permits only omitted or Cinder driver configuration
+          rule: 'self.metadata.name == ''cinder.csi.openstack.org'' ? self.spec.?driverConfig.?driverType.orValue('''')
+            in ['''', ''Cinder''] : true'
+        - message: Cinder status is valid only on the Cinder resource
+          rule: 'self.?status.?cinder.hasValue() ? self.metadata.name == ''cinder.csi.openstack.org''
+            : true'
         - message: driverType 'SecretsStore' requires metadata.name 'secrets-store.csi.k8s.io'
           rule: 'self.spec.?driverConfig.driverType.orValue('''') == ''SecretsStore''
             ? self.metadata.name == ''secrets-store.csi.k8s.io'' : true'

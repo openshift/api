@@ -663,22 +663,62 @@ func (AzureDiskEncryptionSet) SwaggerDoc() map[string]string {
 }
 
 var map_CSIDriverConfigSpec = map[string]string{
-	"":             "CSIDriverConfigSpec defines configuration spec that can be used to optionally configure a specific CSI Driver.",
-	"driverType":   "driverType indicates type of CSI driver for which the driverConfig is being applied to. Valid values are: AWS, Azure, GCP, IBMCloud, vSphere, SecretsStore and omitted. Consumers should treat unknown values as a NO-OP.",
+	"":             "CSIDriverConfigSpec defines configuration spec that can be used to optionally configure a specific CSI Driver. Selecting Cinder requires cinder and prohibits all other driver configuration members. The cinder member must be omitted for all other driver types.",
+	"driverType":   "driverType indicates type of CSI driver for which the driverConfig is being applied to. Valid values are: AWS, Azure, GCP, IBMCloud, vSphere, SecretsStore and empty. Cinder is also valid when CinderCSIDirectAttach is enabled. Consumers should treat unknown values as a NO-OP.",
 	"aws":          "aws is used to configure the AWS CSI driver.",
 	"azure":        "azure is used to configure the Azure CSI driver.",
 	"gcp":          "gcp is used to configure the GCP CSI driver.",
 	"ibmcloud":     "ibmcloud is used to configure the IBM Cloud CSI driver.",
 	"vSphere":      "vSphere is used to configure the vsphere CSI driver.",
 	"secretsStore": "secretsStore is used to configure the Secrets Store CSI driver.",
+	"cinder":       "cinder is required when driverType is Cinder and forbidden otherwise. Omission preserves Nova attachment unless the operator has locked Direct, in which case the operator rejects removal without changing the mode.",
 }
 
 func (CSIDriverConfigSpec) SwaggerDoc() map[string]string {
 	return map_CSIDriverConfigSpec
 }
 
+var map_CinderBackendConfig = map[string]string{
+	"":          "CinderBackendConfig projects a Secret's files at a supported sidecar directory.",
+	"name":      "name is required and uniquely identifies this source within backendConfig. It must contain 1 to 63 lowercase alphanumeric characters or hyphens, starting and ending with an alphanumeric character.",
+	"secret":    "secret is required and names an administrator-managed Secret in openshift-cluster-csi-drivers. All data keys become read-only sidecar files. The operator validates the Secret's existence and contents.",
+	"mountPath": "mountPath is required. The only supported value is /etc/ceph, the read-only sidecar directory for Ceph configuration and keyrings.",
+}
+
+func (CinderBackendConfig) SwaggerDoc() map[string]string {
+	return map_CinderBackendConfig
+}
+
+var map_CinderBackendSecret = map[string]string{
+	"":     "CinderBackendSecret names a backend configuration Secret in openshift-cluster-csi-drivers.",
+	"name": "name is required and identifies the Secret. It must contain 1 to 253 lowercase alphanumeric characters, hyphens, or dots. Each dot-separated component must start and end with an alphanumeric character.",
+}
+
+func (CinderBackendSecret) SwaggerDoc() map[string]string {
+	return map_CinderBackendSecret
+}
+
+var map_CinderCSIDriverConfigSpec = map[string]string{
+	"":              "CinderCSIDriverConfigSpec configures Cinder volume attachment and backend files.",
+	"attachMode":    "attachMode is required. Valid values are Nova (Nova-mediated attachment) and Direct (worker-side os-brick attachment without Nova on all workers). The operator permits Direct only on self-managed OpenStack clusters before any Cinder use and when no Cinder PVCs or PVs exist. The operator locks Nova on first Cinder use and Direct on acceptance, before rollout. The lock survives rollout failures and resource recreation. The operator rejects changes or removal that would change the locked mode. HyperShift rejects Direct without changing workloads. These restrictions are enforced by the operator, not API admission.",
+	"backendConfig": "backendConfig optionally supplies up to 16 read-only Secret file sources to each os-brick sidecar. Source names must be unique; mount paths may be shared if filenames differ. Non-empty configuration requires Direct mode. Omission or an empty list mounts no additional files. Before rollout, the operator rejects missing or empty Secrets, unsafe filenames, and duplicate destination filenames. Sources may be updated without changing the mode.",
+}
+
+func (CinderCSIDriverConfigSpec) SwaggerDoc() map[string]string {
+	return map_CinderCSIDriverConfigSpec
+}
+
+var map_CinderCSIDriverStatus = map[string]string{
+	"":                   "CinderCSIDriverStatus reports the last successfully applied attachment mode. An empty status is valid before a rollout has completed.",
+	"observedAttachMode": "observedAttachMode optionally reports the last successfully completed controller and node rollout. Valid values are Nova (Nova-mediated attachment) and Direct (worker-side os-brick attachment without Nova). Omission means no completed rollout has been observed. Pending, failed, or rejected changes retain the previous value. This is neither the mode lock nor proof that the current generation has rolled out; check conditions and observedGeneration.",
+}
+
+func (CinderCSIDriverStatus) SwaggerDoc() map[string]string {
+	return map_CinderCSIDriverStatus
+}
+
 var map_ClusterCSIDriver = map[string]string{
-	"":         "ClusterCSIDriver object allows management and configuration of a CSI driver operator installed by default in OpenShift. Name of the object must be name of the CSI driver it operates. See CSIDriverName type for list of allowed values.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"":         "ClusterCSIDriver object allows management and configuration of a CSI driver operator installed by default in OpenShift. Name of the object must be name of the CSI driver it operates. See CSIDriverName type for list of allowed values. With CinderCSIDirectAttach enabled, Cinder configuration and status are valid only on cinder.csi.openstack.org, which permits only omitted or Cinder configuration.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 	"spec":     "spec holds user settable values for configuration",
 	"status":   "status holds observed values from the cluster. They may not be overridden.",
@@ -708,7 +748,8 @@ func (ClusterCSIDriverSpec) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterCSIDriverStatus = map[string]string{
-	"": "ClusterCSIDriverStatus is the observed status of CSI driver operator",
+	"":       "ClusterCSIDriverStatus is the observed status of CSI driver operator",
+	"cinder": "cinder optionally reports Cinder configuration on cinder.csi.openstack.org. When omitted, no completed Cinder rollout has been reported.",
 }
 
 func (ClusterCSIDriverStatus) SwaggerDoc() map[string]string {

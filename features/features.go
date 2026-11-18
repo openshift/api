@@ -1139,6 +1139,14 @@ var (
 						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 
+	FeatureGateCinderCSIDirectAttach = newFeatureGate("CinderCSIDirectAttach").
+						reportProblemsToJiraComponent("Storage / OpenStack CSI Drivers").
+						contactPerson("mandre").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/2174").
+						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						mustRegister()
+
 	FeatureGateStoragePathAlert = newFeatureGate("StoragePathAlert").
 					reportProblemsToJiraComponent("Storage / Operators").
 					contactPerson("jsafrane").

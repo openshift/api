@@ -1139,6 +1139,14 @@ var (
 						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 
+	FeatureGateWorkloadWithJob = newFeatureGate("WorkloadWithJob").
+					reportProblemsToJiraComponent("node").
+					contactPerson("kannon92").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/5547").
+					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					mustRegister()
+
 	FeatureGateStoragePathAlert = newFeatureGate("StoragePathAlert").
 					reportProblemsToJiraComponent("Storage / Operators").
 					contactPerson("jsafrane").

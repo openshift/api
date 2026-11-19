@@ -33,6 +33,7 @@ crd_globs="\
     operator/v1/zz_generated.crd-manifests/*_csi-driver_01_clustercsidrivers*.crd.yaml
     insights/v1/zz_generated.crd-manifests/0000_10_insights_01_datagathers*.crd.yaml\
     operator/v1/zz_generated.crd-manifests/0000_50_insights_00_insightsoperators*.crd.yaml
+    operatoringress/v1/zz_generated.crd-manifests/0000_50_dns_01_dnsrecords*.crd.yaml
     operator/v1/zz_generated.crd-manifests/0000_30_cluster-api_01_clusterapis*.crd.yaml
     operator/v1/zz_generated.crd-manifests/0000_50_ingress_02_ingresses*.crd.yaml
     operator/v1/zz_generated.crd-manifests/0000_50_ingress_00_ingresscontrollers*.crd.yaml

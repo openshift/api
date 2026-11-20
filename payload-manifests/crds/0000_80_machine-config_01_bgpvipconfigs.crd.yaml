@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/merged-by-featuregates: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
-    release.openshift.io/feature-set: CustomNoUpgrade,DevPreviewNoUpgrade
+    release.openshift.io/feature-set: CustomNoUpgrade,DevPreviewNoUpgrade,TechPreviewNoUpgrade
   labels:
     openshift.io/operator-managed: ""
   name: bgpvipconfigs.machineconfiguration.openshift.io
@@ -217,11 +217,11 @@ spec:
               hostOverrides:
                 description: |-
                   hostOverrides replaces (does not merge with) defaultPeers for the
-                  named nodes. Only the per-node peer file rendered by the
+                  named control plane nodes. Only the per-node peer file rendered by the
                   machine-config-operator consumes overrides; the cluster-wide session
                   configuration rendered by the cluster-network-operator uses
                   defaultPeers. When omitted, all nodes use defaultPeers; when set, must
-                  have at least 1 entry and must not exceed 256 entries, unique by
+                  have at least 1 entry and must not exceed 16 entries, unique by
                   hostname.
                 items:
                   description: BGPVIPHostPeers is a per-node replacement peer list.
@@ -369,7 +369,7 @@ spec:
                   - hostname
                   - peers
                   type: object
-                maxItems: 256
+                maxItems: 16
                 minItems: 1
                 type: array
                 x-kubernetes-list-map-keys:

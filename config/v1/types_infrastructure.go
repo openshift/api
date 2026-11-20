@@ -4,6 +4,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// Keep the root BGPBasedVIPManagement and MutableTopology validation rules below
+// in sync with manual-override-crd-manifests/infrastructures.config.openshift.io/BGPBasedVIPManagement+MutableTopology.yaml.
+// That override replaces the generated validation list when both gates are enabled.
+
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -19,6 +23,7 @@ import (
 // +kubebuilder:resource:path=infrastructures,scope=Cluster
 // +kubebuilder:subresource:status
 // +kubebuilder:metadata:annotations=release.openshift.io/bootstrap-required=true
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=BGPBasedVIPManagement,rule="!has(oldSelf.status) || !has(oldSelf.status.platformStatus) || !has(oldSelf.status.platformStatus.baremetal) || !has(oldSelf.status.platformStatus.baremetal.vipManagement) || (has(self.status) && has(self.status.platformStatus) && has(self.status.platformStatus.baremetal) && has(self.status.platformStatus.baremetal.vipManagement))",message="status.platformStatus.baremetal.vipManagement may not be removed once set"
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=MutableTopology,rule="!has(self.spec.controlPlaneTopology) || (has(oldSelf.spec.controlPlaneTopology) && self.spec.controlPlaneTopology == oldSelf.spec.controlPlaneTopology) || (has(self.status.controlPlaneTopology) && self.spec.controlPlaneTopology == self.status.controlPlaneTopology) || (has(self.status.controlPlaneTopology) && self.status.controlPlaneTopology == 'SingleReplica' && self.spec.controlPlaneTopology == 'HighlyAvailable')",message="spec.controlPlaneTopology must match status.controlPlaneTopology or be set to HighlyAvailable when status.controlPlaneTopology is SingleReplica"
 type Infrastructure struct {
 	metav1.TypeMeta `json:",inline"`
@@ -1149,7 +1154,8 @@ type BareMetalPlatformStatus struct {
 	// vipManagement indicates which VIP management mechanism is active
 	// on this cluster.
 	// Allowed values are `Keepalived`, `BGP`, and omitted.
-	// Once set to a non-empty value, this field is immutable.
+	// Once set to a non-empty value, this field is immutable and may not be removed.
+	// The enclosing baremetal, platformStatus, and status objects may not be removed either.
 	// When set to `BGP`, kube-vip (Routing Table Mode) and frr-k8s are
 	// deployed as static pods to advertise VIPs via BGP, replacing the
 	// default keepalived/VRRP mechanism.

@@ -303,7 +303,10 @@ spec:
                   to render templates under ./templates/
                 type: object
               infra:
-                description: infra holds the infrastructure details
+                description: |-
+                  infra holds the infrastructure details
+                  Once infra.status.platformStatus.baremetal.vipManagement is set, neither
+                  that field nor any of its enclosing objects may be removed or set to null.
                 nullable: true
                 properties:
                   apiVersion:

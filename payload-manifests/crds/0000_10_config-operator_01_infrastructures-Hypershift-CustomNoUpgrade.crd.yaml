@@ -1838,7 +1838,8 @@ spec:
                           vipManagement indicates which VIP management mechanism is active
                           on this cluster.
                           Allowed values are `Keepalived`, `BGP`, and omitted.
-                          Once set to a non-empty value, this field is immutable.
+                          Once set to a non-empty value, this field is immutable and may not be removed.
+                          The enclosing baremetal, platformStatus, and status objects may not be removed either.
                           When set to `BGP`, kube-vip (Routing Table Mode) and frr-k8s are
                           deployed as static pods to advertise VIPs via BGP, replacing the
                           default keepalived/VRRP mechanism.
@@ -3174,6 +3175,12 @@ spec:
         - spec
         type: object
         x-kubernetes-validations:
+        - message: status.platformStatus.baremetal.vipManagement may not be removed
+            once set
+          rule: '!has(oldSelf.status) || !has(oldSelf.status.platformStatus) || !has(oldSelf.status.platformStatus.baremetal)
+            || !has(oldSelf.status.platformStatus.baremetal.vipManagement) || (has(self.status)
+            && has(self.status.platformStatus) && has(self.status.platformStatus.baremetal)
+            && has(self.status.platformStatus.baremetal.vipManagement))'
         - message: spec.controlPlaneTopology must match status.controlPlaneTopology
             or be set to HighlyAvailable when status.controlPlaneTopology is SingleReplica
           rule: '!has(self.spec.controlPlaneTopology) || (has(oldSelf.spec.controlPlaneTopology)

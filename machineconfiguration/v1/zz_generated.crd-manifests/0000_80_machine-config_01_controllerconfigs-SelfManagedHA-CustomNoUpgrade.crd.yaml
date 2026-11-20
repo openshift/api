@@ -64,14 +64,16 @@ spec:
                 type: string
               bgpVIPPeersJSON:
                 description: |-
-                  bgpVIPPeersJSON carries the BGP VIP peer configuration (the config.json
-                  payload of the bgp-vip-config ConfigMap) for rendering the frr-k8s
-                  static pod peer file on control plane nodes. Only set when BGP-based
-                  VIP management is enabled.
+                  bgpVIPPeersJSON carries the JSON-serialized BGP VIP peer configuration
+                  derived by the machine-config-operator from the BGPVIPConfig spec and
+                  the cluster API and Ingress VIPs. It contains references to password
+                  Secrets in openshift-config, not plaintext passwords. The references
+                  are resolved when rendering the frr-k8s static pod peer file on control
+                  plane nodes. Only set when BGP-based VIP management is enabled.
                   When omitted, BGP-based VIP management is not configured and no
                   frr-k8s peer file is rendered.
-                  When set, the value must be between 1 and 65536 characters long.
-                maxLength: 65536
+                  When set, the value must be between 1 and 262144 characters long.
+                maxLength: 262144
                 minLength: 1
                 type: string
               cloudProviderCAData:
@@ -314,7 +316,10 @@ spec:
                   to render templates under ./templates/
                 type: object
               infra:
-                description: infra holds the infrastructure details
+                description: |-
+                  infra holds the infrastructure details
+                  Once infra.status.platformStatus.baremetal.vipManagement is set, neither
+                  that field nor any of its enclosing objects may be removed or set to null.
                 nullable: true
                 properties:
                   apiVersion:
@@ -2147,7 +2152,8 @@ spec:
                                   vipManagement indicates which VIP management mechanism is active
                                   on this cluster.
                                   Allowed values are `Keepalived`, `BGP`, and omitted.
-                                  Once set to a non-empty value, this field is immutable.
+                                  Once set to a non-empty value, this field is immutable and may not be removed.
+                                  The enclosing baremetal, platformStatus, and status objects may not be removed either.
                                   When set to `BGP`, kube-vip (Routing Table Mode) and frr-k8s are
                                   deployed as static pods to advertise VIPs via BGP, replacing the
                                   default keepalived/VRRP mechanism.
@@ -3746,6 +3752,15 @@ spec:
         required:
         - spec
         type: object
+        x-kubernetes-validations:
+        - message: spec.infra.status.platformStatus.baremetal.vipManagement may not
+            be removed once set
+          rule: '!has(oldSelf.spec) || !has(oldSelf.spec.infra) || !has(oldSelf.spec.infra.status)
+            || !has(oldSelf.spec.infra.status.platformStatus) || !has(oldSelf.spec.infra.status.platformStatus.baremetal)
+            || !has(oldSelf.spec.infra.status.platformStatus.baremetal.vipManagement)
+            || (has(self.spec) && has(self.spec.infra) && has(self.spec.infra.status)
+            && has(self.spec.infra.status.platformStatus) && has(self.spec.infra.status.platformStatus.baremetal)
+            && has(self.spec.infra.status.platformStatus.baremetal.vipManagement))'
     served: true
     storage: true
     subresources:

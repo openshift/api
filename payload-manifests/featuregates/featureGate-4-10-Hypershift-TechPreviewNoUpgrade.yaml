@@ -400,6 +400,9 @@
                         "name": "OpenStackMaxAllowedAddressPairs"
                     },
                     {
+                        "name": "PodAndContainerStatsFromCRI"
+                    },
+                    {
                         "name": "SELinuxMount"
                     },
                     {

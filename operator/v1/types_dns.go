@@ -170,7 +170,8 @@ type Server struct {
 	Name string `json:"name"`
 	// zones is required and specifies the subdomains that Server is authoritative for.
 	// Zones must conform to the rfc1123 definition of a subdomain. Specifying the
-	// cluster domain (i.e., "cluster.local") is invalid.
+	// cluster domain (i.e., "cluster.local") is invalid. Duplicate zones are not allowed.
+	// +listType=set
 	Zones []string `json:"zones"`
 	// forwardPlugin defines a schema for configuring CoreDNS to proxy DNS messages
 	// to upstream resolvers.

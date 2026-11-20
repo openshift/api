@@ -19,3 +19,50 @@ tests:
             upstreams:
             - port: 53
               type: SystemResolvConf
+    - name: Should reject a server with duplicate zones
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          servers:
+          - name: foo
+            zones:
+            - foo.com
+            - foo.com
+            forwardPlugin:
+              upstreams:
+              - 1.1.1.1
+      expectedError: "Duplicate value: \"foo.com\""
+    - name: Should accept a server with distinct zones
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          servers:
+          - name: foo
+            zones:
+            - foo.com
+            - bar.com
+            forwardPlugin:
+              upstreams:
+              - 1.1.1.1
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          servers:
+          - name: foo
+            zones:
+            - foo.com
+            - bar.com
+            forwardPlugin:
+              policy: Random
+              upstreams:
+              - 1.1.1.1
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf

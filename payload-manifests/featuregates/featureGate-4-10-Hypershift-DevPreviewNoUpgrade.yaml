@@ -20,6 +20,9 @@
                         "name": "AuthenticationComponentProxy"
                     },
                     {
+                        "name": "AutomatedEtcdBackup"
+                    },
+                    {
                         "name": "CRIOCredentialProviderConfig"
                     },
                     {
@@ -116,9 +119,6 @@
                     },
                     {
                         "name": "AuthenticationComponentProxyExternalOIDC"
-                    },
-                    {
-                        "name": "AutomatedEtcdBackup"
                     },
                     {
                         "name": "AzureDedicatedHosts"

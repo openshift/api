@@ -19,6 +19,9 @@ import (
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=clustercsidrivers,scope=Cluster
 // +kubebuilder:subresource:status
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=CinderCSIDirectAttach,rule="self.spec.?driverConfig.?driverType.orValue('') == 'Cinder' ? self.metadata.name == 'cinder.csi.openstack.org' : true",message="driverType Cinder requires metadata.name cinder.csi.openstack.org"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=CinderCSIDirectAttach,rule="self.metadata.name == 'cinder.csi.openstack.org' ? self.spec.?driverConfig.?driverType.orValue('') in ['', 'Cinder'] : true",message="the Cinder resource permits only omitted or Cinder driver configuration"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=CinderCSIDirectAttach,rule="self.?status.?cinder.hasValue() ? self.metadata.name == 'cinder.csi.openstack.org' : true",message="Cinder status is valid only on the Cinder resource"
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/701
 // +openshift:file-pattern=cvoRunLevel=0000_50,operatorName=csi-driver,operatorOrdering=01
 // +kubebuilder:validation:XValidation:rule="self.spec.?driverConfig.driverType.orValue('') == 'SecretsStore' ? self.metadata.name == 'secrets-store.csi.k8s.io' : true",message="driverType 'SecretsStore' requires metadata.name 'secrets-store.csi.k8s.io'"
@@ -28,6 +31,8 @@ import (
 // ClusterCSIDriver object allows management and configuration of a CSI driver operator
 // installed by default in OpenShift. Name of the object must be name of the CSI driver
 // it operates. See CSIDriverName type for list of allowed values.
+// With CinderCSIDirectAttach enabled, Cinder configuration and status are valid
+// only on cinder.csi.openstack.org, which permits only omitted or Cinder configuration.
 //
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
@@ -116,7 +121,8 @@ type ClusterCSIDriverSpec struct {
 }
 
 // CSIDriverType indicates type of CSI driver being configured.
-// +kubebuilder:validation:Enum="";AWS;Azure;GCP;IBMCloud;vSphere;SecretsStore
+// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum="";AWS;Azure;GCP;IBMCloud;vSphere;SecretsStore
+// +openshift:validation:FeatureGateAwareEnum:featureGate=CinderCSIDirectAttach,enum="";AWS;Azure;GCP;IBMCloud;vSphere;SecretsStore;Cinder
 type CSIDriverType string
 
 const (
@@ -126,17 +132,23 @@ const (
 	IBMCloudDriverType     CSIDriverType = "IBMCloud"
 	VSphereDriverType      CSIDriverType = "vSphere"
 	SecretsStoreDriverType CSIDriverType = "SecretsStore"
+	CinderDriverType       CSIDriverType = "Cinder"
 )
 
 // CSIDriverConfigSpec defines configuration spec that can be
 // used to optionally configure a specific CSI Driver.
+// Selecting Cinder requires cinder and prohibits all other driver configuration
+// members. The cinder member must be omitted for all other driver types.
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=CinderCSIDirectAttach,rule="has(self.driverType) && self.driverType == 'Cinder' ? has(self.cinder) : !has(self.cinder)",message="cinder must be set if driverType is Cinder, but remain unset otherwise"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=CinderCSIDirectAttach,rule="has(self.driverType) && self.driverType == 'Cinder' ? !has(self.aws) && !has(self.azure) && !has(self.gcp) && !has(self.ibmcloud) && !has(self.vSphere) && !has(self.secretsStore) : true",message="other driver configuration must be unset when driverType is Cinder"
 // +kubebuilder:validation:XValidation:rule="has(self.driverType) && self.driverType == 'IBMCloud' ? has(self.ibmcloud) : !has(self.ibmcloud)",message="ibmcloud must be set if driverType is 'IBMCloud', but remain unset otherwise"
 // +kubebuilder:validation:XValidation:rule="has(self.driverType) && self.driverType == 'SecretsStore' ? has(self.secretsStore) : !has(self.secretsStore)",message="secretsStore must be set if driverType is 'SecretsStore', but remain unset otherwise"
 // +union
 type CSIDriverConfigSpec struct {
 	// driverType indicates type of CSI driver for which the
 	// driverConfig is being applied to.
-	// Valid values are: AWS, Azure, GCP, IBMCloud, vSphere, SecretsStore and omitted.
+	// Valid values are: AWS, Azure, GCP, IBMCloud, vSphere, SecretsStore and empty.
+	// Cinder is also valid when CinderCSIDirectAttach is enabled.
 	// Consumers should treat unknown values as a NO-OP.
 	// +required
 	// +unionDiscriminator
@@ -165,7 +177,99 @@ type CSIDriverConfigSpec struct {
 	// secretsStore is used to configure the Secrets Store CSI driver.
 	// +optional
 	SecretsStore SecretsStoreCSIDriverConfigSpec `json:"secretsStore,omitzero"`
+
+	// cinder is required when driverType is Cinder and forbidden otherwise.
+	// Omission preserves Nova attachment unless the operator has locked Direct,
+	// in which case the operator rejects removal without changing the mode.
+	// +openshift:enable:FeatureGate=CinderCSIDirectAttach
+	// +optional
+	Cinder CinderCSIDriverConfigSpec `json:"cinder,omitzero"`
 }
+
+// CinderCSIDriverConfigSpec configures Cinder volume attachment and backend files.
+// +kubebuilder:validation:XValidation:rule="self.attachMode == 'Direct' || !has(self.backendConfig) || size(self.backendConfig) == 0",message="backendConfig is valid only in Direct mode"
+type CinderCSIDriverConfigSpec struct {
+	// attachMode is required. Valid values are Nova (Nova-mediated attachment)
+	// and Direct (worker-side os-brick attachment without Nova on all workers).
+	// The operator permits Direct only on self-managed OpenStack clusters before
+	// any Cinder use and when no Cinder PVCs or PVs exist.
+	// The operator locks Nova on first Cinder use and Direct on acceptance,
+	// before rollout. The lock survives rollout failures and resource recreation.
+	// The operator rejects changes or removal that would change the locked mode.
+	// HyperShift rejects Direct without changing workloads. These restrictions
+	// are enforced by the operator, not API admission.
+	// +required
+	AttachMode CinderAttachMode `json:"attachMode,omitempty"`
+
+	// backendConfig optionally supplies up to 16 read-only Secret file sources
+	// to each os-brick sidecar. Source names must be unique; mount paths may be
+	// shared if filenames differ. Non-empty configuration requires Direct mode.
+	// Omission or an empty list mounts no additional files. Before rollout, the
+	// operator rejects missing or empty Secrets, unsafe filenames, and duplicate
+	// destination filenames. Sources may be updated without changing the mode.
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MinItems=0
+	// +kubebuilder:validation:MaxItems=16
+	// +optional
+	BackendConfig []CinderBackendConfig `json:"backendConfig,omitempty"`
+}
+
+// CinderAttachMode selects the Cinder volume attachment mechanism.
+// +kubebuilder:validation:Enum=Nova;Direct
+type CinderAttachMode string
+
+const (
+	// CinderAttachModeNova uses Nova-mediated volume attachment.
+	CinderAttachModeNova CinderAttachMode = "Nova"
+	// CinderAttachModeDirect uses worker-side os-brick attachment without Nova.
+	CinderAttachModeDirect CinderAttachMode = "Direct"
+)
+
+// CinderBackendConfig projects a Secret's files at a supported sidecar directory.
+type CinderBackendConfig struct {
+	// name is required and uniquely identifies this source within backendConfig.
+	// It must contain 1 to 63 lowercase alphanumeric characters or hyphens,
+	// starting and ending with an alphanumeric character.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	// +kubebuilder:validation:XValidation:rule="self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')",message="name must be a DNS label"
+	// +required
+	Name string `json:"name,omitempty"`
+
+	// secret is required and names an administrator-managed Secret in
+	// openshift-cluster-csi-drivers. All data keys become read-only sidecar files.
+	// The operator validates the Secret's existence and contents.
+	// +required
+	Secret CinderBackendSecret `json:"secret,omitzero"`
+
+	// mountPath is required. The only supported value is /etc/ceph, the read-only
+	// sidecar directory for Ceph configuration and keyrings.
+	// +required
+	MountPath CinderBackendMountPath `json:"mountPath,omitempty"`
+}
+
+// CinderBackendSecret names a backend configuration Secret in
+// openshift-cluster-csi-drivers.
+type CinderBackendSecret struct {
+	// name is required and identifies the Secret. It must contain 1 to 253
+	// lowercase alphanumeric characters, hyphens, or dots. Each dot-separated
+	// component must start and end with an alphanumeric character.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=253
+	// +kubebuilder:validation:XValidation:rule="self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?([.][a-z0-9]([-a-z0-9]*[a-z0-9])?)*$')",message="secret name must be a DNS subdomain of 1 to 253 characters"
+	// +required
+	Name string `json:"name,omitempty"`
+}
+
+// CinderBackendMountPath is an allowed backend file destination in the sidecar.
+// +kubebuilder:validation:Enum="/etc/ceph"
+type CinderBackendMountPath string
+
+const (
+	// CinderBackendMountPathCeph is the directory for Ceph configuration and keyrings.
+	CinderBackendMountPathCeph CinderBackendMountPath = "/etc/ceph"
+)
 
 // AWSCSIDriverConfigSpec defines properties that can be configured for the AWS CSI driver.
 type AWSCSIDriverConfigSpec struct {
@@ -553,6 +657,27 @@ type SecretsStoreTokenRequest struct {
 // ClusterCSIDriverStatus is the observed status of CSI driver operator
 type ClusterCSIDriverStatus struct {
 	OperatorStatus `json:",inline"`
+
+	// cinder optionally reports Cinder configuration on cinder.csi.openstack.org.
+	// When omitted, no completed Cinder rollout has been reported.
+	// +openshift:enable:FeatureGate=CinderCSIDirectAttach
+	// +optional
+	Cinder *CinderCSIDriverStatus `json:"cinder,omitempty"`
+}
+
+// CinderCSIDriverStatus reports the last successfully applied attachment mode.
+// An empty status is valid before a rollout has completed.
+// +kubebuilder:validation:MinProperties=0
+type CinderCSIDriverStatus struct {
+	// observedAttachMode optionally reports the last successfully completed
+	// controller and node rollout. Valid values are Nova (Nova-mediated attachment)
+	// and Direct (worker-side os-brick attachment without Nova).
+	// Omission means no completed rollout has been observed. Pending, failed, or
+	// rejected changes retain the previous value. This is neither the mode lock
+	// nor proof that the current generation has rolled out; check conditions and
+	// observedGeneration.
+	// +optional
+	ObservedAttachMode CinderAttachMode `json:"observedAttachMode,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

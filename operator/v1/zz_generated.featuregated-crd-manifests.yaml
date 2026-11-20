@@ -97,6 +97,7 @@ clustercsidrivers.operator.openshift.io:
   Category: ""
   FeatureGates:
   - AWSEuropeanSovereignCloudInstall
+  - CinderCSIDirectAttach
   - VSphereConfigurableMaxAllowedBlockVolumesPerNode
   FilenameOperatorName: csi-driver
   FilenameOperatorOrdering: "01"

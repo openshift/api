@@ -1,0 +1,81 @@
+apiVersion: apiextensions.k8s.io/v1
+name: ClusterCSIDriver Cinder attachment
+crdName: clustercsidrivers.operator.openshift.io
+featureGates:
+- -CinderCSIDirectAttach
+tests:
+  onCreate:
+  - name: Should preserve Cinder defaults with the gate disabled
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec: {}
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should reject the Cinder discriminator with the gate disabled
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+    expectedError: 'Unsupported value: "Cinder"'
+  - name: Should prune gated Cinder configuration with the gate disabled
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: ''
+          cinder:
+            attachMode: Direct
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: ''
+        logLevel: Normal
+        operatorLogLevel: Normal
+  onUpdate:
+  - name: Should prune gated Cinder status with the gate disabled
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec: {}
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec: {}
+      status:
+        cinder:
+          observedAttachMode: Direct
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        logLevel: Normal
+        operatorLogLevel: Normal
+      status: {}

@@ -24,6 +24,8 @@ spec:
           ClusterCSIDriver object allows management and configuration of a CSI driver operator
           installed by default in OpenShift. Name of the object must be name of the CSI driver
           it operates. See CSIDriverName type for list of allowed values.
+          With CinderCSIDirectAttach enabled, Cinder configuration and status are valid
+          only on cinder.csi.openstack.org, which permits only omitted or Cinder configuration.
 
           Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
         properties:
@@ -167,16 +169,9 @@ spec:
                     description: |-
                       driverType indicates type of CSI driver for which the
                       driverConfig is being applied to.
-                      Valid values are: AWS, Azure, GCP, IBMCloud, vSphere, SecretsStore and omitted.
+                      Valid values are: AWS, Azure, GCP, IBMCloud, vSphere, SecretsStore and empty.
+                      Cinder is also valid when CinderCSIDirectAttach is enabled.
                       Consumers should treat unknown values as a NO-OP.
-                    enum:
-                    - ""
-                    - AWS
-                    - Azure
-                    - GCP
-                    - IBMCloud
-                    - vSphere
-                    - SecretsStore
                     type: string
                   gcp:
                     description: gcp is used to configure the GCP CSI driver.

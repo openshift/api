@@ -148,6 +148,9 @@
                         "name": "CRDCompatibilityRequirementOperator"
                     },
                     {
+                        "name": "CinderCSIDirectAttach"
+                    },
+                    {
                         "name": "ClientsPreferCBOR"
                     },
                     {

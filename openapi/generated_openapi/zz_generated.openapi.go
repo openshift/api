@@ -1148,6 +1148,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1.CSISnapshotControllerStatus{}.OpenAPIModelName():                            schema_openshift_api_operator_v1_CSISnapshotControllerStatus(ref),
 		operatorv1.Capability{}.OpenAPIModelName():                                             schema_openshift_api_operator_v1_Capability(ref),
 		operatorv1.CapabilityVisibility{}.OpenAPIModelName():                                   schema_openshift_api_operator_v1_CapabilityVisibility(ref),
+		operatorv1.CinderBackendConfig{}.OpenAPIModelName():                                    schema_openshift_api_operator_v1_CinderBackendConfig(ref),
+		operatorv1.CinderBackendSecret{}.OpenAPIModelName():                                    schema_openshift_api_operator_v1_CinderBackendSecret(ref),
+		operatorv1.CinderCSIDriverConfigSpec{}.OpenAPIModelName():                              schema_openshift_api_operator_v1_CinderCSIDriverConfigSpec(ref),
+		operatorv1.CinderCSIDriverStatus{}.OpenAPIModelName():                                  schema_openshift_api_operator_v1_CinderCSIDriverStatus(ref),
 		operatorv1.ClientTLS{}.OpenAPIModelName():                                              schema_openshift_api_operator_v1_ClientTLS(ref),
 		operatorv1.CloudCredential{}.OpenAPIModelName():                                        schema_openshift_api_operator_v1_CloudCredential(ref),
 		operatorv1.CloudCredentialList{}.OpenAPIModelName():                                    schema_openshift_api_operator_v1_CloudCredentialList(ref),
@@ -54852,12 +54856,12 @@ func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCa
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "CSIDriverConfigSpec defines configuration spec that can be used to optionally configure a specific CSI Driver.",
+				Description: "CSIDriverConfigSpec defines configuration spec that can be used to optionally configure a specific CSI Driver. Selecting Cinder requires cinder and prohibits all other driver configuration members. The cinder member must be omitted for all other driver types.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"driverType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "driverType indicates type of CSI driver for which the driverConfig is being applied to. Valid values are: AWS, Azure, GCP, IBMCloud, vSphere, SecretsStore and omitted. Consumers should treat unknown values as a NO-OP.",
+							Description: "driverType indicates type of CSI driver for which the driverConfig is being applied to. Valid values are: AWS, Azure, GCP, IBMCloud, vSphere, SecretsStore and empty. Cinder is also valid when CinderCSIDirectAttach is enabled. Consumers should treat unknown values as a NO-OP.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -54900,6 +54904,13 @@ func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCa
 							Ref:         ref(operatorv1.SecretsStoreCSIDriverConfigSpec{}.OpenAPIModelName()),
 						},
 					},
+					"cinder": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cinder is required when driverType is Cinder and forbidden otherwise. Omission preserves Nova attachment unless the operator has locked Direct, in which case the operator rejects removal without changing the mode.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.CinderCSIDriverConfigSpec{}.OpenAPIModelName()),
+						},
+					},
 				},
 				Required: []string{"driverType"},
 			},
@@ -54911,6 +54922,7 @@ func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCa
 							"fields-to-discriminateBy": map[string]interface{}{
 								"aws":          "AWS",
 								"azure":        "Azure",
+								"cinder":       "Cinder",
 								"gcp":          "GCP",
 								"ibmcloud":     "IBMCloud",
 								"secretsStore": "SecretsStore",
@@ -54922,7 +54934,7 @@ func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			operatorv1.AWSCSIDriverConfigSpec{}.OpenAPIModelName(), operatorv1.AzureCSIDriverConfigSpec{}.OpenAPIModelName(), operatorv1.GCPCSIDriverConfigSpec{}.OpenAPIModelName(), operatorv1.IBMCloudCSIDriverConfigSpec{}.OpenAPIModelName(), operatorv1.SecretsStoreCSIDriverConfigSpec{}.OpenAPIModelName(), operatorv1.VSphereCSIDriverConfigSpec{}.OpenAPIModelName()},
+			operatorv1.AWSCSIDriverConfigSpec{}.OpenAPIModelName(), operatorv1.AzureCSIDriverConfigSpec{}.OpenAPIModelName(), operatorv1.CinderCSIDriverConfigSpec{}.OpenAPIModelName(), operatorv1.GCPCSIDriverConfigSpec{}.OpenAPIModelName(), operatorv1.IBMCloudCSIDriverConfigSpec{}.OpenAPIModelName(), operatorv1.SecretsStoreCSIDriverConfigSpec{}.OpenAPIModelName(), operatorv1.VSphereCSIDriverConfigSpec{}.OpenAPIModelName()},
 	}
 }
 
@@ -55220,6 +55232,128 @@ func schema_openshift_api_operator_v1_CapabilityVisibility(ref common.ReferenceC
 						map[string]interface{}{
 							"discriminator":            "state",
 							"fields-to-discriminateBy": map[string]interface{}{},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1_CinderBackendConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CinderBackendConfig projects a Secret's files at a supported sidecar directory.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is required and uniquely identifies this source within backendConfig. It must contain 1 to 63 lowercase alphanumeric characters or hyphens, starting and ending with an alphanumeric character.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"secret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "secret is required and names an administrator-managed Secret in openshift-cluster-csi-drivers. All data keys become read-only sidecar files. The operator validates the Secret's existence and contents.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.CinderBackendSecret{}.OpenAPIModelName()),
+						},
+					},
+					"mountPath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mountPath is required. The only supported value is /etc/ceph, the read-only sidecar directory for Ceph configuration and keyrings.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "secret", "mountPath"},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.CinderBackendSecret{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1_CinderBackendSecret(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CinderBackendSecret names a backend configuration Secret in openshift-cluster-csi-drivers.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is required and identifies the Secret. It must contain 1 to 253 lowercase alphanumeric characters, hyphens, or dots. Each dot-separated component must start and end with an alphanumeric character.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1_CinderCSIDriverConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CinderCSIDriverConfigSpec configures Cinder volume attachment and backend files.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"attachMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "attachMode is required. Valid values are Nova (Nova-mediated attachment) and Direct (worker-side os-brick attachment without Nova on all workers). The operator permits Direct only on self-managed OpenStack clusters before any Cinder use and when no Cinder PVCs or PVs exist. The operator locks Nova on first Cinder use and Direct on acceptance, before rollout. The lock survives rollout failures and resource recreation. The operator rejects changes or removal that would change the locked mode. HyperShift rejects Direct without changing workloads. These restrictions are enforced by the operator, not API admission.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"backendConfig": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "backendConfig optionally supplies up to 16 read-only Secret file sources to each os-brick sidecar. Source names must be unique; mount paths may be shared if filenames differ. Non-empty configuration requires Direct mode. Omission or an empty list mounts no additional files. Before rollout, the operator rejects missing or empty Secrets, unsafe filenames, and duplicate destination filenames. Sources may be updated without changing the mode.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(operatorv1.CinderBackendConfig{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"attachMode"},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.CinderBackendConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1_CinderCSIDriverStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CinderCSIDriverStatus reports the last successfully applied attachment mode. An empty status is valid before a rollout has completed.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"observedAttachMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedAttachMode optionally reports the last successfully completed controller and node rollout. Valid values are Nova (Nova-mediated attachment) and Direct (worker-side os-brick attachment without Nova). Omission means no completed rollout has been observed. Pending, failed, or rejected changes retain the previous value. This is neither the mode lock nor proof that the current generation has rolled out; check conditions and observedGeneration.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -56016,7 +56150,7 @@ func schema_openshift_api_operator_v1_ClusterCSIDriver(ref common.ReferenceCallb
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ClusterCSIDriver object allows management and configuration of a CSI driver operator installed by default in OpenShift. Name of the object must be name of the CSI driver it operates. See CSIDriverName type for list of allowed values.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Description: "ClusterCSIDriver object allows management and configuration of a CSI driver operator installed by default in OpenShift. Name of the object must be name of the CSI driver it operates. See CSIDriverName type for list of allowed values. With CinderCSIDirectAttach enabled, Cinder configuration and status are valid only on cinder.csi.openstack.org, which permits only omitted or Cinder configuration.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -56257,11 +56391,17 @@ func schema_openshift_api_operator_v1_ClusterCSIDriverStatus(ref common.Referenc
 							},
 						},
 					},
+					"cinder": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cinder optionally reports Cinder configuration on cinder.csi.openstack.org. When omitted, no completed Cinder rollout has been reported.",
+							Ref:         ref(operatorv1.CinderCSIDriverStatus{}.OpenAPIModelName()),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			operatorv1.GenerationStatus{}.OpenAPIModelName(), operatorv1.OperatorCondition{}.OpenAPIModelName()},
+			operatorv1.CinderCSIDriverStatus{}.OpenAPIModelName(), operatorv1.GenerationStatus{}.OpenAPIModelName(), operatorv1.OperatorCondition{}.OpenAPIModelName()},
 	}
 }
 

@@ -47,6 +47,9 @@
                         "name": "CBORServingAndStorage"
                     },
                     {
+                        "name": "CinderCSIDirectAttach"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {

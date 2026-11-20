@@ -946,7 +946,7 @@ var (
 					contactPerson("bnemec").
 					productScope(ocpSpecific).
 					enhancementPR("https://github.com/openshift/enhancements/pull/1803").
-					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
 	FeatureGateBGPBasedVIPManagement = newFeatureGate("BGPBasedVIPManagement").

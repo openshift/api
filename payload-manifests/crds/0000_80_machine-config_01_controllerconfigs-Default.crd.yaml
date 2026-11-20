@@ -1909,6 +1909,24 @@ spec:
                                   rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
                                     && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
                                     : true)'
+                              dnsRecordsType:
+                                description: |-
+                                  dnsRecordsType determines whether records for api, api-int, and ingress
+                                  are provided by the internal DNS service or externally.
+                                  Allowed values are `Internal`, `External`, and omitted.
+                                  When set to `Internal`, records are provided by the internal infrastructure and
+                                  no additional user configuration is required for the cluster to function.
+                                  When set to `External`, records are not provided by the internal infrastructure
+                                  and must be configured by the user on a DNS server outside the cluster.
+                                  Cluster nodes must use this external server for their upstream DNS requests.
+                                  This value may only be set when loadBalancer.type is set to UserManaged.
+                                  When omitted, this means the user has no opinion and the platform is left
+                                  to choose reasonable defaults. These defaults are subject to change over time.
+                                  The current default is `Internal`.
+                                enum:
+                                - Internal
+                                - External
+                                type: string
                               ingressIP:
                                 description: |-
                                   ingressIP is an external IP which routes to the default ingress controller.
@@ -1987,6 +2005,12 @@ spec:
                                   to the nodes in the cluster.
                                 type: string
                             type: object
+                            x-kubernetes-validations:
+                            - message: dnsRecordsType may only be set to External
+                                when loadBalancer.type is UserManaged
+                              rule: '!has(self.dnsRecordsType) || self.dnsRecordsType
+                                == ''Internal'' || (has(self.loadBalancer) && self.loadBalancer.type
+                                == ''UserManaged'')'
                           equinixMetal:
                             description: equinixMetal contains settings specific to
                               the Equinix Metal infrastructure provider.
@@ -2427,6 +2451,24 @@ spec:
                                   rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
                                     && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
                                     : true)'
+                              dnsRecordsType:
+                                description: |-
+                                  dnsRecordsType determines whether records for api, api-int, and ingress
+                                  are provided by the internal DNS service or externally.
+                                  Allowed values are `Internal`, `External`, and omitted.
+                                  When set to `Internal`, records are provided by the internal infrastructure and
+                                  no additional user configuration is required for the cluster to function.
+                                  When set to `External`, records are not provided by the internal infrastructure
+                                  and must be configured by the user on a DNS server outside the cluster.
+                                  Cluster nodes must use this external server for their upstream DNS requests.
+                                  This value may only be set when loadBalancer.type is set to UserManaged.
+                                  When omitted, this means the user has no opinion and the platform is left
+                                  to choose reasonable defaults. These defaults are subject to change over time.
+                                  The current default is `Internal`.
+                                enum:
+                                - Internal
+                                - External
+                                type: string
                               ingressIP:
                                 description: |-
                                   ingressIP is an external IP which routes to the default ingress controller.
@@ -2479,6 +2521,12 @@ spec:
                                       rule: oldSelf == '' || self == oldSelf
                                 type: object
                             type: object
+                            x-kubernetes-validations:
+                            - message: dnsRecordsType may only be set to External
+                                when loadBalancer.type is UserManaged
+                              rule: '!has(self.dnsRecordsType) || self.dnsRecordsType
+                                == ''Internal'' || (has(self.loadBalancer) && self.loadBalancer.type
+                                == ''UserManaged'')'
                           openstack:
                             description: openstack contains settings specific to the
                               OpenStack infrastructure provider.
@@ -2515,6 +2563,24 @@ spec:
                                 description: |-
                                   cloudName is the name of the desired OpenStack cloud in the
                                   client configuration file (`clouds.yaml`).
+                                type: string
+                              dnsRecordsType:
+                                description: |-
+                                  dnsRecordsType determines whether records for api, api-int, and ingress
+                                  are provided by the internal DNS service or externally.
+                                  Allowed values are `Internal`, `External`, and omitted.
+                                  When set to `Internal`, records are provided by the internal infrastructure and
+                                  no additional user configuration is required for the cluster to function.
+                                  When set to `External`, records are not provided by the internal infrastructure
+                                  and must be configured by the user on a DNS server outside the cluster.
+                                  Cluster nodes must use this external server for their upstream DNS requests.
+                                  This value may only be set when loadBalancer.type is set to UserManaged.
+                                  When omitted, this means the user has no opinion and the platform is left
+                                  to choose reasonable defaults. These defaults are subject to change over time.
+                                  The current default is `Internal`.
+                                enum:
+                                - Internal
+                                - External
                                 type: string
                               ingressIP:
                                 description: |-
@@ -2594,6 +2660,12 @@ spec:
                                   to the nodes in the cluster.
                                 type: string
                             type: object
+                            x-kubernetes-validations:
+                            - message: dnsRecordsType may only be set to External
+                                when loadBalancer.type is UserManaged
+                              rule: '!has(self.dnsRecordsType) || self.dnsRecordsType
+                                == ''Internal'' || (has(self.loadBalancer) && self.loadBalancer.type
+                                == ''UserManaged'')'
                           ovirt:
                             description: ovirt contains settings specific to the oVirt
                               infrastructure provider.
@@ -2626,6 +2698,24 @@ spec:
                                   rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
                                     && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
                                     : true)'
+                              dnsRecordsType:
+                                description: |-
+                                  dnsRecordsType determines whether records for api, api-int, and ingress
+                                  are provided by the internal DNS service or externally.
+                                  Allowed values are `Internal`, `External`, and omitted.
+                                  When set to `Internal`, records are provided by the internal infrastructure and
+                                  no additional user configuration is required for the cluster to function.
+                                  When set to `External`, records are not provided by the internal infrastructure
+                                  and must be configured by the user on a DNS server outside the cluster.
+                                  Cluster nodes must use this external server for their upstream DNS requests.
+                                  This value may only be set when loadBalancer.type is set to UserManaged.
+                                  When omitted, this means the user has no opinion and the platform is left
+                                  to choose reasonable defaults. These defaults are subject to change over time.
+                                  The current default is `Internal`.
+                                enum:
+                                - Internal
+                                - External
+                                type: string
                               ingressIP:
                                 description: |-
                                   ingressIP is an external IP which routes to the default ingress controller.
@@ -2683,6 +2773,12 @@ spec:
                                   a future release.'
                                 type: string
                             type: object
+                            x-kubernetes-validations:
+                            - message: dnsRecordsType may only be set to External
+                                when loadBalancer.type is UserManaged
+                              rule: '!has(self.dnsRecordsType) || self.dnsRecordsType
+                                == ''Internal'' || (has(self.loadBalancer) && self.loadBalancer.type
+                                == ''UserManaged'')'
                           powervs:
                             description: powervs contains settings specific to the
                               Power Systems Virtual Servers infrastructure provider.
@@ -2836,6 +2932,24 @@ spec:
                                   rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
                                     && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
                                     : true)'
+                              dnsRecordsType:
+                                description: |-
+                                  dnsRecordsType determines whether records for api, api-int, and ingress
+                                  are provided by the internal DNS service or externally.
+                                  Allowed values are `Internal`, `External`, and omitted.
+                                  When set to `Internal`, records are provided by the internal infrastructure and
+                                  no additional user configuration is required for the cluster to function.
+                                  When set to `External`, records are not provided by the internal infrastructure
+                                  and must be configured by the user on a DNS server outside the cluster.
+                                  Cluster nodes must use this external server for their upstream DNS requests.
+                                  This value may only be set when loadBalancer.type is set to UserManaged.
+                                  When omitted, this means the user has no opinion and the platform is left
+                                  to choose reasonable defaults. These defaults are subject to change over time.
+                                  The current default is `Internal`.
+                                enum:
+                                - Internal
+                                - External
+                                type: string
                               ingressIP:
                                 description: |-
                                   ingressIP is an external IP which routes to the default ingress controller.
@@ -2914,6 +3028,12 @@ spec:
                                   to the nodes in the cluster.
                                 type: string
                             type: object
+                            x-kubernetes-validations:
+                            - message: dnsRecordsType may only be set to External
+                                when loadBalancer.type is UserManaged
+                              rule: '!has(self.dnsRecordsType) || self.dnsRecordsType
+                                == ''Internal'' || (has(self.loadBalancer) && self.loadBalancer.type
+                                == ''UserManaged'')'
                         type: object
                     type: object
                 required:

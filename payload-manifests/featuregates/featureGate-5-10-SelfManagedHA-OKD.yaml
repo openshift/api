@@ -173,6 +173,9 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
+                        "name": "IngressCanaryNodePlacement"
+                    },
+                    {
                         "name": "IngressControllerLBSecurityGroupsAWS"
                     },
                     {

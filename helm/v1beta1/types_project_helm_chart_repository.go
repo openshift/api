@@ -60,7 +60,7 @@ type ProjectHelmChartRepositorySpec struct {
 type ConnectionConfigNamespaceScoped struct {
 
 	// Chart repository URL
-	// +kubebuilder:validation:Pattern=`^https?:\/\/`
+	// +kubebuilder:validation:Pattern=`^(https?|oci):\/\/`
 	// +kubebuilder:validation:MaxLength=2048
 	URL string `json:"url"`
 

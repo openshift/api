@@ -437,6 +437,9 @@
                     },
                     {
                         "name": "VSphereMultiVCenterDay2"
+                    },
+                    {
+                        "name": "WorkloadWithJob"
                     }
                 ],
                 "version": ""

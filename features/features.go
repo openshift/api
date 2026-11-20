@@ -178,6 +178,14 @@ var (
 						enable(inDevPreviewNoUpgrade()).
 						mustRegister()
 
+	FeatureGateOVNKubernetesStartupReadinessTimeout = newFeatureGate("OVNKubernetesStartupReadinessTimeout").
+							reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+							contactPerson("cragr").
+							productScope(ocpSpecific).
+							enhancementPR("https://github.com/openshift/enhancements/pull/2127").
+							enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+							mustRegister()
+
 	FeatureGateNoOverlayMode = newFeatureGate("NoOverlayMode").
 					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
 					contactPerson("pliurh").

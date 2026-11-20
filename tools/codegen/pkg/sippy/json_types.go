@@ -65,12 +65,13 @@ type SippyJob struct {
 }
 
 type SippyJobRun struct {
-	Variants        []string `json:"variants"`
-	Failed          bool     `json:"failed"`
-	FailedTestNames []string `json:"failed_test_names"`
-	KnownFailure    bool     `json:"known_failure"`
-	OverallResult   string   `json:"overall_result"`
-	TestGridURL     string   `json:"test_grid_url"`
+	Variants              []string `json:"variants"`
+	Failed                bool     `json:"failed"`
+	FailedTestNames       []string `json:"failed_test_names"`
+	KnownFailure          bool     `json:"known_failure"`
+	OverallResult         string   `json:"overall_result"`
+	TestGridURL           string   `json:"test_grid_url"`
+	InfrastructureFailure bool     `json:"infrastructure_failure"`
 }
 
 type SippyJobRunsResult struct {
@@ -366,4 +367,3 @@ func BuildSippyJobRunsForJobURL(release, jobName string, timestamp time.Time) st
 
 	return u.String()
 }
-

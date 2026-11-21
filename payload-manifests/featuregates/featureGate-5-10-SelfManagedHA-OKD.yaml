@@ -275,9 +275,6 @@
                         "name": "OpenStackMaxAllowedAddressPairs"
                     },
                     {
-                        "name": "PodAndContainerStatsFromCRI"
-                    },
-                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {

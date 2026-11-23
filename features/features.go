@@ -663,7 +663,7 @@ var (
 								contactPerson("bentito").
 								productScope(ocpSpecific).
 								enhancementPR("https://github.com/openshift/enhancements/pull/2163").
-								enable(inDevPreviewNoUpgrade()).
+								enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 								mustRegister()
 
 	FeatureGateIngressComponentRouteLabels = newFeatureGate("IngressComponentRouteLabels").

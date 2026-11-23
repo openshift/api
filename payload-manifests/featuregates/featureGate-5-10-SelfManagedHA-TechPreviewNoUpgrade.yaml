@@ -56,9 +56,6 @@
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
-                        "name": "IngressControllerResourceConfiguration"
-                    },
-                    {
                         "name": "KarpenterOperator"
                     },
                     {
@@ -293,6 +290,9 @@
                     },
                     {
                         "name": "IngressControllerMultipleHAProxyVersions"
+                    },
+                    {
+                        "name": "IngressControllerResourceConfiguration"
                     },
                     {
                         "name": "InsightsConfig"

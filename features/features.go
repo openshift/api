@@ -1144,7 +1144,7 @@ var (
 					contactPerson("jsafrane").
 					productScope(ocpSpecific).
 					enhancementPR("https://github.com/openshift/enhancements/pull/2108").
-					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
 	FeatureGateMetalEnrollmentAPI = newFeatureGate("MetalEnrollmentAPI").

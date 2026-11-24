@@ -282,9 +282,6 @@
                         "name": "SignatureStores"
                     },
                     {
-                        "name": "StoragePathAlert"
-                    },
-                    {
                         "name": "TLSGroupPreferences"
                     },
                     {
@@ -417,6 +414,9 @@
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"
+                    },
+                    {
+                        "name": "StoragePathAlert"
                     },
                     {
                         "name": "StoragePerformantSecurityPolicy"

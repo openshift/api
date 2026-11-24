@@ -56,7 +56,7 @@ tests:
           policy:
             rootOfTrust:
               policyType: Reject
-      expectedError: 'scopes must be empty when appliesTo is Default'
+      expectedError: 'scopes must be omitted when appliesTo is Default'
     - name: Should reject a non-Reject namespace default policy
       initial: |
         apiVersion: config.openshift.io/v1
@@ -68,4 +68,59 @@ tests:
               policyType: PublicKey
               publicKey:
                 keyData: LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFK0tpN0I3K2tpTFdPSmRQWXBZanRqUmtXVnBxRgpuNHl1TjU2VjZHaGdLRm5SZjJqemlweEFWR084cm0vWUVQU3d2clBORHJqdnA0YlpoNm5NR0Z0NzhBPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t
-      expectedError: 'appliesTo Default requires policyType Reject'
+      expectedError: 'appliesTo Default and policyType Reject must be specified together'
+    - name: Should reject an explicit empty scopes list on a default policy
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ImagePolicy
+        spec:
+          appliesTo: Default
+          policy:
+            rootOfTrust:
+              policyType: Reject
+          scopes: []
+      expectedError: scopes must be omitted when appliesTo is Default
+    - name: Should reject Reject without appliesTo Default
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ImagePolicy
+        spec:
+          policy:
+            rootOfTrust:
+              policyType: Reject
+      expectedError: appliesTo Default and policyType Reject must be specified together
+    - name: Should reject Reject on registry scopes
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ImagePolicy
+        spec:
+          policy:
+            rootOfTrust:
+              policyType: Reject
+          scopes:
+          - example.com
+      expectedError: appliesTo Default and policyType Reject must be specified together
+    - name: Should reject a public key on a default Reject policy
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ImagePolicy
+        spec:
+          appliesTo: Default
+          policy:
+            rootOfTrust:
+              policyType: Reject
+              publicKey:
+                keyData: LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFK0tpN0I3K2tpTFdPSmRQWXBZanRqUmtXVnBxRgpuNHl1TjU2VjZHaGdLRm5SZjJqemlweEFWR084cm0vWUVQU3d2clBORHJqdnA0YlpoNm5NR0Z0NzhBPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t
+      expectedError: publicKey is required when policyType is PublicKey, and forbidden otherwise
+    - name: Should reject signedIdentity on a default Reject policy
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ImagePolicy
+        spec:
+          appliesTo: Default
+          policy:
+            rootOfTrust:
+              policyType: Reject
+            signedIdentity:
+              matchPolicy: MatchRepository
+      expectedError: signedIdentity must not be set when policyType is Reject

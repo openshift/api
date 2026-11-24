@@ -177,9 +177,6 @@
                         "name": "IngressCanaryNodePlacement"
                     },
                     {
-                        "name": "IngressControllerLBSecurityGroupsAWS"
-                    },
-                    {
                         "name": "IngressControllerResourceConfiguration"
                     },
                     {
@@ -378,6 +375,9 @@
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
+                    },
+                    {
+                        "name": "IngressControllerLBSecurityGroupsAWS"
                     },
                     {
                         "name": "IngressControllerMultipleHAProxyVersions"

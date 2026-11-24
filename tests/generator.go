@@ -175,7 +175,7 @@ func generateOnCreateTable(onCreateTests []OnCreateTestSpec) {
 
 		// Fetch the object we just created from the API.
 		gotObj := newEmptyUnstructuredFrom(initialObj)
-		Expect(k8sClient.Get(ctx, objectKey(initialObj), gotObj))
+		Expect(k8sClient.Get(ctx, objectKey(initialObj), gotObj)).To(Succeed())
 
 		expectedObj, err := newUnstructuredFrom(in.expected)
 		Expect(err).ToNot(HaveOccurred(), "expected data should be a valid Kubernetes YAML resource when no expected error is provided")
@@ -232,7 +232,7 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string)
 			originalCRDObjectKey = objectKey(patchedCRD)
 
 			originalCRD := &apiextensionsv1.CustomResourceDefinition{}
-			Expect(k8sClient.Get(ctx, originalCRDObjectKey, originalCRD))
+			Expect(k8sClient.Get(ctx, originalCRDObjectKey, originalCRD)).To(Succeed())
 
 			originalCRDSpec = *originalCRD.Spec.DeepCopy()
 			originalCRD.Spec = patchedCRD.Spec
@@ -267,7 +267,7 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string)
 
 		if len(in.crdPatches) > 0 {
 			originalCRD := &apiextensionsv1.CustomResourceDefinition{}
-			Expect(k8sClient.Get(ctx, originalCRDObjectKey, originalCRD))
+			Expect(k8sClient.Get(ctx, originalCRDObjectKey, originalCRD)).To(Succeed())
 
 			originalCRD.Spec = originalCRDSpec
 
@@ -295,7 +295,7 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string)
 
 		// Fetch the object we just created from the API.
 		gotObj := newEmptyUnstructuredFrom(initialObj)
-		Expect(k8sClient.Get(ctx, objectKey(initialObj), gotObj))
+		Expect(k8sClient.Get(ctx, objectKey(initialObj), gotObj)).To(Succeed())
 
 		updatedObj, err := newUnstructuredFrom(in.updated)
 		Expect(err).ToNot(HaveOccurred(), "updated data should be a valid Kubernetes YAML resource")
@@ -329,7 +329,7 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string)
 			Expect(err).ToNot(HaveOccurred(), "unexpected error updating status")
 		}
 
-		Expect(k8sClient.Get(ctx, objectKey(initialObj), gotObj))
+		Expect(k8sClient.Get(ctx, objectKey(initialObj), gotObj)).To(Succeed())
 
 		expectedObj, err := newUnstructuredFrom(in.expected)
 		Expect(err).ToNot(HaveOccurred(), "expected data should be a valid Kubernetes YAML resource when no expected error is provided")

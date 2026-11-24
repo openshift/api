@@ -12423,9 +12423,16 @@ func schema_openshift_api_config_v1_ClusterImagePolicySpec(ref common.ReferenceC
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "CLusterImagePolicySpec is the specification of the ClusterImagePolicy custom resource.",
+				Description: "ClusterImagePolicySpec is the specification of the ClusterImagePolicy custom resource.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"appliesTo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "appliesTo specifies whether this policy applies to images that do not match any registry-specific policy. The only supported value is \"Default\". The \"Default\" value is available only when the ImagePolicyDenyByDefault feature gate is enabled. When omitted, the policy applies to the registry scopes listed in scopes. Omission is the v1 representation of registry-scoped policies. When set to \"Default\", scopes must be omitted and policyType must be \"Reject\". A cluster default does not prevent namespace-scoped signature-verification policies from applying to matching images.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"scopes": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -12433,7 +12440,7 @@ func schema_openshift_api_config_v1_ClusterImagePolicySpec(ref common.ReferenceC
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "scopes is a required field that defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. This support no more than 256 scopes in one object. If multiple scopes match a given image, only the policy requirements for the most specific scope apply. The policy requirements for more general scopes are ignored. In addition to setting a policy appropriate for your own deployed applications, make sure that a policy on the OpenShift image repositories quay.io/openshift-release-dev/ocp-release, quay.io/openshift-release-dev/ocp-v4.0-art-dev (or on a more general scope) allows deployment of the OpenShift images required for cluster operation. If a scope is configured in both the ClusterImagePolicy and the ImagePolicy, or if the scope in ImagePolicy is nested under one of the scopes from the ClusterImagePolicy, only the policy from the ClusterImagePolicy will be applied. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
+							Description: "scopes is an optional field that defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. Within each policy level (cluster or namespace), only requirements from the most-specific matching scope apply. When namespace intersection merging is enabled, the applicable cluster requirements and namespace requirements are combined, and all must be satisfied. In addition to setting a policy appropriate for your own deployed applications, make sure that a policy on the OpenShift image repositories quay.io/openshift-release-dev/ocp-release, quay.io/openshift-release-dev/ocp-v4.0-art-dev (or on a more general scope) allows deployment of the OpenShift images required for cluster operation. If a scope is configured in both the ClusterImagePolicy and the ImagePolicy, or if the scope in ImagePolicy is nested under one of the scopes from the ClusterImagePolicy, only the policy from the ClusterImagePolicy will be applied unless intersection merging is enabled in the namespace. scopes must be present when appliesTo is omitted and must be omitted when appliesTo is \"Default\". When present, the list may contain at most 256 entries. An empty list is allowed and selects no image scopes. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -12447,13 +12454,13 @@ func schema_openshift_api_config_v1_ClusterImagePolicySpec(ref common.ReferenceC
 					},
 					"policy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "policy is a required field that contains configuration to allow scopes to be verified, and defines how images not matching the verification policy will be treated.",
+							Description: "policy is a required field that specifies signature-verification requirements for scopes. When appliesTo is \"Default\", policy must instead specify Reject, which rejects images that do not match any registry-specific policy.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.ImageSigstoreVerificationPolicy{}.OpenAPIModelName()),
 						},
 					},
 				},
-				Required: []string{"scopes", "policy"},
+				Required: []string{"policy"},
 			},
 		},
 		Dependencies: []string{
@@ -16813,6 +16820,13 @@ func schema_openshift_api_config_v1_ImagePolicySpec(ref common.ReferenceCallback
 				Description: "ImagePolicySpec is the specification of the ImagePolicy CRD.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"appliesTo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "appliesTo specifies whether this policy applies to images that do not match any registry-specific policy. The only supported value is \"Default\". The \"Default\" value is available only when the ImagePolicyDenyByDefault feature gate is enabled. When omitted, the policy applies to the registry scopes listed in scopes. When set to \"Default\", scopes must be omitted and policyType must be \"Reject\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"scopes": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -16820,7 +16834,7 @@ func schema_openshift_api_config_v1_ImagePolicySpec(ref common.ReferenceCallback
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "scopes is a required field that defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. This support no more than 256 scopes in one object. If multiple scopes match a given image, only the policy requirements for the most specific scope apply. The policy requirements for more general scopes are ignored. In addition to setting a policy appropriate for your own deployed applications, make sure that a policy on the OpenShift image repositories quay.io/openshift-release-dev/ocp-release, quay.io/openshift-release-dev/ocp-v4.0-art-dev (or on a more general scope) allows deployment of the OpenShift images required for cluster operation. If a scope is configured in both the ClusterImagePolicy and the ImagePolicy, or if the scope in ImagePolicy is nested under one of the scopes from the ClusterImagePolicy, only the policy from the ClusterImagePolicy will be applied. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
+							Description: "scopes is an optional field that defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. Within each policy level (cluster or namespace), only requirements from the most-specific matching scope apply. When namespace intersection merging is enabled, the applicable cluster requirements and namespace requirements are combined, and all must be satisfied. In addition to setting a policy appropriate for your own deployed applications, make sure that a policy on the OpenShift image repositories quay.io/openshift-release-dev/ocp-release, quay.io/openshift-release-dev/ocp-v4.0-art-dev (or on a more general scope) allows deployment of the OpenShift images required for cluster operation. If a scope is configured in both the ClusterImagePolicy and the ImagePolicy, or if the scope in ImagePolicy is nested under one of the scopes from the ClusterImagePolicy, only the policy from the ClusterImagePolicy will be applied unless intersection merging is enabled in the namespace. scopes must be present when appliesTo is omitted and must be omitted when appliesTo is \"Default\". When present, the list may contain at most 256 entries. An empty list is allowed and selects no image scopes. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -16832,15 +16846,22 @@ func schema_openshift_api_config_v1_ImagePolicySpec(ref common.ReferenceCallback
 							},
 						},
 					},
+					"intersectionMerge": {
+						SchemaProps: spec.SchemaProps{
+							Description: "intersectionMerge enables namespace-level intersection merging. Valid value is \"Enabled\". When enabled in any ImagePolicy in a namespace, intersection merging applies to all ImagePolicies in that namespace. When ImagePolicy and ClusterImagePolicy scopes overlap, the requirements are combined using the nearest enclosing scope in each policy type, and an exact scope match counts as enclosing. All combined requirements must be satisfied, and the ImagePolicy cannot weaken the ClusterImagePolicy requirements. For example, if the ClusterImagePolicy has a policy for scope \"example.com/team\" and an ImagePolicy has a different policy for scope \"example.com/team/app\", an image at \"example.com/team/app:v1\" must satisfy both the ClusterImagePolicy policy for \"example.com/team\" and the ImagePolicy policy for \"example.com/team/app\". Without intersection merging, only the ClusterImagePolicy policy for \"example.com/team\" would be applied to that image. In the reverse case, if the ClusterImagePolicy has a policy for scope \"example.com/team/app\" and an ImagePolicy has a different policy for scope \"example.com/team\", an image at \"example.com/team/app:v1\" must also satisfy both, and the ImagePolicy requirements are added to the more-specific \"example.com/team/app\" scope. Omitting this field does not disable intersection merging enabled by another ImagePolicy. When no ImagePolicy in the namespace enables it, the existing cluster-precedence behavior applies: an ImagePolicy scope that equals or is nested inside a registry-scoped ClusterImagePolicy scope is not applied, and non-conflicting scopes remain applied. Removing the final enabling setting restores that behavior. intersectionMerge requires at least one scope and cannot be combined with appliesTo \"Default\". Default policies configured with appliesTo are not registry scopes and are not combined by intersection merging. This field is available only when the ImagePolicyIntersectionMerge feature gate is enabled.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"policy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "policy is a required field that contains configuration to allow scopes to be verified, and defines how images not matching the verification policy will be treated.",
+							Description: "policy is a required field that specifies signature-verification requirements for scopes. When appliesTo is \"Default\", policy must instead specify Reject, which rejects images that do not match any registry-specific policy.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.ImageSigstoreVerificationPolicy{}.OpenAPIModelName()),
 						},
 					},
 				},
-				Required: []string{"scopes", "policy"},
+				Required: []string{"policy"},
 			},
 		},
 		Dependencies: []string{
@@ -16899,7 +16920,7 @@ func schema_openshift_api_config_v1_ImageSigstoreVerificationPolicy(ref common.R
 					},
 					"signedIdentity": {
 						SchemaProps: spec.SchemaProps{
-							Description: "signedIdentity is an optional field specifies what image identity the signature claims about the image. This is useful when the image identity in the signature differs from the original image spec, such as when mirror registry is configured for the image scope, the signature from the mirror registry contains the image identity of the mirror instead of the original scope. The required matchPolicy field specifies the approach used in the verification process to verify the identity in the signature and the actual image identity, the default matchPolicy is \"MatchRepoDigestOrExact\".",
+							Description: "signedIdentity is an optional field specifies what image identity the signature claims about the image. This is useful when the image identity in the signature differs from the original image spec, such as when mirror registry is configured for the image scope, the signature from the mirror registry contains the image identity of the mirror instead of the original scope. It must not be specified when policyType is Reject. The required matchPolicy field specifies the approach used in the verification process to verify the identity in the signature and the actual image identity, the default matchPolicy is \"MatchRepoDigestOrExact\".",
 							Ref:         ref(configv1.PolicyIdentity{}.OpenAPIModelName()),
 						},
 					},
@@ -21097,7 +21118,7 @@ func schema_openshift_api_config_v1_PolicyRootOfTrust(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"policyType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "policyType is a required field specifies the type of the policy for verification. This field must correspond to how the policy was generated. Allowed values are \"PublicKey\", \"FulcioCAWithRekor\", and \"PKI\". When set to \"PublicKey\", the policy relies on a sigstore publicKey and may optionally use a Rekor verification. When set to \"FulcioCAWithRekor\", the policy is based on the Fulcio certification and incorporates a Rekor verification. When set to \"PKI\", the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI).",
+							Description: "policyType is a required field specifies the type of the policy for verification. This field must correspond to how the policy was generated. Allowed values are \"PublicKey\", \"FulcioCAWithRekor\", \"PKI\", and \"Reject\". The \"Reject\" value is available only when the ImagePolicyDenyByDefault feature gate is enabled. When set to \"PublicKey\", the policy relies on a sigstore publicKey and may optionally use a Rekor verification. When set to \"FulcioCAWithRekor\", the policy is based on the Fulcio certification and incorporates a Rekor verification. When set to \"PKI\", the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI). When set to \"Reject\", appliesTo must be \"Default\" and images not matching any registry-specific policy are rejected.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

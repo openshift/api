@@ -5,9 +5,9 @@ helmchartrepositories.helm.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
-  FilenameOperatorName: ""
+  FilenameOperatorName: console
   FilenameOperatorOrdering: "00"
-  FilenameRunLevel: ""
+  FilenameRunLevel: "0000_50"
   GroupName: helm.openshift.io
   HasStatus: true
   KindName: HelmChartRepository
@@ -26,9 +26,9 @@ projecthelmchartrepositories.helm.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
-  FilenameOperatorName: ""
+  FilenameOperatorName: console
   FilenameOperatorOrdering: "00"
-  FilenameRunLevel: ""
+  FilenameRunLevel: "0000_50"
   GroupName: helm.openshift.io
   HasStatus: true
   KindName: ProjectHelmChartRepository

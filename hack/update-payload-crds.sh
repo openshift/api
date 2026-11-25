@@ -36,6 +36,8 @@ crd_globs="\
     operator/v1/zz_generated.crd-manifests/0000_50_ingress_02_ingresses*.crd.yaml
     operator/v1/zz_generated.crd-manifests/0000_50_ingress_00_ingresscontrollers*.crd.yaml
     config/v1alpha1/zz_generated.crd-manifests/0000_10_config-operator_01_controllermanagers*.crd.yaml
+    helm/v1beta1/zz_generated.crd-manifests/0000_50_console_00_helmchartrepositories*.crd.yaml
+    helm/v1beta1/zz_generated.crd-manifests/0000_50_console_00_projecthelmchartrepositories*.crd.yaml
     "
 
 # To allow the crd_globs to be sourced in the verify script,

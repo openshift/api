@@ -18,7 +18,7 @@ import (
 // +kubebuilder:resource:path=helmchartrepositories,scope=Cluster
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/598
-// +openshift:file-pattern=operatorOrdering=00
+// +openshift:file-pattern=cvoRunLevel=0000_50,operatorName=console,operatorOrdering=00
 type HelmChartRepository struct {
 	metav1.TypeMeta `json:",inline"`
 

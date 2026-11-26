@@ -294,6 +294,9 @@
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
+                        "name": "RouteAdvertisementNodeSelector"
+                    },
+                    {
                         "name": "ShortCertRotation"
                     },
                     {

@@ -30,6 +30,8 @@ crd_globs="\
     config/v1alpha1/zz_generated.crd-manifests/0000_10_config-operator_01_clustermonitoring*.crd.yaml
     config/v1alpha1/zz_generated.crd-manifests/0000_10_config-operator_01_pkis*.crd.yaml
     operator/v1/zz_generated.crd-manifests/*_storage_01_storages*.crd.yaml
+    operator/v1/zz_generated.crd-manifests/0000_70_dns_00_dnses*.crd.yaml
+    network/v1alpha1/zz_generated.crd-manifests/0000_70_dns_00_dnsnameresolvers*.crd.yaml
     operator/v1/zz_generated.crd-manifests/*_csi-driver_01_clustercsidrivers*.crd.yaml
     insights/v1/zz_generated.crd-manifests/0000_10_insights_01_datagathers*.crd.yaml\
     operator/v1/zz_generated.crd-manifests/0000_50_insights_00_insightsoperators*.crd.yaml

@@ -1,0 +1,139 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "BGPBasedVIPManagement ControllerConfig retention"
+crdName: controllerconfigs.machineconfiguration.openshift.io
+featureGates:
+- BGPBasedVIPManagement
+tests:
+  onUpdate:
+    - name: Should reject clearing infra after BGP is set
+      initial: &bgpController |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ControllerConfig
+        spec:
+          additionalTrustBundle: null
+          baseOSContainerImage: ""
+          cloudProviderCAData: null
+          cloudProviderConfig: ""
+          clusterDNSIP: 192.168.111.10
+          dns: null
+          images: {}
+          infra:
+            apiVersion: config.openshift.io/v1
+            kind: Infrastructure
+            spec: {}
+            status:
+              platformStatus:
+                type: BareMetal
+                baremetal:
+                  vipManagement: BGP
+          ipFamilies: IPv4
+          kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+          network: null
+          proxy: null
+          releaseImage: ""
+          rootCAData: Y2VydGlmaWNhdGUK
+      updated: &noInfraController |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ControllerConfig
+        spec:
+          additionalTrustBundle: null
+          baseOSContainerImage: ""
+          cloudProviderCAData: null
+          cloudProviderConfig: ""
+          clusterDNSIP: 192.168.111.10
+          dns: null
+          images: {}
+          infra: null
+          ipFamilies: IPv4
+          kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+          network: null
+          proxy: null
+          releaseImage: ""
+          rootCAData: Y2VydGlmaWNhdGUK
+      expectedError: "vipManagement may not be removed once set"
+    - name: Should reject removing infra status after BGP is set
+      initial: *bgpController
+      updated: &noInfraStatusController |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ControllerConfig
+        spec:
+          additionalTrustBundle: null
+          baseOSContainerImage: ""
+          cloudProviderCAData: null
+          cloudProviderConfig: ""
+          clusterDNSIP: 192.168.111.10
+          dns: null
+          images: {}
+          infra:
+            apiVersion: config.openshift.io/v1
+            kind: Infrastructure
+            spec: {}
+          ipFamilies: IPv4
+          kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+          network: null
+          proxy: null
+          releaseImage: ""
+          rootCAData: Y2VydGlmaWNhdGUK
+      expectedError: "vipManagement may not be removed once set"
+    - name: Should reject removing infra platformStatus after BGP is set
+      initial: *bgpController
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ControllerConfig
+        spec:
+          additionalTrustBundle: null
+          baseOSContainerImage: ""
+          cloudProviderCAData: null
+          cloudProviderConfig: ""
+          clusterDNSIP: 192.168.111.10
+          dns: null
+          images: {}
+          infra:
+            apiVersion: config.openshift.io/v1
+            kind: Infrastructure
+            spec: {}
+            status: {}
+          ipFamilies: IPv4
+          kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+          network: null
+          proxy: null
+          releaseImage: ""
+          rootCAData: Y2VydGlmaWNhdGUK
+      expectedError: "vipManagement may not be removed once set"
+    - name: Should reject clearing infra after Keepalived is set
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ControllerConfig
+        spec:
+          additionalTrustBundle: null
+          baseOSContainerImage: ""
+          cloudProviderCAData: null
+          cloudProviderConfig: ""
+          clusterDNSIP: 192.168.111.10
+          dns: null
+          images: {}
+          infra:
+            apiVersion: config.openshift.io/v1
+            kind: Infrastructure
+            spec: {}
+            status:
+              platformStatus:
+                type: BareMetal
+                baremetal:
+                  vipManagement: Keepalived
+          ipFamilies: IPv4
+          kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+          network: null
+          proxy: null
+          releaseImage: ""
+          rootCAData: Y2VydGlmaWNhdGUK
+      updated: *noInfraController
+      expectedError: "vipManagement may not be removed once set"
+    - name: Should allow clearing infra when vipManagement was never set
+      initial: *noInfraStatusController
+      updated: *noInfraController
+      expected: *noInfraController
+    - name: Should allow populating infra when vipManagement was never set
+      initial: *noInfraController
+      updated: *noInfraStatusController
+      expected: *noInfraStatusController

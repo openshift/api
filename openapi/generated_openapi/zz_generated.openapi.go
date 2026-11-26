@@ -11497,7 +11497,7 @@ func schema_openshift_api_config_v1_BareMetalPlatformStatus(ref common.Reference
 					},
 					"vipManagement": {
 						SchemaProps: spec.SchemaProps{
-							Description: "vipManagement indicates which VIP management mechanism is active on this cluster. Allowed values are `Keepalived`, `BGP`, and omitted. Once set to a non-empty value, this field is immutable. When set to `BGP`, kube-vip (Routing Table Mode) and frr-k8s are deployed as static pods to advertise VIPs via BGP, replacing the default keepalived/VRRP mechanism. When set to `Keepalived`, the default keepalived-based VIP management is used. When omitted, the default keepalived-based VIP management is used.\n\nPossible enum values:\n - `\"BGP\"` means the VIPs are advertised via BGP by kube-vip (Routing Table Mode) and frr-k8s running as static pods.\n - `\"Keepalived\"` means the VIPs are managed by the default keepalived/VRRP mechanism.",
+							Description: "vipManagement indicates which VIP management mechanism is active on this cluster. Allowed values are `Keepalived`, `BGP`, and omitted. Once set to a non-empty value, this field is immutable and may not be removed. The enclosing baremetal, platformStatus, and status objects may not be removed either. When set to `BGP`, kube-vip (Routing Table Mode) and frr-k8s are deployed as static pods to advertise VIPs via BGP, replacing the default keepalived/VRRP mechanism. When set to `Keepalived`, the default keepalived-based VIP management is used. When omitted, the default keepalived-based VIP management is used.\n\nPossible enum values:\n - `\"BGP\"` means the VIPs are advertised via BGP by kube-vip (Routing Table Mode) and frr-k8s running as static pods.\n - `\"Keepalived\"` means the VIPs are managed by the default keepalived/VRRP mechanism.",
 							Type:        []string{"string"},
 							Format:      "",
 							Enum:        []interface{}{"BGP", "Keepalived"},
@@ -49570,7 +49570,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_BGPVIPConfigSpec(ref com
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "hostOverrides replaces (does not merge with) defaultPeers for the named nodes. Only the per-node peer file rendered by the machine-config-operator consumes overrides; the cluster-wide session configuration rendered by the cluster-network-operator uses defaultPeers. When omitted, all nodes use defaultPeers; when set, must have at least 1 entry and must not exceed 256 entries, unique by hostname.",
+							Description: "hostOverrides replaces (does not merge with) defaultPeers for the named control plane nodes. Only the per-node peer file rendered by the machine-config-operator consumes overrides; the cluster-wide session configuration rendered by the cluster-network-operator uses defaultPeers. When omitted, all nodes use defaultPeers; when set, must have at least 1 entry and must not exceed 16 entries, unique by hostname.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

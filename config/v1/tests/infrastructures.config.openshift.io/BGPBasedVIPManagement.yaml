@@ -5,6 +5,215 @@ featureGates:
 - BGPBasedVIPManagement
 tests:
   onUpdate:
+    - name: Should reject removing platformStatus after BGP is set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: BareMetal
+            baremetal:
+              vipManagement: BGP
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status: {}
+      expectedStatusError: "vipManagement may not be removed once set"
+    - name: Should reject removing platformStatus after Keepalived is set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: BareMetal
+            baremetal:
+              vipManagement: Keepalived
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status: {}
+      expectedStatusError: "vipManagement may not be removed once set"
+    - name: Should allow updating baremetal while preserving vipManagement
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: BareMetal
+            baremetal: {}
+        status:
+          platformStatus:
+            type: BareMetal
+            baremetal:
+              vipManagement: BGP
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: BareMetal
+            baremetal: {}
+        status:
+          platformStatus:
+            type: BareMetal
+            baremetal:
+              vipManagement: BGP
+              nodeDNSIP: 192.168.111.10
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: BareMetal
+            baremetal: {}
+        status:
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          controlPlaneTopology: HighlyAvailable
+          platformStatus:
+            type: BareMetal
+            baremetal:
+              vipManagement: BGP
+              nodeDNSIP: 192.168.111.10
+              loadBalancer:
+                type: OpenShiftManagedDefault
+    - name: Should allow removing baremetal when vipManagement was never set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: BareMetal
+            baremetal: {}
+        status:
+          platformStatus:
+            type: BareMetal
+            baremetal: {}
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: BareMetal
+            baremetal: {}
+        status:
+          platformStatus:
+            type: BareMetal
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: BareMetal
+            baremetal: {}
+        status:
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          controlPlaneTopology: HighlyAvailable
+          platformStatus:
+            type: BareMetal
+    - name: Should reject removing vipManagement after BGP is set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: BareMetal
+            baremetal: {}
+        status:
+          platformStatus:
+            type: BareMetal
+            baremetal:
+              vipManagement: BGP
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: BareMetal
+            baremetal: {}
+        status:
+          platformStatus:
+            type: BareMetal
+            baremetal: {}
+      expectedStatusError: "baremetal.vipManagement may not be removed once set"
+    - name: Should reject removing baremetal after BGP is set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: BareMetal
+            baremetal: {}
+        status:
+          platformStatus:
+            type: BareMetal
+            baremetal:
+              vipManagement: BGP
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: BareMetal
+            baremetal: {}
+        status:
+          platformStatus:
+            type: BareMetal
+      expectedStatusError: "baremetal.vipManagement may not be removed once set"
+    - name: Should reject removing vipManagement after Keepalived is set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: BareMetal
+            baremetal: {}
+        status:
+          platformStatus:
+            type: BareMetal
+            baremetal:
+              vipManagement: Keepalived
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: BareMetal
+            baremetal: {}
+        status:
+          platformStatus:
+            type: BareMetal
+            baremetal: {}
+      expectedStatusError: "baremetal.vipManagement may not be removed once set"
+    - name: Should reject removing baremetal after Keepalived is set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: BareMetal
+            baremetal: {}
+        status:
+          platformStatus:
+            type: BareMetal
+            baremetal:
+              vipManagement: Keepalived
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: BareMetal
+            baremetal: {}
+        status:
+          platformStatus:
+            type: BareMetal
+      expectedStatusError: "baremetal.vipManagement may not be removed once set"
     - name: Should allow setting vipManagement to BGP on BareMetal
       initial: |
         apiVersion: config.openshift.io/v1

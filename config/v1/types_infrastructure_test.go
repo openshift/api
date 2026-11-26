@@ -2,7 +2,8 @@ package v1
 
 import (
 	"os"
-	"path"
+	"path/filepath"
+	"slices"
 	"testing"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -11,8 +12,8 @@ import (
 )
 
 const (
-	infraCRDDefaultFilePath     = "0000_10_config-operator_01_infrastructures-Default.crd.yaml"
-	infraCRDTestPreviewFilePath = "0000_10_config-operator_01_infrastructures-TechPreviewNoUpgrade.crd.yaml"
+	infraCRDManifestsDir    = "zz_generated.crd-manifests"
+	infraCRDDefaultFilePath = "0000_10_config-operator_01_infrastructures-Default.crd.yaml"
 )
 
 // TestInfrastructureStatusDefault verifies that the infrastructure CR status does not have default value
@@ -21,12 +22,24 @@ const (
 // It allows separating between clean installation and the roll-back to the previous version of the cluster
 func TestInfrastructureStatusDefault(t *testing.T) {
 
-	filePaths := []string{infraCRDDefaultFilePath, infraCRDTestPreviewFilePath}
+	// Glob the generated infrastructure CRDs so the test keeps covering every
+	// feature set and cluster profile variant when the generator changes how
+	// the manifests are split.
+	filePaths, err := filepath.Glob(filepath.Join(infraCRDManifestsDir, "*_infrastructures-*.crd.yaml"))
+	if err != nil {
+		t.Fatalf("failed to list infrastructure CRD files: %v", err)
+	}
+	if len(filePaths) == 0 {
+		t.Fatalf("no infrastructure CRD files found in %q", infraCRDManifestsDir)
+	}
+	if !slices.Contains(filePaths, filepath.Join(infraCRDManifestsDir, infraCRDDefaultFilePath)) {
+		t.Fatalf("infrastructure CRD file %q not found in %v", infraCRDDefaultFilePath, filePaths)
+	}
 
-	for _, filepath := range filePaths {
-		infraCRDBytes, err := os.ReadFile(path.Join("zz_generated.crd-manifests", filepath))
+	for _, crdFilePath := range filePaths {
+		infraCRDBytes, err := os.ReadFile(crdFilePath)
 		if err != nil {
-			t.Fatalf("failed to read infrastructure CRD file %q: %v", filepath, err)
+			t.Fatalf("failed to read infrastructure CRD file %q: %v", crdFilePath, err)
 		}
 
 		var infraCRD map[string]interface{}

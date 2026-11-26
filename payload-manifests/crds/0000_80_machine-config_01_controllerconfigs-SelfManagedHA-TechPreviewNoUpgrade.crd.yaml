@@ -4,7 +4,6 @@ metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/1453
     api.openshift.io/merged-by-featuregates: "true"
-    include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
     release.openshift.io/feature-set: TechPreviewNoUpgrade
   labels:
@@ -62,6 +61,20 @@ spec:
               baseOSExtensionsContainerImage:
                 description: baseOSExtensionsContainerImage is the matching extensions
                   container for the new-format container
+                type: string
+              bgpVIPPeersJSON:
+                description: |-
+                  bgpVIPPeersJSON carries the JSON-serialized BGP VIP peer configuration
+                  derived by the machine-config-operator from the BGPVIPConfig spec and
+                  the cluster API and Ingress VIPs. It contains references to password
+                  Secrets in openshift-config, not plaintext passwords. The references
+                  are resolved when rendering the frr-k8s static pod peer file on control
+                  plane nodes. Only set when BGP-based VIP management is enabled.
+                  When omitted, BGP-based VIP management is not configured and no
+                  frr-k8s peer file is rendered.
+                  When set, the value must be between 1 and 262144 characters long.
+                maxLength: 262144
+                minLength: 1
                 type: string
               cloudProviderCAData:
                 description: cloudProviderCAData specifies the cloud provider CA data
@@ -303,7 +316,10 @@ spec:
                   to render templates under ./templates/
                 type: object
               infra:
-                description: infra holds the infrastructure details
+                description: |-
+                  infra holds the infrastructure details
+                  Once infra.status.platformStatus.baremetal.vipManagement is set, neither
+                  that field nor any of its enclosing objects may be removed or set to null.
                 nullable: true
                 properties:
                   apiVersion:
@@ -2100,6 +2116,26 @@ spec:
                                   datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames
                                   to the nodes in the cluster.
                                 type: string
+                              vipManagement:
+                                description: |-
+                                  vipManagement indicates which VIP management mechanism is active
+                                  on this cluster.
+                                  Allowed values are `Keepalived`, `BGP`, and omitted.
+                                  Once set to a non-empty value, this field is immutable and may not be removed.
+                                  The enclosing baremetal, platformStatus, and status objects may not be removed either.
+                                  When set to `BGP`, kube-vip (Routing Table Mode) and frr-k8s are
+                                  deployed as static pods to advertise VIPs via BGP, replacing the
+                                  default keepalived/VRRP mechanism.
+                                  When set to `Keepalived`, the default keepalived-based VIP
+                                  management is used.
+                                  When omitted, the default keepalived-based VIP management is used.
+                                enum:
+                                - Keepalived
+                                - BGP
+                                type: string
+                                x-kubernetes-validations:
+                                - message: vipManagement is immutable once set
+                                  rule: oldSelf == '' || self == oldSelf
                             type: object
                             x-kubernetes-validations:
                             - message: dnsRecordsType may only be set to External
@@ -3137,6 +3173,13 @@ spec:
                 - spec
                 type: object
                 x-kubernetes-embedded-resource: true
+                x-kubernetes-validations:
+                - message: status.platformStatus.baremetal.vipManagement may not be
+                    removed once set
+                  rule: '!has(oldSelf.status) || !has(oldSelf.status.platformStatus)
+                    || !has(oldSelf.status.platformStatus.baremetal) || !has(oldSelf.status.platformStatus.baremetal.vipManagement)
+                    || (has(self.status) && has(self.status.platformStatus) && has(self.status.platformStatus.baremetal)
+                    && has(self.status.platformStatus.baremetal.vipManagement))'
               internalRegistryPullSecret:
                 description: |-
                   internalRegistryPullSecret is the pull secret for the internal registry, used by
@@ -3376,6 +3419,15 @@ spec:
         required:
         - spec
         type: object
+        x-kubernetes-validations:
+        - message: spec.infra.status.platformStatus.baremetal.vipManagement may not
+            be removed once set
+          rule: '!has(oldSelf.spec) || !has(oldSelf.spec.infra) || !has(oldSelf.spec.infra.status)
+            || !has(oldSelf.spec.infra.status.platformStatus) || !has(oldSelf.spec.infra.status.platformStatus.baremetal)
+            || !has(oldSelf.spec.infra.status.platformStatus.baremetal.vipManagement)
+            || (has(self.spec) && has(self.spec.infra) && has(self.spec.infra.status)
+            && has(self.spec.infra.status.platformStatus) && has(self.spec.infra.status.platformStatus.baremetal)
+            && has(self.spec.infra.status.platformStatus.baremetal.vipManagement))'
     served: true
     storage: true
     subresources:

@@ -31,6 +31,7 @@ const KubeletConfigRoleLabelPrefix = "pools.operator.machineconfiguration.opensh
 //
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=BGPBasedVIPManagement,rule="!has(oldSelf.spec) || !has(oldSelf.spec.infra) || !has(oldSelf.spec.infra.status) || !has(oldSelf.spec.infra.status.platformStatus) || !has(oldSelf.spec.infra.status.platformStatus.baremetal) || !has(oldSelf.spec.infra.status.platformStatus.baremetal.vipManagement) || (has(self.spec) && has(self.spec.infra) && has(self.spec.infra.status) && has(self.spec.infra.status.platformStatus) && has(self.spec.infra.status.platformStatus.baremetal) && has(self.spec.infra.status.platformStatus.baremetal.vipManagement))",message="spec.infra.status.platformStatus.baremetal.vipManagement may not be removed once set"
 type ControllerConfig struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -113,16 +114,18 @@ type ControllerConfigSpec struct {
 	// +required
 	Images map[string]string `json:"images"`
 
-	// bgpVIPPeersJSON carries the BGP VIP peer configuration (the config.json
-	// payload of the bgp-vip-config ConfigMap) for rendering the frr-k8s
-	// static pod peer file on control plane nodes. Only set when BGP-based
-	// VIP management is enabled.
+	// bgpVIPPeersJSON carries the JSON-serialized BGP VIP peer configuration
+	// derived by the machine-config-operator from the BGPVIPConfig spec and
+	// the cluster API and Ingress VIPs. It contains references to password
+	// Secrets in openshift-config, not plaintext passwords. The references
+	// are resolved when rendering the frr-k8s static pod peer file on control
+	// plane nodes. Only set when BGP-based VIP management is enabled.
 	// When omitted, BGP-based VIP management is not configured and no
 	// frr-k8s peer file is rendered.
-	// When set, the value must be between 1 and 65536 characters long.
+	// When set, the value must be between 1 and 262144 characters long.
 	// +openshift:enable:FeatureGate=BGPBasedVIPManagement
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=65536
+	// +kubebuilder:validation:MaxLength=262144
 	// +optional
 	BGPVIPPeersJSON string `json:"bgpVIPPeersJSON,omitempty"`
 
@@ -148,6 +151,8 @@ type ControllerConfigSpec struct {
 	Proxy *configv1.ProxyStatus `json:"proxy"`
 
 	// infra holds the infrastructure details
+	// Once infra.status.platformStatus.baremetal.vipManagement is set, neither
+	// that field nor any of its enclosing objects may be removed or set to null.
 	// +kubebuilder:validation:EmbeddedResource
 	// +required
 	// +nullable

@@ -3526,8 +3526,8 @@ spec:
                         value:
                           description: |-
                             value is the value of the label.
-                            Must be between 1 and 128 characters in length.
-                          maxLength: 128
+                            Must be between 1 and 1024 characters in length.
+                          maxLength: 1024
                           minLength: 1
                           type: string
                       required:

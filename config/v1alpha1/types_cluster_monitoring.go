@@ -1738,9 +1738,9 @@ type Label struct {
 	// +kubebuilder:validation:MinLength=1
 	Key string `json:"key,omitempty"`
 	// value is the value of the label.
-	// Must be between 1 and 128 characters in length.
+	// Must be between 1 and 1024 characters in length.
 	// +required
-	// +kubebuilder:validation:MaxLength=128
+	// +kubebuilder:validation:MaxLength=1024
 	// +kubebuilder:validation:MinLength=1
 	Value string `json:"value,omitempty"`
 }

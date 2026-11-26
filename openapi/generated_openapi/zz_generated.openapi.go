@@ -27883,13 +27883,6 @@ func schema_openshift_api_config_v1alpha1_RelabelConfig(ref common.ReferenceCall
 				Description: "RelabelConfig represents a relabeling rule.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "name is an optional, human-readable label for this relabel configuration. It is informational only: it is not used by Prometheus and has no effect on the relabeling behavior. When omitted, the relabel configuration is unnamed. Must contain only alphanumeric characters, hyphens, and underscores. Must be at most 63 characters in length.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"sourceLabels": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -27918,7 +27911,7 @@ func schema_openshift_api_config_v1alpha1_RelabelConfig(ref common.ReferenceCall
 					},
 					"regex": {
 						SchemaProps: spec.SchemaProps{
-							Description: "regex is the regular expression to match against the concatenated source label values. Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"(.*)\" to match everything. Prometheus anchors the expression at both ends, so an empty string matches only an empty value (for example, series where the source labels are absent or empty), which differs from omitting the field. Must be at most 8192 characters in length.",
+							Description: "regex is the regular expression to match against the concatenated source label values. Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"(.*)\" to match everything. Must be between 1 and 8192 characters in length when specified.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

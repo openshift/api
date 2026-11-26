@@ -2130,15 +2130,16 @@ type Sigv4 struct {
 
 // RelabelConfig represents a relabeling rule.
 type RelabelConfig struct {
-	// name is an optional, human-readable label for this relabel configuration.
-	// It is informational only: it is not used by Prometheus and has no effect on the relabeling behavior.
-	// When omitted, the relabel configuration is unnamed.
+	// TOMBSTONE: This field has been tombstoned because relabel configurations have no name in Prometheus or Prometheus Operator, and the platform does not use it. This tombstone will be dropped when promoting this API to v1.
+	// ---
+	// name is a unique identifier for this relabel configuration.
 	// Must contain only alphanumeric characters, hyphens, and underscores.
-	// Must be at most 63 characters in length.
-	// +optional
-	// +kubebuilder:validation:MaxLength=63
-	// +kubebuilder:validation:XValidation:rule="self.matches('^[a-zA-Z0-9_-]+$')",message="must contain only alphanumeric characters, hyphens, and underscores"
-	Name string `json:"name,omitempty"`
+	// Must be between 1 and 63 characters in length.
+	// Former marker: required
+	// Former marker: kubebuilder:validation:MinLength=1
+	// Former marker: kubebuilder:validation:MaxLength=63
+	// Former marker: kubebuilder:validation:XValidation:rule="self.matches('^[a-zA-Z0-9_-]+$')",message="must contain only alphanumeric characters, hyphens, and underscores"
+	// Name string `json:"name,omitempty"`
 
 	// sourceLabels specifies which label names to extract from each series for this relabeling rule.
 	// The values of these labels are joined together using the configured separator,
@@ -2176,10 +2177,9 @@ type RelabelConfig struct {
 	// Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax).
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// The default value is "(.*)" to match everything.
-	// Prometheus anchors the expression at both ends, so an empty string matches only an empty value
-	// (for example, series where the source labels are absent or empty), which differs from omitting the field.
-	// Must be at most 8192 characters in length.
+	// Must be between 1 and 8192 characters in length when specified.
 	// +optional
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=8192
 	Regex string `json:"regex,omitempty"`
 

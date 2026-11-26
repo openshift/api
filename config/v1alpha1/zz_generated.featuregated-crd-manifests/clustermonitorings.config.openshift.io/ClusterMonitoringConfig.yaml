@@ -4608,29 +4608,15 @@ spec:
                                     and forbidden otherwise
                                   rule: 'has(self.type) && self.type == ''LabelMap''
                                     ? has(self.labelMap) : !has(self.labelMap)'
-                              name:
-                                description: |-
-                                  name is an optional, human-readable label for this relabel configuration.
-                                  It is informational only: it is not used by Prometheus and has no effect on the relabeling behavior.
-                                  When omitted, the relabel configuration is unnamed.
-                                  Must contain only alphanumeric characters, hyphens, and underscores.
-                                  Must be at most 63 characters in length.
-                                maxLength: 63
-                                type: string
-                                x-kubernetes-validations:
-                                - message: must contain only alphanumeric characters,
-                                    hyphens, and underscores
-                                  rule: self.matches('^[a-zA-Z0-9_-]+$')
                               regex:
                                 description: |-
                                   regex is the regular expression to match against the concatenated source label values.
                                   Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax).
                                   When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
                                   The default value is "(.*)" to match everything.
-                                  Prometheus anchors the expression at both ends, so an empty string matches only an empty value
-                                  (for example, series where the source labels are absent or empty), which differs from omitting the field.
-                                  Must be at most 8192 characters in length.
+                                  Must be between 1 and 8192 characters in length when specified.
                                 maxLength: 8192
+                                minLength: 1
                                 type: string
                               separator:
                                 description: |-

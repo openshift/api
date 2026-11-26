@@ -164,9 +164,6 @@
                         "name": "GenericWorkload"
                     },
                     {
-                        "name": "GomaxprocsInjection"
-                    },
-                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
@@ -356,6 +353,9 @@
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
+                        "name": "GomaxprocsInjection"
                     },
                     {
                         "name": "IngressComponentRouteLabels"

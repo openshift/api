@@ -1,0 +1,1579 @@
+apiVersion: apiextensions.k8s.io/v1
+name: ClusterCSIDriver Cinder attachment
+crdName: clustercsidrivers.operator.openshift.io
+featureGates:
+- CinderCSIDirectAttach
+tests:
+  onCreate:
+  - name: Should preserve omitted Cinder configuration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec: {}
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should allow an empty legacy driver discriminator on Cinder
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: ''
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: ''
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should allow explicit Nova attachment
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Nova
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Nova
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should allow empty backend configuration in Nova mode
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Nova
+            backendConfig: []
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Nova
+            backendConfig: []
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should allow explicit Direct attachment
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should allow empty backend configuration in Direct mode
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig: []
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig: []
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should allow backend Secret files in Direct mode
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should allow multiple sources at the same destination
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph
+            - name: extra-files
+              secret:
+                name: extra-backend-config
+              mountPath: /etc/ceph
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph
+            - name: extra-files
+              secret:
+                name: extra-backend-config
+              mountPath: /etc/ceph
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should allow the maximum 16 backend sources
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: files-0
+              secret:
+                name: secret-0
+              mountPath: /etc/ceph
+            - name: files-1
+              secret:
+                name: secret-1
+              mountPath: /etc/ceph
+            - name: files-2
+              secret:
+                name: secret-2
+              mountPath: /etc/ceph
+            - name: files-3
+              secret:
+                name: secret-3
+              mountPath: /etc/ceph
+            - name: files-4
+              secret:
+                name: secret-4
+              mountPath: /etc/ceph
+            - name: files-5
+              secret:
+                name: secret-5
+              mountPath: /etc/ceph
+            - name: files-6
+              secret:
+                name: secret-6
+              mountPath: /etc/ceph
+            - name: files-7
+              secret:
+                name: secret-7
+              mountPath: /etc/ceph
+            - name: files-8
+              secret:
+                name: secret-8
+              mountPath: /etc/ceph
+            - name: files-9
+              secret:
+                name: secret-9
+              mountPath: /etc/ceph
+            - name: files-10
+              secret:
+                name: secret-10
+              mountPath: /etc/ceph
+            - name: files-11
+              secret:
+                name: secret-11
+              mountPath: /etc/ceph
+            - name: files-12
+              secret:
+                name: secret-12
+              mountPath: /etc/ceph
+            - name: files-13
+              secret:
+                name: secret-13
+              mountPath: /etc/ceph
+            - name: files-14
+              secret:
+                name: secret-14
+              mountPath: /etc/ceph
+            - name: files-15
+              secret:
+                name: secret-15
+              mountPath: /etc/ceph
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: files-0
+              secret:
+                name: secret-0
+              mountPath: /etc/ceph
+            - name: files-1
+              secret:
+                name: secret-1
+              mountPath: /etc/ceph
+            - name: files-2
+              secret:
+                name: secret-2
+              mountPath: /etc/ceph
+            - name: files-3
+              secret:
+                name: secret-3
+              mountPath: /etc/ceph
+            - name: files-4
+              secret:
+                name: secret-4
+              mountPath: /etc/ceph
+            - name: files-5
+              secret:
+                name: secret-5
+              mountPath: /etc/ceph
+            - name: files-6
+              secret:
+                name: secret-6
+              mountPath: /etc/ceph
+            - name: files-7
+              secret:
+                name: secret-7
+              mountPath: /etc/ceph
+            - name: files-8
+              secret:
+                name: secret-8
+              mountPath: /etc/ceph
+            - name: files-9
+              secret:
+                name: secret-9
+              mountPath: /etc/ceph
+            - name: files-10
+              secret:
+                name: secret-10
+              mountPath: /etc/ceph
+            - name: files-11
+              secret:
+                name: secret-11
+              mountPath: /etc/ceph
+            - name: files-12
+              secret:
+                name: secret-12
+              mountPath: /etc/ceph
+            - name: files-13
+              secret:
+                name: secret-13
+              mountPath: /etc/ceph
+            - name: files-14
+              secret:
+                name: secret-14
+              mountPath: /etc/ceph
+            - name: files-15
+              secret:
+                name: secret-15
+              mountPath: /etc/ceph
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should allow a 63-character source name and 253-character Secret name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              secret:
+                name: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+              mountPath: /etc/ceph
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              secret:
+                name: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+              mountPath: /etc/ceph
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should require Cinder configuration for the Cinder discriminator
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+    expectedError: cinder must be set if driverType is Cinder
+  - name: Should reject cinder with discriminator empty
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: ''
+          cinder:
+            attachMode: Direct
+    expectedError: cinder must be set if driverType is Cinder
+  - name: Should reject cinder with discriminator AWS
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: AWS
+          cinder:
+            attachMode: Direct
+    expectedError: cinder must be set if driverType is Cinder
+  - name: Should reject cinder with discriminator Azure
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Azure
+          cinder:
+            attachMode: Direct
+    expectedError: cinder must be set if driverType is Cinder
+  - name: Should reject cinder with discriminator GCP
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: GCP
+          cinder:
+            attachMode: Direct
+    expectedError: cinder must be set if driverType is Cinder
+  - name: Should reject cinder with discriminator vSphere
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: vSphere
+          cinder:
+            attachMode: Direct
+    expectedError: cinder must be set if driverType is Cinder
+  - name: Should require the driver discriminator
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          cinder:
+            attachMode: Direct
+    expectedError: 'driverType: Required value'
+  - name: Should reject Cinder configuration on another resource
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: ebs.csi.aws.com
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+    expectedError: driverType Cinder requires metadata.name cinder.csi.openstack.org
+  - name: Should reject AWS selection on the Cinder resource
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: AWS
+    expectedError: the Cinder resource permits only omitted or Cinder driver configuration
+  - name: Should reject Azure selection on the Cinder resource
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Azure
+    expectedError: the Cinder resource permits only omitted or Cinder driver configuration
+  - name: Should reject GCP selection on the Cinder resource
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: GCP
+    expectedError: the Cinder resource permits only omitted or Cinder driver configuration
+  - name: Should reject vSphere selection on the Cinder resource
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: vSphere
+    expectedError: the Cinder resource permits only omitted or Cinder driver configuration
+  - name: Should reject Cinder with the aws member
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+          aws: {}
+    expectedError: other driver configuration must be unset when driverType is Cinder
+  - name: Should reject Cinder with the azure member
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+          azure: {}
+    expectedError: other driver configuration must be unset when driverType is Cinder
+  - name: Should reject Cinder with the gcp member
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+          gcp: {}
+    expectedError: other driver configuration must be unset when driverType is Cinder
+  - name: Should reject Cinder with the vSphere member
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+          vSphere: {}
+    expectedError: other driver configuration must be unset when driverType is Cinder
+  - name: Should reject Cinder with the secretsStore member
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+          secretsStore: {}
+    expectedError: other driver configuration must be unset when driverType is Cinder
+  - name: Should reject Cinder with the ibmcloud member
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+          ibmcloud:
+            encryptionKeyCRN: crn:v1:bluemix:public:kms:us-south:a/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb:key:cccccccc-cccc-cccc-cccc-cccccccccccc
+    expectedError: other driver configuration must be unset when driverType is Cinder
+  - name: Should require attachMode for explicit Cinder configuration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder: {}
+    expectedError: 'attachMode: Required value'
+  - name: Should reject attachMode empty
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: ''
+    expectedError: Unsupported value
+  - name: Should reject attachMode Auto
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Auto
+    expectedError: Unsupported value
+  - name: Should reject attachMode direct
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: direct
+    expectedError: Unsupported value
+  - name: Should reject backend sources in Nova mode
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Nova
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph
+    expectedError: backendConfig is valid only in Direct mode
+  - name: Should reject more than 16 backend sources
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: files-0
+              secret:
+                name: secret-0
+              mountPath: /etc/ceph
+            - name: files-1
+              secret:
+                name: secret-1
+              mountPath: /etc/ceph
+            - name: files-2
+              secret:
+                name: secret-2
+              mountPath: /etc/ceph
+            - name: files-3
+              secret:
+                name: secret-3
+              mountPath: /etc/ceph
+            - name: files-4
+              secret:
+                name: secret-4
+              mountPath: /etc/ceph
+            - name: files-5
+              secret:
+                name: secret-5
+              mountPath: /etc/ceph
+            - name: files-6
+              secret:
+                name: secret-6
+              mountPath: /etc/ceph
+            - name: files-7
+              secret:
+                name: secret-7
+              mountPath: /etc/ceph
+            - name: files-8
+              secret:
+                name: secret-8
+              mountPath: /etc/ceph
+            - name: files-9
+              secret:
+                name: secret-9
+              mountPath: /etc/ceph
+            - name: files-10
+              secret:
+                name: secret-10
+              mountPath: /etc/ceph
+            - name: files-11
+              secret:
+                name: secret-11
+              mountPath: /etc/ceph
+            - name: files-12
+              secret:
+                name: secret-12
+              mountPath: /etc/ceph
+            - name: files-13
+              secret:
+                name: secret-13
+              mountPath: /etc/ceph
+            - name: files-14
+              secret:
+                name: secret-14
+              mountPath: /etc/ceph
+            - name: files-15
+              secret:
+                name: secret-15
+              mountPath: /etc/ceph
+            - name: files-16
+              secret:
+                name: secret-16
+              mountPath: /etc/ceph
+    expectedError: must have at most 16 items
+  - name: Should reject duplicate backend source names
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph
+            - name: ceph-files
+              secret:
+                name: another-secret
+              mountPath: /etc/ceph
+    expectedError: Duplicate value
+  - name: Should reject invalid backend source name empty
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ''
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph
+    expectedError: backendConfig[0].name
+  - name: Should reject invalid backend source name aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph
+    expectedError: backendConfig[0].name
+  - name: Should reject invalid backend source name Uppercase
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: Uppercase
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph
+    expectedError: backendConfig[0].name
+  - name: Should reject invalid backend source name -prefix
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: -prefix
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph
+    expectedError: backendConfig[0].name
+  - name: Should reject invalid backend source name suffix-
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: suffix-
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph
+    expectedError: backendConfig[0].name
+  - name: Should reject invalid backend source name has.dots
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: has.dots
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph
+    expectedError: backendConfig[0].name
+  - name: Should reject invalid backend source name has_underscores
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: has_underscores
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph
+    expectedError: backendConfig[0].name
+  - name: Should reject invalid Secret name empty
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: ''
+              mountPath: /etc/ceph
+    expectedError: secret.name
+  - name: Should reject invalid Secret name aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              mountPath: /etc/ceph
+    expectedError: secret.name
+  - name: Should reject invalid Secret name Uppercase
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: Uppercase
+              mountPath: /etc/ceph
+    expectedError: secret.name
+  - name: Should reject invalid Secret name -prefix
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: -prefix
+              mountPath: /etc/ceph
+    expectedError: secret.name
+  - name: Should reject invalid Secret name suffix-
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: suffix-
+              mountPath: /etc/ceph
+    expectedError: secret.name
+  - name: Should reject invalid Secret name has_underscores
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: has_underscores
+              mountPath: /etc/ceph
+    expectedError: secret.name
+  - name: Should reject invalid Secret name two..dots
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: two..dots
+              mountPath: /etc/ceph
+    expectedError: secret.name
+  - name: Should reject invalid Secret name .leading
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: .leading
+              mountPath: /etc/ceph
+    expectedError: secret.name
+  - name: Should reject invalid Secret name trailing.
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: trailing.
+              mountPath: /etc/ceph
+    expectedError: secret.name
+  - name: Should require backend name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph
+    expectedError: 'name: Required value'
+  - name: Should require backend secret
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              mountPath: /etc/ceph
+    expectedError: 'secret: Required value'
+  - name: Should require backend mountPath
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: ceph-backend-config
+    expectedError: 'mountPath: Required value'
+  - name: Should require the referenced Secret name
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret: {}
+              mountPath: /etc/ceph
+    expectedError: 'name: Required value'
+  - name: Should reject unsupported mount path empty
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: ceph-backend-config
+              mountPath: ''
+    expectedError: Unsupported value
+  - name: Should reject unsupported mount path /etc
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc
+    expectedError: Unsupported value
+  - name: Should reject unsupported mount path /etc/ceph/
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph/
+    expectedError: Unsupported value
+  - name: Should reject unsupported mount path /host/etc/ceph
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: ceph-backend-config
+              mountPath: /host/etc/ceph
+    expectedError: Unsupported value
+  - name: Should reject unsupported mount path /etc/ceph/../iscsi
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph/../iscsi
+    expectedError: Unsupported value
+  - name: Should reject null attachMode
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: null
+    expectedError: 'attachMode: Required value'
+  - name: Should reject a null Secret reference
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret: null
+              mountPath: /etc/ceph
+    expectedError: 'secret: Required value'
+  - name: Should preserve legacy driver member behavior
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: ebs.csi.aws.com
+      spec:
+        driverConfig:
+          driverType: AWS
+          aws: {}
+          azure: {}
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: ebs.csi.aws.com
+      spec:
+        driverConfig:
+          driverType: AWS
+          aws: {}
+          azure: {}
+        logLevel: Normal
+        operatorLogLevel: Normal
+  onUpdate:
+  - name: Should admit initial selection of Direct without a schema lock
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec: {}
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should admit mode changes for operator lifecycle enforcement
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Nova
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should admit configuration removal for operator lifecycle enforcement
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec: {}
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should allow backend references to change independently of mode
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: ceph-backend-config
+              mountPath: /etc/ceph
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: rotated-backend-config
+              mountPath: /etc/ceph
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+            backendConfig:
+            - name: ceph-files
+              secret:
+                name: rotated-backend-config
+              mountPath: /etc/ceph
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should report observed Nova without explicit driver configuration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec: {}
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec: {}
+      status:
+        cinder:
+          observedAttachMode: Nova
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        logLevel: Normal
+        operatorLogLevel: Normal
+      status:
+        cinder:
+          observedAttachMode: Nova
+  - name: Should report observed Direct without explicit driver configuration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec: {}
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec: {}
+      status:
+        cinder:
+          observedAttachMode: Direct
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        logLevel: Normal
+        operatorLogLevel: Normal
+      status:
+        cinder:
+          observedAttachMode: Direct
+  - name: Should allow empty Cinder status before first rollout
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec: {}
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec: {}
+      status:
+        cinder: {}
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        logLevel: Normal
+        operatorLogLevel: Normal
+      status:
+        cinder: {}
+  - name: Should allow observed mode to advance after a completed rollout
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+      status:
+        cinder:
+          observedAttachMode: Nova
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+      status:
+        cinder:
+          observedAttachMode: Direct
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+        logLevel: Normal
+        operatorLogLevel: Normal
+      status:
+        cinder:
+          observedAttachMode: Direct
+  - name: Should retain a previous observed mode independently of desired mode
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Nova
+      status:
+        cinder:
+          observedAttachMode: Nova
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+      status:
+        cinder:
+          observedAttachMode: Nova
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec:
+        driverConfig:
+          driverType: Cinder
+          cinder:
+            attachMode: Direct
+        logLevel: Normal
+        operatorLogLevel: Normal
+      status:
+        cinder:
+          observedAttachMode: Nova
+  - name: Should reject invalid observed attachment modes
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec: {}
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: cinder.csi.openstack.org
+      spec: {}
+      status:
+        cinder:
+          observedAttachMode: Auto
+    expectedStatusError: Unsupported value
+  - name: Should reject Cinder status on another resource
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: ebs.csi.aws.com
+      spec: {}
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: ClusterCSIDriver
+      metadata:
+        name: ebs.csi.aws.com
+      spec: {}
+      status:
+        cinder:
+          observedAttachMode: Direct
+    expectedStatusError: Cinder status is valid only on the Cinder resource

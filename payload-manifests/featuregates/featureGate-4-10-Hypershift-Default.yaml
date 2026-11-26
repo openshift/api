@@ -51,6 +51,9 @@
                         "name": "CRIOCredentialProviderConfig"
                     },
                     {
+                        "name": "CinderCSIDirectAttach"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {

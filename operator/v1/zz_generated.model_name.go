@@ -161,6 +161,26 @@ func (in CapabilityVisibility) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in CinderBackendConfig) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.CinderBackendConfig"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in CinderBackendSecret) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.CinderBackendSecret"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in CinderCSIDriverConfigSpec) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.CinderCSIDriverConfigSpec"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in CinderCSIDriverStatus) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.CinderCSIDriverStatus"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in ClientTLS) OpenAPIModelName() string {
 	return "com.github.openshift.api.operator.v1.ClientTLS"
 }

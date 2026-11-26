@@ -163,6 +163,9 @@
                         "name": "CRIOCredentialProviderConfig"
                     },
                     {
+                        "name": "CinderCSIDirectAttach"
+                    },
+                    {
                         "name": "ClientsPreferCBOR"
                     },
                     {

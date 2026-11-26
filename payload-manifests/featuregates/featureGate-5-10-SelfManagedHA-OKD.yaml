@@ -269,9 +269,6 @@
                         "name": "OVNObservability"
                     },
                     {
-                        "name": "OnPremDNSRecords"
-                    },
-                    {
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
@@ -410,6 +407,9 @@
                     },
                     {
                         "name": "OSStreams"
+                    },
+                    {
+                        "name": "OnPremDNSRecords"
                     },
                     {
                         "name": "SELinuxMount"

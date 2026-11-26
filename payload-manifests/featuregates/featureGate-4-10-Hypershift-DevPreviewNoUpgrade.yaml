@@ -434,6 +434,9 @@
                     },
                     {
                         "name": "VSpherePerComponentScopedCredsInstall"
+                    },
+                    {
+                        "name": "WorkloadWithJob"
                     }
                 ],
                 "version": ""

@@ -27951,13 +27951,6 @@ func schema_openshift_api_config_v1alpha1_RelabelConfig(ref common.ReferenceCall
 				Description: "RelabelConfig represents a relabeling rule.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "name is a unique identifier for this relabel configuration. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"sourceLabels": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -27999,7 +27992,7 @@ func schema_openshift_api_config_v1alpha1_RelabelConfig(ref common.ReferenceCall
 						},
 					},
 				},
-				Required: []string{"name", "action"},
+				Required: []string{"action"},
 			},
 		},
 		Dependencies: []string{
@@ -28174,14 +28167,11 @@ func schema_openshift_api_config_v1alpha1_RemoteWriteSpec(ref common.ReferenceCa
 					"writeRelabelConfigs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"name",
-								},
-								"x-kubernetes-list-type": "map",
+								"x-kubernetes-list-type": "atomic",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 10 relabeling rules can be specified. Each rule must have a unique name.",
+							Description: "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 10 relabeling rules can be specified. Rules are applied in the order they are listed.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

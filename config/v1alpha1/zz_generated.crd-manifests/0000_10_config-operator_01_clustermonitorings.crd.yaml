@@ -4434,7 +4434,7 @@ spec:
                             writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.
                             When omitted, no relabeling is performed and all metrics are sent as-is.
                             Minimum of 1 and maximum of 10 relabeling rules can be specified.
-                            Each rule must have a unique name.
+                            Rules are applied in the order they are listed.
                           items:
                             description: RelabelConfig represents a relabeling rule.
                             properties:
@@ -4645,18 +4645,6 @@ spec:
                                     and forbidden otherwise
                                   rule: 'has(self.type) && self.type == ''LabelMap''
                                     ? has(self.labelMap) : !has(self.labelMap)'
-                              name:
-                                description: |-
-                                  name is a unique identifier for this relabel configuration.
-                                  Must contain only alphanumeric characters, hyphens, and underscores.
-                                  Must be between 1 and 63 characters in length.
-                                maxLength: 63
-                                minLength: 1
-                                type: string
-                                x-kubernetes-validations:
-                                - message: must contain only alphanumeric characters,
-                                    hyphens, and underscores
-                                  rule: self.matches('^[a-zA-Z0-9_-]+$')
                               regex:
                                 description: |-
                                   regex is the regular expression to match against the concatenated source label values.
@@ -4703,14 +4691,11 @@ spec:
                                 x-kubernetes-list-type: set
                             required:
                             - action
-                            - name
                             type: object
                           maxItems: 10
                           minItems: 1
                           type: array
-                          x-kubernetes-list-map-keys:
-                          - name
-                          x-kubernetes-list-type: map
+                          x-kubernetes-list-type: atomic
                       required:
                       - name
                       - url

@@ -15226,7 +15226,6 @@
       "description": "RelabelConfig represents a relabeling rule.",
       "type": "object",
       "required": [
-        "name",
         "action"
       ],
       "properties": {
@@ -15234,10 +15233,6 @@
           "description": "action defines the action to perform on the matched labels and its configuration. Exactly one action-specific configuration must be specified based on the action type.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RelabelActionConfig"
-        },
-        "name": {
-          "description": "name is a unique identifier for this relabel configuration. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length.",
-          "type": "string"
         },
         "regex": {
           "description": "regex is the regular expression to match against the concatenated source label values. Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"(.*)\" to match everything. Must be between 1 and 8192 characters in length when specified.",
@@ -15366,15 +15361,12 @@
           "type": "string"
         },
         "writeRelabelConfigs": {
-          "description": "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 10 relabeling rules can be specified. Each rule must have a unique name.",
+          "description": "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 10 relabeling rules can be specified. Rules are applied in the order they are listed.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RelabelConfig"
           },
-          "x-kubernetes-list-map-keys": [
-            "name"
-          ],
-          "x-kubernetes-list-type": "map"
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },

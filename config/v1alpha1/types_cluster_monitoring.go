@@ -1840,12 +1840,11 @@ type RemoteWriteSpec struct {
 	// writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.
 	// When omitted, no relabeling is performed and all metrics are sent as-is.
 	// Minimum of 1 and maximum of 10 relabeling rules can be specified.
-	// Each rule must have a unique name.
+	// Rules are applied in the order they are listed.
 	// +optional
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
-	// +listType=map
-	// +listMapKey=name
+	// +listType=atomic
 	WriteRelabelConfigs []RelabelConfig `json:"writeRelabelConfigs,omitempty"`
 }
 
@@ -2192,14 +2191,16 @@ type Sigv4 struct {
 
 // RelabelConfig represents a relabeling rule.
 type RelabelConfig struct {
+	// TOMBSTONE: This field has been tombstoned because relabel configurations have no name in Prometheus or Prometheus Operator, and the platform does not use it. This tombstone will be dropped when promoting this API to v1.
+	// ---
 	// name is a unique identifier for this relabel configuration.
 	// Must contain only alphanumeric characters, hyphens, and underscores.
 	// Must be between 1 and 63 characters in length.
-	// +required
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=63
-	// +kubebuilder:validation:XValidation:rule="self.matches('^[a-zA-Z0-9_-]+$')",message="must contain only alphanumeric characters, hyphens, and underscores"
-	Name string `json:"name,omitempty"`
+	// Former marker: required
+	// Former marker: kubebuilder:validation:MinLength=1
+	// Former marker: kubebuilder:validation:MaxLength=63
+	// Former marker: kubebuilder:validation:XValidation:rule="self.matches('^[a-zA-Z0-9_-]+$')",message="must contain only alphanumeric characters, hyphens, and underscores"
+	// Name string `json:"name,omitempty"`
 
 	// sourceLabels specifies which label names to extract from each series for this relabeling rule.
 	// The values of these labels are joined together using the configured separator,

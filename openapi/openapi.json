@@ -15366,7 +15366,7 @@
           "type": "string"
         },
         "writeRelabelConfigs": {
-          "description": "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 10 relabeling rules can be specified. Each rule must have a unique name.",
+          "description": "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 100 relabeling rules can be specified. Each rule must have a unique name.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RelabelConfig"

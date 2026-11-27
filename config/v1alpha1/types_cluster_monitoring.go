@@ -1839,11 +1839,11 @@ type RemoteWriteSpec struct {
 	TLSConfig TLSConfig `json:"tlsConfig,omitempty,omitzero"`
 	// writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.
 	// When omitted, no relabeling is performed and all metrics are sent as-is.
-	// Minimum of 1 and maximum of 10 relabeling rules can be specified.
+	// Minimum of 1 and maximum of 100 relabeling rules can be specified.
 	// Each rule must have a unique name.
 	// +optional
 	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MaxItems=100
 	// +listType=map
 	// +listMapKey=name
 	WriteRelabelConfigs []RelabelConfig `json:"writeRelabelConfigs,omitempty"`

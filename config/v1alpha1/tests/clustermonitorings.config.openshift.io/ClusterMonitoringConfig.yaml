@@ -3382,6 +3382,398 @@ tests:
                     regex: "my_metric_.+"
                     action:
                       type: Keep
+    - name: Should accept 11 writeRelabelConfigs rules
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: ServiceAccount
+                writeRelabelConfigs:
+                  - {name: rule-000, sourceLabels: [__name__], regex: "metric_000", action: {type: Drop}}
+                  - {name: rule-001, sourceLabels: [__name__], regex: "metric_001", action: {type: Drop}}
+                  - {name: rule-002, sourceLabels: [__name__], regex: "metric_002", action: {type: Drop}}
+                  - {name: rule-003, sourceLabels: [__name__], regex: "metric_003", action: {type: Drop}}
+                  - {name: rule-004, sourceLabels: [__name__], regex: "metric_004", action: {type: Drop}}
+                  - {name: rule-005, sourceLabels: [__name__], regex: "metric_005", action: {type: Drop}}
+                  - {name: rule-006, sourceLabels: [__name__], regex: "metric_006", action: {type: Drop}}
+                  - {name: rule-007, sourceLabels: [__name__], regex: "metric_007", action: {type: Drop}}
+                  - {name: rule-008, sourceLabels: [__name__], regex: "metric_008", action: {type: Drop}}
+                  - {name: rule-009, sourceLabels: [__name__], regex: "metric_009", action: {type: Drop}}
+                  - {name: rule-010, sourceLabels: [__name__], regex: "metric_010", action: {type: Drop}}
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: ServiceAccount
+                writeRelabelConfigs:
+                  - {name: rule-000, sourceLabels: [__name__], regex: "metric_000", action: {type: Drop}}
+                  - {name: rule-001, sourceLabels: [__name__], regex: "metric_001", action: {type: Drop}}
+                  - {name: rule-002, sourceLabels: [__name__], regex: "metric_002", action: {type: Drop}}
+                  - {name: rule-003, sourceLabels: [__name__], regex: "metric_003", action: {type: Drop}}
+                  - {name: rule-004, sourceLabels: [__name__], regex: "metric_004", action: {type: Drop}}
+                  - {name: rule-005, sourceLabels: [__name__], regex: "metric_005", action: {type: Drop}}
+                  - {name: rule-006, sourceLabels: [__name__], regex: "metric_006", action: {type: Drop}}
+                  - {name: rule-007, sourceLabels: [__name__], regex: "metric_007", action: {type: Drop}}
+                  - {name: rule-008, sourceLabels: [__name__], regex: "metric_008", action: {type: Drop}}
+                  - {name: rule-009, sourceLabels: [__name__], regex: "metric_009", action: {type: Drop}}
+                  - {name: rule-010, sourceLabels: [__name__], regex: "metric_010", action: {type: Drop}}
+    - name: Should accept 100 writeRelabelConfigs rules
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: ServiceAccount
+                writeRelabelConfigs:
+                  - {name: rule-000, sourceLabels: [__name__], regex: "metric_000", action: {type: Drop}}
+                  - {name: rule-001, sourceLabels: [__name__], regex: "metric_001", action: {type: Drop}}
+                  - {name: rule-002, sourceLabels: [__name__], regex: "metric_002", action: {type: Drop}}
+                  - {name: rule-003, sourceLabels: [__name__], regex: "metric_003", action: {type: Drop}}
+                  - {name: rule-004, sourceLabels: [__name__], regex: "metric_004", action: {type: Drop}}
+                  - {name: rule-005, sourceLabels: [__name__], regex: "metric_005", action: {type: Drop}}
+                  - {name: rule-006, sourceLabels: [__name__], regex: "metric_006", action: {type: Drop}}
+                  - {name: rule-007, sourceLabels: [__name__], regex: "metric_007", action: {type: Drop}}
+                  - {name: rule-008, sourceLabels: [__name__], regex: "metric_008", action: {type: Drop}}
+                  - {name: rule-009, sourceLabels: [__name__], regex: "metric_009", action: {type: Drop}}
+                  - {name: rule-010, sourceLabels: [__name__], regex: "metric_010", action: {type: Drop}}
+                  - {name: rule-011, sourceLabels: [__name__], regex: "metric_011", action: {type: Drop}}
+                  - {name: rule-012, sourceLabels: [__name__], regex: "metric_012", action: {type: Drop}}
+                  - {name: rule-013, sourceLabels: [__name__], regex: "metric_013", action: {type: Drop}}
+                  - {name: rule-014, sourceLabels: [__name__], regex: "metric_014", action: {type: Drop}}
+                  - {name: rule-015, sourceLabels: [__name__], regex: "metric_015", action: {type: Drop}}
+                  - {name: rule-016, sourceLabels: [__name__], regex: "metric_016", action: {type: Drop}}
+                  - {name: rule-017, sourceLabels: [__name__], regex: "metric_017", action: {type: Drop}}
+                  - {name: rule-018, sourceLabels: [__name__], regex: "metric_018", action: {type: Drop}}
+                  - {name: rule-019, sourceLabels: [__name__], regex: "metric_019", action: {type: Drop}}
+                  - {name: rule-020, sourceLabels: [__name__], regex: "metric_020", action: {type: Drop}}
+                  - {name: rule-021, sourceLabels: [__name__], regex: "metric_021", action: {type: Drop}}
+                  - {name: rule-022, sourceLabels: [__name__], regex: "metric_022", action: {type: Drop}}
+                  - {name: rule-023, sourceLabels: [__name__], regex: "metric_023", action: {type: Drop}}
+                  - {name: rule-024, sourceLabels: [__name__], regex: "metric_024", action: {type: Drop}}
+                  - {name: rule-025, sourceLabels: [__name__], regex: "metric_025", action: {type: Drop}}
+                  - {name: rule-026, sourceLabels: [__name__], regex: "metric_026", action: {type: Drop}}
+                  - {name: rule-027, sourceLabels: [__name__], regex: "metric_027", action: {type: Drop}}
+                  - {name: rule-028, sourceLabels: [__name__], regex: "metric_028", action: {type: Drop}}
+                  - {name: rule-029, sourceLabels: [__name__], regex: "metric_029", action: {type: Drop}}
+                  - {name: rule-030, sourceLabels: [__name__], regex: "metric_030", action: {type: Drop}}
+                  - {name: rule-031, sourceLabels: [__name__], regex: "metric_031", action: {type: Drop}}
+                  - {name: rule-032, sourceLabels: [__name__], regex: "metric_032", action: {type: Drop}}
+                  - {name: rule-033, sourceLabels: [__name__], regex: "metric_033", action: {type: Drop}}
+                  - {name: rule-034, sourceLabels: [__name__], regex: "metric_034", action: {type: Drop}}
+                  - {name: rule-035, sourceLabels: [__name__], regex: "metric_035", action: {type: Drop}}
+                  - {name: rule-036, sourceLabels: [__name__], regex: "metric_036", action: {type: Drop}}
+                  - {name: rule-037, sourceLabels: [__name__], regex: "metric_037", action: {type: Drop}}
+                  - {name: rule-038, sourceLabels: [__name__], regex: "metric_038", action: {type: Drop}}
+                  - {name: rule-039, sourceLabels: [__name__], regex: "metric_039", action: {type: Drop}}
+                  - {name: rule-040, sourceLabels: [__name__], regex: "metric_040", action: {type: Drop}}
+                  - {name: rule-041, sourceLabels: [__name__], regex: "metric_041", action: {type: Drop}}
+                  - {name: rule-042, sourceLabels: [__name__], regex: "metric_042", action: {type: Drop}}
+                  - {name: rule-043, sourceLabels: [__name__], regex: "metric_043", action: {type: Drop}}
+                  - {name: rule-044, sourceLabels: [__name__], regex: "metric_044", action: {type: Drop}}
+                  - {name: rule-045, sourceLabels: [__name__], regex: "metric_045", action: {type: Drop}}
+                  - {name: rule-046, sourceLabels: [__name__], regex: "metric_046", action: {type: Drop}}
+                  - {name: rule-047, sourceLabels: [__name__], regex: "metric_047", action: {type: Drop}}
+                  - {name: rule-048, sourceLabels: [__name__], regex: "metric_048", action: {type: Drop}}
+                  - {name: rule-049, sourceLabels: [__name__], regex: "metric_049", action: {type: Drop}}
+                  - {name: rule-050, sourceLabels: [__name__], regex: "metric_050", action: {type: Drop}}
+                  - {name: rule-051, sourceLabels: [__name__], regex: "metric_051", action: {type: Drop}}
+                  - {name: rule-052, sourceLabels: [__name__], regex: "metric_052", action: {type: Drop}}
+                  - {name: rule-053, sourceLabels: [__name__], regex: "metric_053", action: {type: Drop}}
+                  - {name: rule-054, sourceLabels: [__name__], regex: "metric_054", action: {type: Drop}}
+                  - {name: rule-055, sourceLabels: [__name__], regex: "metric_055", action: {type: Drop}}
+                  - {name: rule-056, sourceLabels: [__name__], regex: "metric_056", action: {type: Drop}}
+                  - {name: rule-057, sourceLabels: [__name__], regex: "metric_057", action: {type: Drop}}
+                  - {name: rule-058, sourceLabels: [__name__], regex: "metric_058", action: {type: Drop}}
+                  - {name: rule-059, sourceLabels: [__name__], regex: "metric_059", action: {type: Drop}}
+                  - {name: rule-060, sourceLabels: [__name__], regex: "metric_060", action: {type: Drop}}
+                  - {name: rule-061, sourceLabels: [__name__], regex: "metric_061", action: {type: Drop}}
+                  - {name: rule-062, sourceLabels: [__name__], regex: "metric_062", action: {type: Drop}}
+                  - {name: rule-063, sourceLabels: [__name__], regex: "metric_063", action: {type: Drop}}
+                  - {name: rule-064, sourceLabels: [__name__], regex: "metric_064", action: {type: Drop}}
+                  - {name: rule-065, sourceLabels: [__name__], regex: "metric_065", action: {type: Drop}}
+                  - {name: rule-066, sourceLabels: [__name__], regex: "metric_066", action: {type: Drop}}
+                  - {name: rule-067, sourceLabels: [__name__], regex: "metric_067", action: {type: Drop}}
+                  - {name: rule-068, sourceLabels: [__name__], regex: "metric_068", action: {type: Drop}}
+                  - {name: rule-069, sourceLabels: [__name__], regex: "metric_069", action: {type: Drop}}
+                  - {name: rule-070, sourceLabels: [__name__], regex: "metric_070", action: {type: Drop}}
+                  - {name: rule-071, sourceLabels: [__name__], regex: "metric_071", action: {type: Drop}}
+                  - {name: rule-072, sourceLabels: [__name__], regex: "metric_072", action: {type: Drop}}
+                  - {name: rule-073, sourceLabels: [__name__], regex: "metric_073", action: {type: Drop}}
+                  - {name: rule-074, sourceLabels: [__name__], regex: "metric_074", action: {type: Drop}}
+                  - {name: rule-075, sourceLabels: [__name__], regex: "metric_075", action: {type: Drop}}
+                  - {name: rule-076, sourceLabels: [__name__], regex: "metric_076", action: {type: Drop}}
+                  - {name: rule-077, sourceLabels: [__name__], regex: "metric_077", action: {type: Drop}}
+                  - {name: rule-078, sourceLabels: [__name__], regex: "metric_078", action: {type: Drop}}
+                  - {name: rule-079, sourceLabels: [__name__], regex: "metric_079", action: {type: Drop}}
+                  - {name: rule-080, sourceLabels: [__name__], regex: "metric_080", action: {type: Drop}}
+                  - {name: rule-081, sourceLabels: [__name__], regex: "metric_081", action: {type: Drop}}
+                  - {name: rule-082, sourceLabels: [__name__], regex: "metric_082", action: {type: Drop}}
+                  - {name: rule-083, sourceLabels: [__name__], regex: "metric_083", action: {type: Drop}}
+                  - {name: rule-084, sourceLabels: [__name__], regex: "metric_084", action: {type: Drop}}
+                  - {name: rule-085, sourceLabels: [__name__], regex: "metric_085", action: {type: Drop}}
+                  - {name: rule-086, sourceLabels: [__name__], regex: "metric_086", action: {type: Drop}}
+                  - {name: rule-087, sourceLabels: [__name__], regex: "metric_087", action: {type: Drop}}
+                  - {name: rule-088, sourceLabels: [__name__], regex: "metric_088", action: {type: Drop}}
+                  - {name: rule-089, sourceLabels: [__name__], regex: "metric_089", action: {type: Drop}}
+                  - {name: rule-090, sourceLabels: [__name__], regex: "metric_090", action: {type: Drop}}
+                  - {name: rule-091, sourceLabels: [__name__], regex: "metric_091", action: {type: Drop}}
+                  - {name: rule-092, sourceLabels: [__name__], regex: "metric_092", action: {type: Drop}}
+                  - {name: rule-093, sourceLabels: [__name__], regex: "metric_093", action: {type: Drop}}
+                  - {name: rule-094, sourceLabels: [__name__], regex: "metric_094", action: {type: Drop}}
+                  - {name: rule-095, sourceLabels: [__name__], regex: "metric_095", action: {type: Drop}}
+                  - {name: rule-096, sourceLabels: [__name__], regex: "metric_096", action: {type: Drop}}
+                  - {name: rule-097, sourceLabels: [__name__], regex: "metric_097", action: {type: Drop}}
+                  - {name: rule-098, sourceLabels: [__name__], regex: "metric_098", action: {type: Drop}}
+                  - {name: rule-099, sourceLabels: [__name__], regex: "metric_099", action: {type: Drop}}
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: ServiceAccount
+                writeRelabelConfigs:
+                  - {name: rule-000, sourceLabels: [__name__], regex: "metric_000", action: {type: Drop}}
+                  - {name: rule-001, sourceLabels: [__name__], regex: "metric_001", action: {type: Drop}}
+                  - {name: rule-002, sourceLabels: [__name__], regex: "metric_002", action: {type: Drop}}
+                  - {name: rule-003, sourceLabels: [__name__], regex: "metric_003", action: {type: Drop}}
+                  - {name: rule-004, sourceLabels: [__name__], regex: "metric_004", action: {type: Drop}}
+                  - {name: rule-005, sourceLabels: [__name__], regex: "metric_005", action: {type: Drop}}
+                  - {name: rule-006, sourceLabels: [__name__], regex: "metric_006", action: {type: Drop}}
+                  - {name: rule-007, sourceLabels: [__name__], regex: "metric_007", action: {type: Drop}}
+                  - {name: rule-008, sourceLabels: [__name__], regex: "metric_008", action: {type: Drop}}
+                  - {name: rule-009, sourceLabels: [__name__], regex: "metric_009", action: {type: Drop}}
+                  - {name: rule-010, sourceLabels: [__name__], regex: "metric_010", action: {type: Drop}}
+                  - {name: rule-011, sourceLabels: [__name__], regex: "metric_011", action: {type: Drop}}
+                  - {name: rule-012, sourceLabels: [__name__], regex: "metric_012", action: {type: Drop}}
+                  - {name: rule-013, sourceLabels: [__name__], regex: "metric_013", action: {type: Drop}}
+                  - {name: rule-014, sourceLabels: [__name__], regex: "metric_014", action: {type: Drop}}
+                  - {name: rule-015, sourceLabels: [__name__], regex: "metric_015", action: {type: Drop}}
+                  - {name: rule-016, sourceLabels: [__name__], regex: "metric_016", action: {type: Drop}}
+                  - {name: rule-017, sourceLabels: [__name__], regex: "metric_017", action: {type: Drop}}
+                  - {name: rule-018, sourceLabels: [__name__], regex: "metric_018", action: {type: Drop}}
+                  - {name: rule-019, sourceLabels: [__name__], regex: "metric_019", action: {type: Drop}}
+                  - {name: rule-020, sourceLabels: [__name__], regex: "metric_020", action: {type: Drop}}
+                  - {name: rule-021, sourceLabels: [__name__], regex: "metric_021", action: {type: Drop}}
+                  - {name: rule-022, sourceLabels: [__name__], regex: "metric_022", action: {type: Drop}}
+                  - {name: rule-023, sourceLabels: [__name__], regex: "metric_023", action: {type: Drop}}
+                  - {name: rule-024, sourceLabels: [__name__], regex: "metric_024", action: {type: Drop}}
+                  - {name: rule-025, sourceLabels: [__name__], regex: "metric_025", action: {type: Drop}}
+                  - {name: rule-026, sourceLabels: [__name__], regex: "metric_026", action: {type: Drop}}
+                  - {name: rule-027, sourceLabels: [__name__], regex: "metric_027", action: {type: Drop}}
+                  - {name: rule-028, sourceLabels: [__name__], regex: "metric_028", action: {type: Drop}}
+                  - {name: rule-029, sourceLabels: [__name__], regex: "metric_029", action: {type: Drop}}
+                  - {name: rule-030, sourceLabels: [__name__], regex: "metric_030", action: {type: Drop}}
+                  - {name: rule-031, sourceLabels: [__name__], regex: "metric_031", action: {type: Drop}}
+                  - {name: rule-032, sourceLabels: [__name__], regex: "metric_032", action: {type: Drop}}
+                  - {name: rule-033, sourceLabels: [__name__], regex: "metric_033", action: {type: Drop}}
+                  - {name: rule-034, sourceLabels: [__name__], regex: "metric_034", action: {type: Drop}}
+                  - {name: rule-035, sourceLabels: [__name__], regex: "metric_035", action: {type: Drop}}
+                  - {name: rule-036, sourceLabels: [__name__], regex: "metric_036", action: {type: Drop}}
+                  - {name: rule-037, sourceLabels: [__name__], regex: "metric_037", action: {type: Drop}}
+                  - {name: rule-038, sourceLabels: [__name__], regex: "metric_038", action: {type: Drop}}
+                  - {name: rule-039, sourceLabels: [__name__], regex: "metric_039", action: {type: Drop}}
+                  - {name: rule-040, sourceLabels: [__name__], regex: "metric_040", action: {type: Drop}}
+                  - {name: rule-041, sourceLabels: [__name__], regex: "metric_041", action: {type: Drop}}
+                  - {name: rule-042, sourceLabels: [__name__], regex: "metric_042", action: {type: Drop}}
+                  - {name: rule-043, sourceLabels: [__name__], regex: "metric_043", action: {type: Drop}}
+                  - {name: rule-044, sourceLabels: [__name__], regex: "metric_044", action: {type: Drop}}
+                  - {name: rule-045, sourceLabels: [__name__], regex: "metric_045", action: {type: Drop}}
+                  - {name: rule-046, sourceLabels: [__name__], regex: "metric_046", action: {type: Drop}}
+                  - {name: rule-047, sourceLabels: [__name__], regex: "metric_047", action: {type: Drop}}
+                  - {name: rule-048, sourceLabels: [__name__], regex: "metric_048", action: {type: Drop}}
+                  - {name: rule-049, sourceLabels: [__name__], regex: "metric_049", action: {type: Drop}}
+                  - {name: rule-050, sourceLabels: [__name__], regex: "metric_050", action: {type: Drop}}
+                  - {name: rule-051, sourceLabels: [__name__], regex: "metric_051", action: {type: Drop}}
+                  - {name: rule-052, sourceLabels: [__name__], regex: "metric_052", action: {type: Drop}}
+                  - {name: rule-053, sourceLabels: [__name__], regex: "metric_053", action: {type: Drop}}
+                  - {name: rule-054, sourceLabels: [__name__], regex: "metric_054", action: {type: Drop}}
+                  - {name: rule-055, sourceLabels: [__name__], regex: "metric_055", action: {type: Drop}}
+                  - {name: rule-056, sourceLabels: [__name__], regex: "metric_056", action: {type: Drop}}
+                  - {name: rule-057, sourceLabels: [__name__], regex: "metric_057", action: {type: Drop}}
+                  - {name: rule-058, sourceLabels: [__name__], regex: "metric_058", action: {type: Drop}}
+                  - {name: rule-059, sourceLabels: [__name__], regex: "metric_059", action: {type: Drop}}
+                  - {name: rule-060, sourceLabels: [__name__], regex: "metric_060", action: {type: Drop}}
+                  - {name: rule-061, sourceLabels: [__name__], regex: "metric_061", action: {type: Drop}}
+                  - {name: rule-062, sourceLabels: [__name__], regex: "metric_062", action: {type: Drop}}
+                  - {name: rule-063, sourceLabels: [__name__], regex: "metric_063", action: {type: Drop}}
+                  - {name: rule-064, sourceLabels: [__name__], regex: "metric_064", action: {type: Drop}}
+                  - {name: rule-065, sourceLabels: [__name__], regex: "metric_065", action: {type: Drop}}
+                  - {name: rule-066, sourceLabels: [__name__], regex: "metric_066", action: {type: Drop}}
+                  - {name: rule-067, sourceLabels: [__name__], regex: "metric_067", action: {type: Drop}}
+                  - {name: rule-068, sourceLabels: [__name__], regex: "metric_068", action: {type: Drop}}
+                  - {name: rule-069, sourceLabels: [__name__], regex: "metric_069", action: {type: Drop}}
+                  - {name: rule-070, sourceLabels: [__name__], regex: "metric_070", action: {type: Drop}}
+                  - {name: rule-071, sourceLabels: [__name__], regex: "metric_071", action: {type: Drop}}
+                  - {name: rule-072, sourceLabels: [__name__], regex: "metric_072", action: {type: Drop}}
+                  - {name: rule-073, sourceLabels: [__name__], regex: "metric_073", action: {type: Drop}}
+                  - {name: rule-074, sourceLabels: [__name__], regex: "metric_074", action: {type: Drop}}
+                  - {name: rule-075, sourceLabels: [__name__], regex: "metric_075", action: {type: Drop}}
+                  - {name: rule-076, sourceLabels: [__name__], regex: "metric_076", action: {type: Drop}}
+                  - {name: rule-077, sourceLabels: [__name__], regex: "metric_077", action: {type: Drop}}
+                  - {name: rule-078, sourceLabels: [__name__], regex: "metric_078", action: {type: Drop}}
+                  - {name: rule-079, sourceLabels: [__name__], regex: "metric_079", action: {type: Drop}}
+                  - {name: rule-080, sourceLabels: [__name__], regex: "metric_080", action: {type: Drop}}
+                  - {name: rule-081, sourceLabels: [__name__], regex: "metric_081", action: {type: Drop}}
+                  - {name: rule-082, sourceLabels: [__name__], regex: "metric_082", action: {type: Drop}}
+                  - {name: rule-083, sourceLabels: [__name__], regex: "metric_083", action: {type: Drop}}
+                  - {name: rule-084, sourceLabels: [__name__], regex: "metric_084", action: {type: Drop}}
+                  - {name: rule-085, sourceLabels: [__name__], regex: "metric_085", action: {type: Drop}}
+                  - {name: rule-086, sourceLabels: [__name__], regex: "metric_086", action: {type: Drop}}
+                  - {name: rule-087, sourceLabels: [__name__], regex: "metric_087", action: {type: Drop}}
+                  - {name: rule-088, sourceLabels: [__name__], regex: "metric_088", action: {type: Drop}}
+                  - {name: rule-089, sourceLabels: [__name__], regex: "metric_089", action: {type: Drop}}
+                  - {name: rule-090, sourceLabels: [__name__], regex: "metric_090", action: {type: Drop}}
+                  - {name: rule-091, sourceLabels: [__name__], regex: "metric_091", action: {type: Drop}}
+                  - {name: rule-092, sourceLabels: [__name__], regex: "metric_092", action: {type: Drop}}
+                  - {name: rule-093, sourceLabels: [__name__], regex: "metric_093", action: {type: Drop}}
+                  - {name: rule-094, sourceLabels: [__name__], regex: "metric_094", action: {type: Drop}}
+                  - {name: rule-095, sourceLabels: [__name__], regex: "metric_095", action: {type: Drop}}
+                  - {name: rule-096, sourceLabels: [__name__], regex: "metric_096", action: {type: Drop}}
+                  - {name: rule-097, sourceLabels: [__name__], regex: "metric_097", action: {type: Drop}}
+                  - {name: rule-098, sourceLabels: [__name__], regex: "metric_098", action: {type: Drop}}
+                  - {name: rule-099, sourceLabels: [__name__], regex: "metric_099", action: {type: Drop}}
+    - name: Should reject more than 100 writeRelabelConfigs rules
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: ServiceAccount
+                writeRelabelConfigs:
+                  - {name: rule-000, sourceLabels: [__name__], regex: "metric_000", action: {type: Drop}}
+                  - {name: rule-001, sourceLabels: [__name__], regex: "metric_001", action: {type: Drop}}
+                  - {name: rule-002, sourceLabels: [__name__], regex: "metric_002", action: {type: Drop}}
+                  - {name: rule-003, sourceLabels: [__name__], regex: "metric_003", action: {type: Drop}}
+                  - {name: rule-004, sourceLabels: [__name__], regex: "metric_004", action: {type: Drop}}
+                  - {name: rule-005, sourceLabels: [__name__], regex: "metric_005", action: {type: Drop}}
+                  - {name: rule-006, sourceLabels: [__name__], regex: "metric_006", action: {type: Drop}}
+                  - {name: rule-007, sourceLabels: [__name__], regex: "metric_007", action: {type: Drop}}
+                  - {name: rule-008, sourceLabels: [__name__], regex: "metric_008", action: {type: Drop}}
+                  - {name: rule-009, sourceLabels: [__name__], regex: "metric_009", action: {type: Drop}}
+                  - {name: rule-010, sourceLabels: [__name__], regex: "metric_010", action: {type: Drop}}
+                  - {name: rule-011, sourceLabels: [__name__], regex: "metric_011", action: {type: Drop}}
+                  - {name: rule-012, sourceLabels: [__name__], regex: "metric_012", action: {type: Drop}}
+                  - {name: rule-013, sourceLabels: [__name__], regex: "metric_013", action: {type: Drop}}
+                  - {name: rule-014, sourceLabels: [__name__], regex: "metric_014", action: {type: Drop}}
+                  - {name: rule-015, sourceLabels: [__name__], regex: "metric_015", action: {type: Drop}}
+                  - {name: rule-016, sourceLabels: [__name__], regex: "metric_016", action: {type: Drop}}
+                  - {name: rule-017, sourceLabels: [__name__], regex: "metric_017", action: {type: Drop}}
+                  - {name: rule-018, sourceLabels: [__name__], regex: "metric_018", action: {type: Drop}}
+                  - {name: rule-019, sourceLabels: [__name__], regex: "metric_019", action: {type: Drop}}
+                  - {name: rule-020, sourceLabels: [__name__], regex: "metric_020", action: {type: Drop}}
+                  - {name: rule-021, sourceLabels: [__name__], regex: "metric_021", action: {type: Drop}}
+                  - {name: rule-022, sourceLabels: [__name__], regex: "metric_022", action: {type: Drop}}
+                  - {name: rule-023, sourceLabels: [__name__], regex: "metric_023", action: {type: Drop}}
+                  - {name: rule-024, sourceLabels: [__name__], regex: "metric_024", action: {type: Drop}}
+                  - {name: rule-025, sourceLabels: [__name__], regex: "metric_025", action: {type: Drop}}
+                  - {name: rule-026, sourceLabels: [__name__], regex: "metric_026", action: {type: Drop}}
+                  - {name: rule-027, sourceLabels: [__name__], regex: "metric_027", action: {type: Drop}}
+                  - {name: rule-028, sourceLabels: [__name__], regex: "metric_028", action: {type: Drop}}
+                  - {name: rule-029, sourceLabels: [__name__], regex: "metric_029", action: {type: Drop}}
+                  - {name: rule-030, sourceLabels: [__name__], regex: "metric_030", action: {type: Drop}}
+                  - {name: rule-031, sourceLabels: [__name__], regex: "metric_031", action: {type: Drop}}
+                  - {name: rule-032, sourceLabels: [__name__], regex: "metric_032", action: {type: Drop}}
+                  - {name: rule-033, sourceLabels: [__name__], regex: "metric_033", action: {type: Drop}}
+                  - {name: rule-034, sourceLabels: [__name__], regex: "metric_034", action: {type: Drop}}
+                  - {name: rule-035, sourceLabels: [__name__], regex: "metric_035", action: {type: Drop}}
+                  - {name: rule-036, sourceLabels: [__name__], regex: "metric_036", action: {type: Drop}}
+                  - {name: rule-037, sourceLabels: [__name__], regex: "metric_037", action: {type: Drop}}
+                  - {name: rule-038, sourceLabels: [__name__], regex: "metric_038", action: {type: Drop}}
+                  - {name: rule-039, sourceLabels: [__name__], regex: "metric_039", action: {type: Drop}}
+                  - {name: rule-040, sourceLabels: [__name__], regex: "metric_040", action: {type: Drop}}
+                  - {name: rule-041, sourceLabels: [__name__], regex: "metric_041", action: {type: Drop}}
+                  - {name: rule-042, sourceLabels: [__name__], regex: "metric_042", action: {type: Drop}}
+                  - {name: rule-043, sourceLabels: [__name__], regex: "metric_043", action: {type: Drop}}
+                  - {name: rule-044, sourceLabels: [__name__], regex: "metric_044", action: {type: Drop}}
+                  - {name: rule-045, sourceLabels: [__name__], regex: "metric_045", action: {type: Drop}}
+                  - {name: rule-046, sourceLabels: [__name__], regex: "metric_046", action: {type: Drop}}
+                  - {name: rule-047, sourceLabels: [__name__], regex: "metric_047", action: {type: Drop}}
+                  - {name: rule-048, sourceLabels: [__name__], regex: "metric_048", action: {type: Drop}}
+                  - {name: rule-049, sourceLabels: [__name__], regex: "metric_049", action: {type: Drop}}
+                  - {name: rule-050, sourceLabels: [__name__], regex: "metric_050", action: {type: Drop}}
+                  - {name: rule-051, sourceLabels: [__name__], regex: "metric_051", action: {type: Drop}}
+                  - {name: rule-052, sourceLabels: [__name__], regex: "metric_052", action: {type: Drop}}
+                  - {name: rule-053, sourceLabels: [__name__], regex: "metric_053", action: {type: Drop}}
+                  - {name: rule-054, sourceLabels: [__name__], regex: "metric_054", action: {type: Drop}}
+                  - {name: rule-055, sourceLabels: [__name__], regex: "metric_055", action: {type: Drop}}
+                  - {name: rule-056, sourceLabels: [__name__], regex: "metric_056", action: {type: Drop}}
+                  - {name: rule-057, sourceLabels: [__name__], regex: "metric_057", action: {type: Drop}}
+                  - {name: rule-058, sourceLabels: [__name__], regex: "metric_058", action: {type: Drop}}
+                  - {name: rule-059, sourceLabels: [__name__], regex: "metric_059", action: {type: Drop}}
+                  - {name: rule-060, sourceLabels: [__name__], regex: "metric_060", action: {type: Drop}}
+                  - {name: rule-061, sourceLabels: [__name__], regex: "metric_061", action: {type: Drop}}
+                  - {name: rule-062, sourceLabels: [__name__], regex: "metric_062", action: {type: Drop}}
+                  - {name: rule-063, sourceLabels: [__name__], regex: "metric_063", action: {type: Drop}}
+                  - {name: rule-064, sourceLabels: [__name__], regex: "metric_064", action: {type: Drop}}
+                  - {name: rule-065, sourceLabels: [__name__], regex: "metric_065", action: {type: Drop}}
+                  - {name: rule-066, sourceLabels: [__name__], regex: "metric_066", action: {type: Drop}}
+                  - {name: rule-067, sourceLabels: [__name__], regex: "metric_067", action: {type: Drop}}
+                  - {name: rule-068, sourceLabels: [__name__], regex: "metric_068", action: {type: Drop}}
+                  - {name: rule-069, sourceLabels: [__name__], regex: "metric_069", action: {type: Drop}}
+                  - {name: rule-070, sourceLabels: [__name__], regex: "metric_070", action: {type: Drop}}
+                  - {name: rule-071, sourceLabels: [__name__], regex: "metric_071", action: {type: Drop}}
+                  - {name: rule-072, sourceLabels: [__name__], regex: "metric_072", action: {type: Drop}}
+                  - {name: rule-073, sourceLabels: [__name__], regex: "metric_073", action: {type: Drop}}
+                  - {name: rule-074, sourceLabels: [__name__], regex: "metric_074", action: {type: Drop}}
+                  - {name: rule-075, sourceLabels: [__name__], regex: "metric_075", action: {type: Drop}}
+                  - {name: rule-076, sourceLabels: [__name__], regex: "metric_076", action: {type: Drop}}
+                  - {name: rule-077, sourceLabels: [__name__], regex: "metric_077", action: {type: Drop}}
+                  - {name: rule-078, sourceLabels: [__name__], regex: "metric_078", action: {type: Drop}}
+                  - {name: rule-079, sourceLabels: [__name__], regex: "metric_079", action: {type: Drop}}
+                  - {name: rule-080, sourceLabels: [__name__], regex: "metric_080", action: {type: Drop}}
+                  - {name: rule-081, sourceLabels: [__name__], regex: "metric_081", action: {type: Drop}}
+                  - {name: rule-082, sourceLabels: [__name__], regex: "metric_082", action: {type: Drop}}
+                  - {name: rule-083, sourceLabels: [__name__], regex: "metric_083", action: {type: Drop}}
+                  - {name: rule-084, sourceLabels: [__name__], regex: "metric_084", action: {type: Drop}}
+                  - {name: rule-085, sourceLabels: [__name__], regex: "metric_085", action: {type: Drop}}
+                  - {name: rule-086, sourceLabels: [__name__], regex: "metric_086", action: {type: Drop}}
+                  - {name: rule-087, sourceLabels: [__name__], regex: "metric_087", action: {type: Drop}}
+                  - {name: rule-088, sourceLabels: [__name__], regex: "metric_088", action: {type: Drop}}
+                  - {name: rule-089, sourceLabels: [__name__], regex: "metric_089", action: {type: Drop}}
+                  - {name: rule-090, sourceLabels: [__name__], regex: "metric_090", action: {type: Drop}}
+                  - {name: rule-091, sourceLabels: [__name__], regex: "metric_091", action: {type: Drop}}
+                  - {name: rule-092, sourceLabels: [__name__], regex: "metric_092", action: {type: Drop}}
+                  - {name: rule-093, sourceLabels: [__name__], regex: "metric_093", action: {type: Drop}}
+                  - {name: rule-094, sourceLabels: [__name__], regex: "metric_094", action: {type: Drop}}
+                  - {name: rule-095, sourceLabels: [__name__], regex: "metric_095", action: {type: Drop}}
+                  - {name: rule-096, sourceLabels: [__name__], regex: "metric_096", action: {type: Drop}}
+                  - {name: rule-097, sourceLabels: [__name__], regex: "metric_097", action: {type: Drop}}
+                  - {name: rule-098, sourceLabels: [__name__], regex: "metric_098", action: {type: Drop}}
+                  - {name: rule-099, sourceLabels: [__name__], regex: "metric_099", action: {type: Drop}}
+                  - {name: rule-100, sourceLabels: [__name__], regex: "metric_100", action: {type: Drop}}
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs: Too many: 101: must have at most 100 items'
     - name: Should accept writeRelabelConfigs with regex longer than 1000 bytes
       initial: |
         apiVersion: config.openshift.io/v1alpha1

@@ -644,7 +644,7 @@ var map_RemoteWriteSpec = map[string]string{
 	"remoteTimeoutSeconds": "remoteTimeoutSeconds defines the timeout in seconds for requests to the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
 	"exemplarsMode":        "exemplarsMode controls whether exemplars are sent via remote write. Valid values are \"Send\", \"DoNotSend\" and omitted. When set to \"Send\", Prometheus is configured to store a maximum of 100,000 exemplars in memory and send them with remote write. Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring. When omitted or set to \"DoNotSend\", exemplars are not sent.",
 	"tlsConfig":            "tlsConfig defines TLS authentication settings for the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
-	"writeRelabelConfigs":  "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 10 relabeling rules can be specified. Each rule must have a unique name.",
+	"writeRelabelConfigs":  "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 100 relabeling rules can be specified. Each rule must have a unique name.",
 }
 
 func (RemoteWriteSpec) SwaggerDoc() map[string]string {

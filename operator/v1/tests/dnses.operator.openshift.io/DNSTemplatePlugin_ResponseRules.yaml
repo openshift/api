@@ -1,0 +1,579 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "DNS"
+crdName: dnses.operator.openshift.io
+featureGates:
+- DNSTemplatePlugin
+tests:
+  onCreate:
+    - name: Should be able to create a DNS with a wildcard A response rule
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: wildcard-apps
+            query:
+              name: "*.apps.customer.com"
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10", "203.0.113.11"]
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          responseRules:
+          - name: wildcard-apps
+            query:
+              name: "*.apps.customer.com"
+            ttlSeconds: 60
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10", "203.0.113.11"]
+    - name: Should be able to create a DNS with a wildcard CNAME response rule
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: wildcard-alias
+            query:
+              name: "*.alias.customer.com"
+            ttlSeconds: 120
+            action:
+              type: CNAME
+              cname:
+                target: sentinel.customer.com
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          responseRules:
+          - name: wildcard-alias
+            query:
+              name: "*.alias.customer.com"
+            ttlSeconds: 120
+            action:
+              type: CNAME
+              cname:
+                target: sentinel.customer.com
+    - name: Should be able to create a DNS with an exact-name NXDOMAIN response rule
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: blocked-host
+            query:
+              name: blocked.customer.com
+            action:
+              type: NXDOMAIN
+              nxdomain: {}
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          responseRules:
+          - name: blocked-host
+            query:
+              name: blocked.customer.com
+            ttlSeconds: 60
+            action:
+              type: NXDOMAIN
+              nxdomain: {}
+    - name: Should reject an NXDOMAIN response rule on a wildcard name
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: wildcard-blocked
+            query:
+              name: "*.blocked.customer.com"
+            action:
+              type: NXDOMAIN
+              nxdomain: {}
+      expectedError: "nxdomain is only valid when query.name is an exact name, not a wildcard"
+    - name: Should reject an action with type A but no a field set
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: missing-a
+            query:
+              name: missing-a.customer.com
+            action:
+              type: A
+      expectedError: "a must be set if type is 'A', but remain unset otherwise"
+    - name: Should reject an action with type A but cname also set
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: mixed-action
+            query:
+              name: mixed.customer.com
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+              cname:
+                target: sentinel.customer.com
+      expectedError: "cname must be set if type is 'CNAME', but remain unset otherwise"
+    - name: Should reject a response rule missing query
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: missing-query
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+      expectedError: "Required value"
+    - name: Should reject a response rule with ttlSeconds below the minimum
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: too-low-ttl
+            query:
+              name: low-ttl.customer.com
+            ttlSeconds: 10
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+      expectedError: "should be greater than or equal to 30"
+    - name: Should reject a response rule with ttlSeconds above the maximum
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: too-high-ttl
+            query:
+              name: high-ttl.customer.com
+            ttlSeconds: 7200
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+      expectedError: "should be less than or equal to 3600"
+    - name: Should reject a response rule with an invalid address
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: invalid-address
+            query:
+              name: invalid.customer.com
+            action:
+              type: A
+              a:
+                addresses: ["not-an-ip"]
+      expectedError: "address must be an IPv4 address in dotted-decimal notation"
+    - name: Should reject a response rule with a trailing dot in query.name
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: trailing-dot
+            query:
+              name: "trailing.customer.com."
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+      expectedError: "query name must be a lowercase DNS name with an optional single leading wildcard label"
+    - name: Should reject an exact CNAME rule targeting itself
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: self-reference
+            query:
+              name: alias.example.com
+            action:
+              type: CNAME
+              cname:
+                target: alias.example.com
+      expectedError: "an exact-name CNAME rule must not target its own query name"
+    - name: Should reject two rules with the same query name
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: first
+            query:
+              name: app.example.com
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+          - name: second
+            query:
+              name: app.example.com
+            action:
+              type: NXDOMAIN
+              nxdomain: {}
+      expectedError: "responseRules must have distinct query names"
+    - name: Should allow an exact A rule covered by a wildcard CNAME rule
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: exact-a
+            query:
+              name: app.example.com
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+          - name: wildcard-cname
+            query:
+              name: "*.example.com"
+            action:
+              type: CNAME
+              cname:
+                target: destination.other.com
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          responseRules:
+          - name: exact-a
+            query:
+              name: app.example.com
+            ttlSeconds: 60
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+          - name: wildcard-cname
+            query:
+              name: "*.example.com"
+            ttlSeconds: 60
+            action:
+              type: CNAME
+              cname:
+                target: destination.other.com
+    - name: Should allow an A rule with 8 addresses
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: eight-addresses
+            query:
+              name: app.example.com
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.1", "203.0.113.2", "203.0.113.3", "203.0.113.4", "203.0.113.5", "203.0.113.6", "203.0.113.7", "203.0.113.8"]
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          responseRules:
+          - name: eight-addresses
+            query:
+              name: app.example.com
+            ttlSeconds: 60
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.1", "203.0.113.2", "203.0.113.3", "203.0.113.4", "203.0.113.5", "203.0.113.6", "203.0.113.7", "203.0.113.8"]
+    - name: Should reject an A rule with more than 8 addresses
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: nine-addresses
+            query:
+              name: app.example.com
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.1", "203.0.113.2", "203.0.113.3", "203.0.113.4", "203.0.113.5", "203.0.113.6", "203.0.113.7", "203.0.113.8", "203.0.113.9"]
+      expectedError: "must have at most 8 items"
+    - name: Should allow an exact CNAME rule covered by a wildcard A rule
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: exact-cname
+            query:
+              name: app.example.com
+            action:
+              type: CNAME
+              cname:
+                target: destination.other.com
+          - name: wildcard-a
+            query:
+              name: "*.example.com"
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          responseRules:
+          - name: exact-cname
+            query:
+              name: app.example.com
+            ttlSeconds: 60
+            action:
+              type: CNAME
+              cname:
+                target: destination.other.com
+          - name: wildcard-a
+            query:
+              name: "*.example.com"
+            ttlSeconds: 60
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+    - name: Should allow a deeper exact A rule outside a one-label wildcard CNAME rule
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: deeper-exact-a
+            query:
+              name: app.sub.example.com
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+          - name: wildcard-cname
+            query:
+              name: "*.example.com"
+            action:
+              type: CNAME
+              cname:
+                target: destination.other.com
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          responseRules:
+          - name: deeper-exact-a
+            query:
+              name: app.sub.example.com
+            ttlSeconds: 60
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+          - name: wildcard-cname
+            query:
+              name: "*.example.com"
+            ttlSeconds: 60
+            action:
+              type: CNAME
+              cname:
+                target: destination.other.com
+    - name: Should reject a rule in the cluster domain
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: cluster-service
+            query:
+              name: app.cluster.local
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+      expectedError: "response rules must not cover cluster.local or reverse DNS zones"
+    - name: Should reject a wildcard rule covering a reverse zone
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: reverse-zone
+            query:
+              name: "*.arpa"
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+      expectedError: "response rules must not cover cluster.local or reverse DNS zones"
+    - name: Should reject a query with a label longer than 63 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: long-query-label
+            query:
+              name: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+      expectedError: "each DNS label must be at most 63 characters"
+    - name: Should reject a CNAME target with a label longer than 63 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: long-target-label
+            query:
+              name: alias.example.com
+            action:
+              type: CNAME
+              cname:
+                target: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com
+      expectedError: "each DNS label must be at most 63 characters"
+    - name: Should be able to create a DNS without responseRules (optional field)
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          servers: []
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          servers: []
+  onUpdate:
+    - name: Should be able to add a response rule to an existing DNS
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: wildcard-apps
+            query:
+              name: "*.apps.customer.com"
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          responseRules:
+          - name: wildcard-apps
+            query:
+              name: "*.apps.customer.com"
+            ttlSeconds: 60
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+    - name: Should reject changing an action's type without updating its member field
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: wildcard-apps
+            query:
+              name: "*.apps.customer.com"
+            action:
+              type: A
+              a:
+                addresses: ["203.0.113.10"]
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          responseRules:
+          - name: wildcard-apps
+            query:
+              name: "*.apps.customer.com"
+            action:
+              type: CNAME
+              a:
+                addresses: ["203.0.113.10"]
+      expectedError: "a must be set if type is 'A', but remain unset otherwise"

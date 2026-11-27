@@ -25674,7 +25674,7 @@ func schema_openshift_api_config_v1alpha1_Label(ref common.ReferenceCallback) co
 					},
 					"value": {
 						SchemaProps: spec.SchemaProps{
-							Description: "value is the value of the label. Must be between 1 and 128 characters in length.",
+							Description: "value is the value of the label. Must be between 1 and 1024 characters in length.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

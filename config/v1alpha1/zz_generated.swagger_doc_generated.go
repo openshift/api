@@ -214,7 +214,7 @@ func (KubeStateMetricsResourceLabels) SwaggerDoc() map[string]string {
 var map_Label = map[string]string{
 	"":      "Label represents a key/value pair for external labels.",
 	"key":   "key is the name of the label. Prometheus supports UTF-8 label names, so any valid UTF-8 string is allowed. Must be between 1 and 128 characters in length.",
-	"value": "value is the value of the label. Must be between 1 and 128 characters in length.",
+	"value": "value is the value of the label. Must be between 1 and 1024 characters in length.",
 }
 
 func (Label) SwaggerDoc() map[string]string {

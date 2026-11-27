@@ -78,7 +78,7 @@ spec:
                   url:
                     description: Chart repository URL
                     maxLength: 2048
-                    pattern: ^https?:\/\/
+                    pattern: ^(https?|oci):\/\/
                     type: string
                 type: object
               description:

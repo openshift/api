@@ -1683,6 +1683,7 @@ spec:
                                 - AzureGermanCloud
                                 - AzureStackCloud
                                 - AzureUSSecCloud
+                                - AzureUSNatCloud
                                 type: string
                               networkResourceGroupName:
                                 description: |-

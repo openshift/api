@@ -21,12 +21,13 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/google/cel-go/common/types"
-	"github.com/google/cel-go/common/types/ref"
-	"github.com/google/cel-go/common/types/traits"
+	"cel.dev/cel-go/common/types"
+	"cel.dev/cel-go/common/types/ref"
+	"cel.dev/cel-go/common/types/traits"
+	"sigs.k8s.io/structured-merge-diff/v7/value"
+
 	apiequality "k8s.io/apimachinery/pkg/api/equality"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"sigs.k8s.io/structured-merge-diff/v6/value"
 )
 
 // SchemalessTypedToVal wraps a Go value as a CEL ref.Val.

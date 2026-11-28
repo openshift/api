@@ -1092,14 +1092,6 @@ var (
 							enable(inDevPreviewNoUpgrade()).
 							mustRegister()
 
-	FeatureGateDRADeviceTaintRules = newFeatureGate("DRADeviceTaintRules").
-					reportProblemsToJiraComponent("node").
-					contactPerson("haircommander").
-					productScope(kubernetes).
-					enhancementPR("https://github.com/kubernetes/enhancements/issues/5055").
-					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-					mustRegister()
-
 	FeatureGateControllerManagerConfig = newFeatureGate("ControllerManagerConfig").
 						reportProblemsToJiraComponent("kube-controller-manager").
 						contactPerson("jdobson").

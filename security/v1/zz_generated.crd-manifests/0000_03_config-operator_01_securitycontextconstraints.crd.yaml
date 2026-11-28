@@ -291,19 +291,19 @@ spec:
                 description: seLinuxOptions required to run as; required for MustRunAs
                 properties:
                   level:
-                    description: Level is SELinux level label that applies to the
+                    description: level is SELinux level label that applies to the
                       container.
                     type: string
                   role:
-                    description: Role is a SELinux role label that applies to the
+                    description: role is a SELinux role label that applies to the
                       container.
                     type: string
                   type:
-                    description: Type is a SELinux type label that applies to the
+                    description: type is a SELinux type label that applies to the
                       container.
                     type: string
                   user:
-                    description: User is a SELinux user label that applies to the
+                    description: user is a SELinux user label that applies to the
                       container.
                     type: string
                 type: object

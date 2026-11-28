@@ -208,9 +208,6 @@
                         "name": "DNSNameResolver"
                     },
                     {
-                        "name": "DRADeviceTaintRules"
-                    },
-                    {
                         "name": "DRAWorkloadResourceClaims"
                     },
                     {

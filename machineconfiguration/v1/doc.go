@@ -1,5 +1,6 @@
 // +k8s:deepcopy-gen=package,register
 // +groupName=machineconfiguration.openshift.io
+// +k8s:openapi-gen=true
 // +k8s:openapi-model-package=com.github.openshift.api.machineconfiguration.v1
 
 // +kubebuilder:validation:Optional
